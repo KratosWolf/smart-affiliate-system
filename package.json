@@ -1,12 +1,28 @@
 {
   "name": "smart-affiliate-system",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Sistema Inteligente de Marketing para Afiliados - Automated Google Ads campaign optimization with character-level precision and ROI-based scaling",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "analyze": "ANALYZE=true next build",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:migrate": "prisma migrate dev",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -25,7 +41,9 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.5.0",
     "@types/bcryptjs": "^2.4.6",
+    "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -33,8 +51,48 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
+    "husky": "^8.0.3",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.0",
     "postcss": "^8.5.6",
+    "prettier": "^3.1.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
-  }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "affiliate-marketing",
+    "google-ads",
+    "character-optimization",
+    "roi-scaling",
+    "product-validation",
+    "nextjs",
+    "typescript",
+    "smart-campaigns"
+  ],
+  "author": {
+    "name": "Smart Affiliate System",
+    "email": "info@smart-affiliate-system.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KratosWolf/smart-affiliate-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KratosWolf/smart-affiliate-system/issues"
+  },
+  "homepage": "https://smart-affiliate-system.vercel.app"
 }
