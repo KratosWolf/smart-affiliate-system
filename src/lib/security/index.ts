@@ -20,7 +20,7 @@ export function getClientIP(request: NextRequest): string {
     return remoteAddr.trim();
   }
   
-  return request.ip ?? 'unknown';
+  return 'unknown';
 }
 
 /**

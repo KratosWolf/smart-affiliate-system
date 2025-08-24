@@ -4,8 +4,8 @@
   "description": "Sistema Inteligente de Marketing para Afiliados - Automated Google Ads campaign optimization with character-level precision and ROI-based scaling",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -37,6 +37,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.62.0",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^4.1.1"
   },
   "devDependencies": {

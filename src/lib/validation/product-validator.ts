@@ -232,11 +232,8 @@ export class ProductValidator {
     ));
 
     // Competition Score (0-100) - inverse of competition level
-    const competitionScore = {
-      'low': 80,
-      'medium': 50,
-      'high': 20
-    }[marketAnalysis.competition];
+    const competitionScore = marketAnalysis.competition === 'low' ? 80 :
+      marketAnalysis.competition === 'medium' ? 50 : 20;
 
     // Profitability Score (0-100) - based on price, CPC, and estimated conversion
     const estimatedMargin = productData.price * 0.1; // Assume 10% commission
@@ -452,12 +449,9 @@ export class ProductValidator {
     return undefined;
   }
 
-  private estimateSearchVolume(competition: any, keywordCount: number): number {
-    const baseVolume = {
-      'low': 5000,
-      'medium': 15000,
-      'high': 50000
-    }[competition.level];
+  private estimateSearchVolume(competition: { level: 'low' | 'medium' | 'high' }, keywordCount: number): number {
+    const baseVolume = competition.level === 'low' ? 5000 :
+      competition.level === 'medium' ? 15000 : 50000;
 
     // Adjust based on total results and keyword variety
     const multiplier = Math.min(2, Math.max(0.5, keywordCount / 10));
@@ -466,11 +460,8 @@ export class ProductValidator {
   }
 
   private estimateCpc(competition: 'low' | 'medium' | 'high', niche?: string): number {
-    const baseCpc = {
-      'low': 0.50,
-      'medium': 1.25,
-      'high': 2.50
-    }[competition];
+    const baseCpc = competition === 'low' ? 0.50 :
+      competition === 'medium' ? 1.25 : 2.50;
 
     // Niche multipliers
     const nicheMultipliers: Record<string, number> = {

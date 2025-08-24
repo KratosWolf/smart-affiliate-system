@@ -77,8 +77,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Rate limiting preparation (headers for monitoring)
-  const clientIP = request.ip ?? 
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 
+  const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 
     request.headers.get('x-real-ip') ?? 
     'unknown';
   
