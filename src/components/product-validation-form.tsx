@@ -17,6 +17,12 @@ export default function ProductValidationForm() {
   const [isValidating, setIsValidating] = useState(false)
   const [result, setResult] = useState<ProductValidationResponse | null>(null)
   const [error, setError] = useState<string>('')
+  
+  // Presell generation state
+  const [isGeneratingPresell, setIsGeneratingPresell] = useState(false)
+  const [affiliateUrl, setAffiliateUrl] = useState('')
+  const [presellGenerated, setPresellGenerated] = useState(false)
+  const [presellData, setPresellData] = useState<any>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -58,6 +64,40 @@ export default function ProductValidationForm() {
     if (score >= 80) return 'VIÁVEL'
     if (score >= 60) return 'MODERADO'
     return 'NÃO VIÁVEL'
+  }
+
+  const handleGeneratePresell = async () => {
+    if (!result || !affiliateUrl) return
+
+    setIsGeneratingPresell(true)
+    setError('')
+
+    try {
+      const response = await fetch('/api/v1/presell', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          validation: result,
+          affiliateUrl: affiliateUrl
+        })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setPresellData(data.data)
+        setPresellGenerated(true)
+      } else {
+        setError(data.error || 'Erro na geração da presell')
+      }
+    } catch (err) {
+      setError('Erro ao gerar presell')
+      console.error('Presell generation error:', err)
+    } finally {
+      setIsGeneratingPresell(false)
+    }
   }
 
   return (
@@ -116,6 +156,7 @@ export default function ProductValidationForm() {
                   <option value="Alemanha">🇩🇪 Alemanha</option>
                   <option value="França">🇫🇷 França</option>
                   <option value="Espanha">🇪🇸 Espanha</option>
+                  <option value="Polônia">🇵🇱 Polônia</option>
                 </select>
               </div>
             </div>
@@ -276,6 +317,40 @@ export default function ProductValidationForm() {
                 </div>
               )}
 
+              {/* Competitor Analysis (NEW!) */}
+              {result.competitorAnalysis && (
+                <div className="bg-purple-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-purple-800 mb-2">🔍 Análise de Concorrência Google Ads:</h4>
+                  <div className="text-sm text-purple-700 space-y-2">
+                    <p><strong>Anunciantes Ativos:</strong> {result.competitorAnalysis.totalAdvertisers}</p>
+                    {result.competitorAnalysis.topAdvertisers.length > 0 && (
+                      <p><strong>Top Anunciantes:</strong> {result.competitorAnalysis.topAdvertisers.join(', ')}</p>
+                    )}
+                    {result.competitorAnalysis.commonHeadlines.length > 0 && (
+                      <div>
+                        <strong>Headlines Mais Usadas:</strong>
+                        <ul className="mt-1 ml-4">
+                          {result.competitorAnalysis.commonHeadlines.slice(0, 3).map((headline, idx) => (
+                            <li key={idx} className="text-xs">• "{headline}"</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    <p><strong>Posição Média dos Ads:</strong> {result.competitorAnalysis.avgAdPosition.toFixed(1)}</p>
+                    {result.competitorAnalysis.dominantStrategies.length > 0 && (
+                      <div>
+                        <strong>Estratégias para se Destacar:</strong>
+                        <ul className="mt-1 ml-4">
+                          {result.competitorAnalysis.dominantStrategies.map((strategy, idx) => (
+                            <li key={idx} className="text-xs">• {strategy}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Warnings */}
               {result.recommendations.warnings.length > 0 && (
                 <div className="bg-yellow-50 p-4 rounded-lg">
@@ -291,15 +366,157 @@ export default function ProductValidationForm() {
 
             {/* Action Buttons */}
             {result.recommendations.shouldProceed && (
-              <div className="flex gap-4 pt-4 border-t">
-                <Button className="flex-1">
-                  📊 VER DETALHES COMPLETOS
-                </Button>
-                <Button variant="outline" className="flex-1">
-                  ⬇️ DOWNLOAD TUDO
-                </Button>
+              <div className="space-y-4 pt-4 border-t">
+                {!presellGenerated && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        URL de Afiliado *
+                      </label>
+                      <Input
+                        type="url"
+                        placeholder="https://go.hotmart.com/abc123"
+                        value={affiliateUrl}
+                        onChange={(e) => setAffiliateUrl(e.target.value)}
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1">URL para onde o usuário será direcionado para compra</p>
+                    </div>
+                    
+                    <Button 
+                      onClick={handleGeneratePresell}
+                      className="w-full h-12 text-lg font-semibold"
+                      disabled={isGeneratingPresell || !affiliateUrl}
+                    >
+                      {isGeneratingPresell ? (
+                        <div className="flex items-center gap-2">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          🌐 Gerando presell otimizada...
+                        </div>
+                      ) : (
+                        '🌐 GERAR PRESELL OTIMIZADA'
+                      )}
+                    </Button>
+                  </div>
+                )}
+                
+                {presellGenerated && (
+                  <div className="flex gap-4">
+                    <Button className="flex-1">
+                      👁️ VISUALIZAR PRESELL
+                    </Button>
+                    <Button variant="outline" className="flex-1">
+                      ⬇️ DOWNLOAD COMPLETO
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Presell Generation Progress */}
+      {isGeneratingPresell && (
+        <Card>
+          <CardContent className="p-6">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 text-blue-600">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                🎨 Analisando produto e extraindo informações...
+              </div>
+              <div className="flex items-center gap-3 text-gray-400">
+                <div className="rounded-full h-4 w-4 bg-gray-200"></div>
+                🌍 Detectando idioma e moeda do país alvo...
+              </div>
+              <div className="flex items-center gap-3 text-gray-400">
+                <div className="rounded-full h-4 w-4 bg-gray-200"></div>
+                📝 Gerando copy otimizada para conversão...
+              </div>
+              <div className="flex items-center gap-3 text-gray-400">
+                <div className="rounded-full h-4 w-4 bg-gray-200"></div>
+                📱 Criando HTML responsivo + CSS + JS...
+              </div>
+              <div className="flex items-center gap-3 text-gray-400">
+                <div className="rounded-full h-4 w-4 bg-gray-200"></div>
+                🎯 Configurando tracking e otimizações...
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Presell Generated Results */}
+      {presellGenerated && presellData && (
+        <Card className="border-green-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              🌐 PRESELL GERADA COM SUCESSO
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Generation Summary */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <div className="text-2xl font-bold text-green-600">
+                  ✅
+                </div>
+                <div className="text-sm text-green-700 font-medium">HTML Responsivo</div>
+              </div>
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600">
+                  📱
+                </div>
+                <div className="text-sm text-blue-700 font-medium">Mobile First</div>
+              </div>
+              <div className="text-center p-4 bg-purple-50 rounded-lg">
+                <div className="text-2xl font-bold text-purple-600">
+                  🎯
+                </div>
+                <div className="text-sm text-purple-700 font-medium">SEO Otimizado</div>
+              </div>
+              <div className="text-center p-4 bg-orange-50 rounded-lg">
+                <div className="text-2xl font-bold text-orange-600">
+                  📊
+                </div>
+                <div className="text-sm text-orange-700 font-medium">Tracking Ready</div>
+              </div>
+            </div>
+
+            {/* Metadata */}
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-semibold text-blue-800 mb-2">📋 Detalhes da Presell:</h4>
+              <div className="text-sm text-blue-700 space-y-1">
+                <p><strong>Idioma:</strong> {presellData.metadata.language}</p>
+                <p><strong>Moeda:</strong> {presellData.metadata.currency}</p>
+                <p><strong>Countdown:</strong> {presellData.metadata.countdownEnabled ? 'Ativo' : 'Desabilitado'}</p>
+                <p><strong>Social Proof:</strong> {presellData.metadata.socialProofEnabled ? 'Ativo' : 'Desabilitado'}</p>
+                <p><strong>Gerado em:</strong> {new Date(presellData.metadata.generatedAt).toLocaleString('pt-BR')}</p>
+              </div>
+            </div>
+
+            {/* Preview Link */}
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-2">🔗 URL da Presell:</h4>
+              <div className="text-sm text-gray-600">
+                <code className="bg-white px-2 py-1 rounded border">
+                  https://presells.smart-affiliate.com/{presellData.productName.toLowerCase().replace(/\s+/g, '-')}.html
+                </code>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-4">
+              <Button className="flex-1">
+                👁️ VISUALIZAR PRESELL
+              </Button>
+              <Button variant="outline" className="flex-1">
+                ⬇️ DOWNLOAD ARQUIVOS
+              </Button>
+              <Button variant="outline" className="flex-1">
+                📋 COPIAR CÓDIGO
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}

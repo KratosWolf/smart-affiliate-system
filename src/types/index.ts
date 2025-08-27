@@ -14,7 +14,9 @@ export interface ProductValidationRequest {
 
 export interface ProductValidationResponse {
   id: string;
+  productName: string;
   productUrl: string;
+  targetCountry: string;
   validationScore: number; // 0-100
   status: 'pending' | 'validating' | 'completed' | 'failed';
   
@@ -36,6 +38,15 @@ export interface ProductValidationResponse {
     avgCpc: number;
     seasonality: SeasonalityData[];
     trends: TrendData[];
+  };
+  
+  // Competitor Analysis
+  competitorAnalysis?: {
+    totalAdvertisers: number;
+    topAdvertisers: string[];
+    commonHeadlines: string[];
+    avgAdPosition: number;
+    dominantStrategies: string[];
   };
   
   // Viability Metrics
@@ -565,6 +576,152 @@ export interface SmartAffiliateError {
   statusCode: number;
   context?: Record<string, any>;
   timestamp: Date;
+}
+
+// ================================
+// PRESELL GENERATOR TYPES
+// ================================
+
+export interface PresellGenerationRequest {
+  validation: ProductValidationResponse;
+  affiliateUrl: string;
+  customization?: {
+    colors?: {
+      primary?: string;
+      secondary?: string;
+      accent?: string;
+      background?: string;
+      text?: string;
+    };
+    texts?: {
+      headline?: string;
+      subheadline?: string;
+      ctaButton?: string;
+      urgencyText?: string;
+    };
+    features?: {
+      countdown?: boolean;
+      socialProof?: boolean;
+      testimonials?: boolean;
+      bonusSection?: boolean;
+      faqSection?: boolean;
+    };
+  };
+}
+
+export interface PresellGenerationResponse {
+  success: boolean;
+  data?: {
+    productName: string;
+    targetCountry: string;
+    validationScore: number;
+    generated: {
+      html: string;
+      css: string;
+      js: string;
+      assets: Record<string, string>;
+    };
+    config: PresellConfig;
+    optimization: {
+      mobileOptimized: boolean;
+      seoOptimized: boolean;
+      conversionOptimized: boolean;
+      loadTimeOptimized: boolean;
+    };
+    metadata: {
+      language: string;
+      currency: string;
+      countdownEnabled: boolean;
+      socialProofEnabled: boolean;
+      testimonials: boolean;
+      generatedAt: string;
+    };
+  };
+  error?: string;
+}
+
+export interface PresellConfig {
+  // Basic Info
+  productName: string;
+  targetCountry: string;
+  language: string;
+  currency: string;
+  affiliateUrl: string;
+  
+  // Styling
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    text: string;
+  };
+  
+  // Content
+  content: {
+    headline: string;
+    subheadline: string;
+    description: string;
+    benefits: string[];
+    features: string[];
+    ctaButton: string;
+    urgencyText: string;
+    trustSignals: string[];
+    testimonials: PresellTestimonial[];
+    faqs: PresellFAQ[];
+  };
+  
+  // Features
+  features: {
+    countdown: boolean;
+    socialProof: boolean;
+    testimonials: boolean;
+    bonusSection: boolean;
+    faqSection: boolean;
+    exitIntent: boolean;
+  };
+  
+  // SEO
+  seo: {
+    title: string;
+    description: string;
+    keywords: string[];
+    ogImage?: string;
+  };
+  
+  // Tracking
+  tracking: {
+    googleAnalytics?: string;
+    facebookPixel?: string;
+    customEvents: boolean;
+  };
+}
+
+export interface PresellTestimonial {
+  id: string;
+  name: string;
+  location: string;
+  text: string;
+  rating: number;
+  image?: string;
+  verified: boolean;
+}
+
+export interface PresellFAQ {
+  id: string;
+  question: string;
+  answer: string;
+  order: number;
+}
+
+export interface PresellAssets {
+  html: string;
+  css: string;
+  js: string;
+  seoTags: string;
+  mobileOptimization: string;
+  conversionTracking: string;
+  socialProofScripts: string;
 }
 
 // ================================

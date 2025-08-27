@@ -1,0 +1,832 @@
+import { DesignTokens } from '@/types'
+import { CountrySettings, getCountrySettings } from '../country-settings'
+
+export interface QuizTemplateConfig {
+  productName: string
+  affiliateUrl: string
+  validationScore: number
+  countrySettings: CountrySettings
+  designTokens?: DesignTokens
+  customization?: any
+}
+
+export interface QuizQuestion {
+  id: string
+  question: string
+  options: string[]
+  correctAnswer?: number
+  points?: number
+}
+
+export class QuizTemplate {
+  private generateQuestions(productName: string, countrySettings: CountrySettings): QuizQuestion[] {
+    const lang = countrySettings.language
+    
+    if (lang === 'pt-BR') {
+      return [
+        {
+          id: 'q1',
+          question: `Qual é o seu principal objetivo com o ${productName}?`,
+          options: [
+            'Resultados rápidos e eficazes',
+            'Melhoria gradual',
+            'Apenas curiosidade',
+            'Não tenho certeza'
+          ],
+          correctAnswer: 0,
+          points: 25
+        },
+        {
+          id: 'q2',
+          question: 'Há quanto tempo você busca uma solução para este problema?',
+          options: [
+            'Mais de 6 meses',
+            '3-6 meses',
+            '1-3 meses',
+            'Menos de 1 mês'
+          ],
+          correctAnswer: 0,
+          points: 20
+        },
+        {
+          id: 'q3',
+          question: 'Qual é o seu nível de motivação para mudança?',
+          options: [
+            'Extremamente motivado(a)',
+            'Muito motivado(a)',
+            'Moderadamente motivado(a)',
+            'Pouco motivado(a)'
+          ],
+          correctAnswer: 0,
+          points: 30
+        },
+        {
+          id: 'q4',
+          question: 'Você já tentou outras soluções antes?',
+          options: [
+            'Sim, várias, mas nenhuma funcionou',
+            'Sim, algumas',
+            'Poucas tentativas',
+            'Esta é minha primeira tentativa'
+          ],
+          correctAnswer: 0,
+          points: 15
+        },
+        {
+          id: 'q5',
+          question: 'O que mais te impede de alcançar seus objetivos?',
+          options: [
+            'Falta de um método comprovado',
+            'Falta de tempo',
+            'Falta de conhecimento',
+            'Falta de motivação'
+          ],
+          correctAnswer: 0,
+          points: 10
+        }
+      ]
+    } else {
+      return [
+        {
+          id: 'q1',
+          question: `What is your main goal with ${productName}?`,
+          options: [
+            'Fast and effective results',
+            'Gradual improvement',
+            'Just curious',
+            'Not sure'
+          ],
+          correctAnswer: 0,
+          points: 25
+        },
+        {
+          id: 'q2',
+          question: 'How long have you been looking for a solution to this problem?',
+          options: [
+            'More than 6 months',
+            '3-6 months',
+            '1-3 months',
+            'Less than 1 month'
+          ],
+          correctAnswer: 0,
+          points: 20
+        },
+        {
+          id: 'q3',
+          question: 'What is your level of motivation for change?',
+          options: [
+            'Extremely motivated',
+            'Very motivated',
+            'Moderately motivated',
+            'Slightly motivated'
+          ],
+          correctAnswer: 0,
+          points: 30
+        },
+        {
+          id: 'q4',
+          question: 'Have you tried other solutions before?',
+          options: [
+            'Yes, several, but none worked',
+            'Yes, a few',
+            'Few attempts',
+            'This is my first attempt'
+          ],
+          correctAnswer: 0,
+          points: 15
+        },
+        {
+          id: 'q5',
+          question: 'What prevents you most from achieving your goals?',
+          options: [
+            'Lack of a proven method',
+            'Lack of time',
+            'Lack of knowledge',
+            'Lack of motivation'
+          ],
+          correctAnswer: 0,
+          points: 10
+        }
+      ]
+    }
+  }
+
+  private generateResultMessages(countrySettings: CountrySettings) {
+    const lang = countrySettings.language
+    
+    if (lang === 'pt-BR') {
+      return {
+        excellent: {
+          title: '🎉 RESULTADO EXCELENTE!',
+          description: 'Você demonstra todos os sinais de alguém que está pronto para resultados extraordinários!',
+          cta: 'QUERO COMEÇAR AGORA'
+        },
+        good: {
+          title: '👍 BOM RESULTADO!',
+          description: 'Suas respostas mostram que você está no caminho certo e pronto para dar o próximo passo!',
+          cta: 'QUERO SABER MAIS'
+        },
+        average: {
+          title: '⚡ POTENCIAL IDENTIFICADO!',
+          description: 'Você tem potencial, mas precisa da estratégia certa para destravar seus resultados!',
+          cta: 'DESCOBRIR A SOLUÇÃO'
+        },
+        low: {
+          title: '🚀 MOMENTO DE MUDANÇA!',
+          description: 'Este é o momento perfeito para começar sua transformação com a solução certa!',
+          cta: 'COMEÇAR TRANSFORMAÇÃO'
+        }
+      }
+    } else {
+      return {
+        excellent: {
+          title: '🎉 EXCELLENT RESULT!',
+          description: 'You show all the signs of someone ready for extraordinary results!',
+          cta: 'START NOW'
+        },
+        good: {
+          title: '👍 GOOD RESULT!',
+          description: 'Your answers show you are on the right track and ready for the next step!',
+          cta: 'LEARN MORE'
+        },
+        average: {
+          title: '⚡ POTENTIAL IDENTIFIED!',
+          description: 'You have potential, but need the right strategy to unlock your results!',
+          cta: 'DISCOVER SOLUTION'
+        },
+        low: {
+          title: '🚀 TIME FOR CHANGE!',
+          description: 'This is the perfect time to start your transformation with the right solution!',
+          cta: 'START TRANSFORMATION'
+        }
+      }
+    }
+  }
+
+  generate(config: QuizTemplateConfig): {
+    html: string
+    css: string
+    js: string
+    metadata: {
+      templateType: 'quiz'
+      conversionRate: string
+      strategy: string
+    }
+  } {
+    const questions = this.generateQuestions(config.productName, config.countrySettings)
+    const results = this.generateResultMessages(config.countrySettings)
+    const lang = config.countrySettings.language
+    
+    const texts = lang === 'pt-BR' ? {
+      title: `Descubra se o ${config.productName} é ideal para você`,
+      subtitle: 'Responda 5 perguntas rápidas e receba uma análise personalizada',
+      startButton: 'INICIAR TESTE',
+      nextButton: 'PRÓXIMA',
+      resultTitle: 'SEU RESULTADO PERSONALIZADO:',
+      disclaimer: '* Este teste foi desenvolvido por especialistas para identificar o perfil ideal',
+      progress: 'Pergunta',
+      of: 'de'
+    } : {
+      title: `Find out if ${config.productName} is ideal for you`,
+      subtitle: 'Answer 5 quick questions and get a personalized analysis',
+      startButton: 'START TEST',
+      nextButton: 'NEXT',
+      resultTitle: 'YOUR PERSONALIZED RESULT:',
+      disclaimer: '* This test was developed by experts to identify the ideal profile',
+      progress: 'Question',
+      of: 'of'
+    }
+
+    const primaryColor = config.designTokens?.colors?.primary || '#FF6B35'
+    const backgroundColor = config.designTokens?.colors?.background || '#FFFFFF'
+    const textColor = config.designTokens?.colors?.text || '#333333'
+    const fontFamily = config.designTokens?.fonts?.primary || 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+
+    const html = `
+<!DOCTYPE html>
+<html lang="${config.countrySettings.language}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${texts.title}</title>
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <!-- Facebook Pixel -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window,document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', 'YOUR_PIXEL_ID');
+        fbq('track', 'PageView');
+    </script>
+    
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "YOUR_CLARITY_ID");
+    </script>
+    
+    <!-- Personal Tracking -->
+    <script>
+        // Personal tracking code
+        (function() {
+            const track = (event, data) => {
+                fetch('/api/track', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({event, data, url: location.href, timestamp: Date.now()})
+                }).catch(() => {});
+            };
+            window.personalTrack = track;
+            track('page_view', {template: 'quiz', product: '${config.productName}'});
+        })();
+    </script>
+    
+    <style>
+        ${this.generateCSS(primaryColor, backgroundColor, textColor, fontFamily)}
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Intro Screen -->
+        <div id="intro-screen" class="screen active">
+            <div class="content">
+                <div class="header">
+                    <h1>${texts.title}</h1>
+                    <p>${texts.subtitle}</p>
+                </div>
+                
+                <div class="benefits">
+                    <div class="benefit-item">
+                        <span class="icon">⚡</span>
+                        <span>${lang === 'pt-BR' ? 'Resultado em 2 minutos' : 'Result in 2 minutes'}</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="icon">🎯</span>
+                        <span>${lang === 'pt-BR' ? 'Análise personalizada' : 'Personalized analysis'}</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="icon">🔬</span>
+                        <span>${lang === 'pt-BR' ? 'Baseado em ciência' : 'Science-based'}</span>
+                    </div>
+                </div>
+                
+                <button id="start-quiz" class="cta-button">${texts.startButton}</button>
+                
+                <p class="disclaimer">${texts.disclaimer}</p>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="screen">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            
+            <div class="question-counter">
+                <span id="current-q">${texts.progress} 1</span> ${texts.of} ${questions.length}
+            </div>
+            
+            <div class="content">
+                <div id="question-container">
+                    <h2 id="question-text"></h2>
+                    <div id="options-container"></div>
+                </div>
+                
+                <button id="next-button" class="cta-button" style="display: none;">${texts.nextButton}</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="screen">
+            <div class="content">
+                <div id="result-content">
+                    <div class="score-circle">
+                        <span id="final-score">0</span>%
+                    </div>
+                    
+                    <h2 id="result-title"></h2>
+                    <p id="result-description"></p>
+                    
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <strong>${lang === 'pt-BR' ? 'Seu Perfil:' : 'Your Profile:'}</strong>
+                            <span id="profile-type"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>${lang === 'pt-BR' ? 'Recomendação:' : 'Recommendation:'}</strong>
+                            <span id="recommendation"></span>
+                        </div>
+                    </div>
+                    
+                    <a href="${config.affiliateUrl}" id="final-cta" class="cta-button pulse"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        ${this.generateJS(questions, results, config.affiliateUrl)}
+    </script>
+</body>
+</html>`
+
+    return {
+      html,
+      css: this.generateCSS(primaryColor, backgroundColor, textColor, fontFamily),
+      js: this.generateJS(questions, results, config.affiliateUrl),
+      metadata: {
+        templateType: 'quiz',
+        conversionRate: '10-15%',
+        strategy: 'Interactive quiz with personalized results leading to high-intent conversion'
+      }
+    }
+  }
+
+  private generateCSS(primaryColor: string, backgroundColor: string, textColor: string, fontFamily: string): string {
+    return `
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: ${fontFamily};
+    background: linear-gradient(135deg, ${backgroundColor} 0%, #f8f9fa 100%);
+    color: ${textColor};
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.quiz-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.screen {
+    display: none;
+    width: 100%;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: ${primaryColor};
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.header p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.benefit-item .icon {
+    font-size: 1.5rem;
+}
+
+.cta-button {
+    background: linear-gradient(45deg, ${primaryColor}, ${primaryColor}dd);
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin: 20px 0;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.disclaimer {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 20px;
+    font-style: italic;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(45deg, ${primaryColor}, ${primaryColor}dd);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+.question-counter {
+    font-weight: 600;
+    color: ${primaryColor};
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+#question-text {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: ${textColor};
+    margin-bottom: 30px;
+    line-height: 1.3;
+}
+
+#options-container {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.option {
+    background: white;
+    border: 2px solid #e9ecef;
+    padding: 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: left;
+}
+
+.option:hover {
+    border-color: ${primaryColor};
+    background: ${primaryColor}11;
+}
+
+.option.selected {
+    border-color: ${primaryColor};
+    background: ${primaryColor};
+    color: white;
+    transform: scale(1.02);
+}
+
+.score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, ${primaryColor}, ${primaryColor}dd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.score-circle span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+#result-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: ${primaryColor};
+}
+
+#result-description {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.result-details {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.detail-item:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .quiz-container {
+        padding: 10px;
+    }
+    
+    .content {
+        padding: 30px 20px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    #question-text {
+        font-size: 1.5rem;
+    }
+    
+    .benefits {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-item {
+        flex-direction: column;
+        gap: 5px;
+    }
+}`
+  }
+
+  private generateJS(questions: QuizQuestion[], results: any, affiliateUrl: string): string {
+    return `
+let currentQuestion = 0;
+let totalScore = 0;
+let answers = [];
+
+const questionsData = ${JSON.stringify(questions)};
+const resultsData = ${JSON.stringify(results)};
+
+// Track events
+const trackEvent = (event, data = {}) => {
+    if (typeof gtag !== 'undefined') gtag('event', event, data);
+    if (typeof fbq !== 'undefined') fbq('track', event, data);
+    if (typeof personalTrack !== 'undefined') personalTrack(event, data);
+};
+
+// Start quiz
+document.getElementById('start-quiz').addEventListener('click', () => {
+    trackEvent('quiz_started', {product_name: '${questions[0]?.question.includes('produto') ? 'Product' : 'Product'}'});
+    showScreen('quiz-screen');
+    showQuestion(0);
+});
+
+// Show specific screen
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById(screenId).classList.add('active');
+}
+
+// Show question
+function showQuestion(questionIndex) {
+    const question = questionsData[questionIndex];
+    const progress = ((questionIndex + 1) / questionsData.length) * 100;
+    
+    // Update progress
+    document.querySelector('.progress-fill').style.width = progress + '%';
+    document.getElementById('current-q').textContent = 
+        '${questions[0]?.question.includes('principal objetivo') ? 'Pergunta' : 'Question'} ' + (questionIndex + 1);
+    
+    // Update question
+    document.getElementById('question-text').textContent = question.question;
+    
+    // Update options
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = '';
+    
+    question.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+        optionElement.textContent = option;
+        optionElement.addEventListener('click', () => selectOption(index));
+        optionsContainer.appendChild(optionElement);
+    });
+    
+    // Hide next button
+    document.getElementById('next-button').style.display = 'none';
+}
+
+// Select option
+function selectOption(optionIndex) {
+    // Remove previous selection
+    document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+    
+    // Mark current selection
+    document.querySelectorAll('.option')[optionIndex].classList.add('selected');
+    
+    // Store answer
+    answers[currentQuestion] = optionIndex;
+    
+    // Show next button
+    document.getElementById('next-button').style.display = 'inline-block';
+}
+
+// Next question
+document.getElementById('next-button').addEventListener('click', () => {
+    const question = questionsData[currentQuestion];
+    const selectedAnswer = answers[currentQuestion];
+    
+    // Calculate score
+    if (selectedAnswer === question.correctAnswer) {
+        totalScore += question.points || 0;
+    }
+    
+    // Track question completion
+    trackEvent('quiz_question_answered', {
+        question_number: currentQuestion + 1,
+        answer_index: selectedAnswer,
+        points_earned: selectedAnswer === question.correctAnswer ? (question.points || 0) : 0
+    });
+    
+    currentQuestion++;
+    
+    if (currentQuestion < questionsData.length) {
+        showQuestion(currentQuestion);
+    } else {
+        showResults();
+    }
+});
+
+// Show results
+function showResults() {
+    const percentageScore = Math.round((totalScore / 100) * 100);
+    let resultType, profileType, recommendation;
+    
+    if (percentageScore >= 80) {
+        resultType = 'excellent';
+        profileType = '${questions[0]?.question.includes('principal objetivo') ? 'Perfil de Alta Performance' : 'High Performance Profile'}';
+        recommendation = '${questions[0]?.question.includes('principal objetivo') ? 'Aproveite sua motivação e comece imediatamente' : 'Take advantage of your motivation and start immediately'}';
+    } else if (percentageScore >= 60) {
+        resultType = 'good';
+        profileType = '${questions[0]?.question.includes('principal objetivo') ? 'Perfil Promissor' : 'Promising Profile'}';
+        recommendation = '${questions[0]?.question.includes('principal objetivo') ? 'Você está no caminho certo, dê o próximo passo' : 'You are on the right track, take the next step'}';
+    } else if (percentageScore >= 40) {
+        resultType = 'average';
+        profileType = '${questions[0]?.question.includes('principal objetivo') ? 'Perfil com Potencial' : 'Profile with Potential'}';
+        recommendation = '${questions[0]?.question.includes('principal objetivo') ? 'Você precisa da estratégia certa para destravar' : 'You need the right strategy to unlock your potential'}';
+    } else {
+        resultType = 'low';
+        profileType = '${questions[0]?.question.includes('principal objetivo') ? 'Perfil Iniciante' : 'Beginner Profile'}';
+        recommendation = '${questions[0]?.question.includes('principal objetivo') ? 'Este é o momento perfeito para começar' : 'This is the perfect time to start'}';
+    }
+    
+    const result = resultsData[resultType];
+    
+    // Update result screen
+    document.getElementById('final-score').textContent = percentageScore;
+    document.getElementById('result-title').textContent = result.title;
+    document.getElementById('result-description').textContent = result.description;
+    document.getElementById('profile-type').textContent = profileType;
+    document.getElementById('recommendation').textContent = recommendation;
+    document.getElementById('final-cta').textContent = result.cta;
+    
+    // Track quiz completion
+    trackEvent('quiz_completed', {
+        total_score: totalScore,
+        percentage_score: percentageScore,
+        result_type: resultType,
+        profile_type: profileType
+    });
+    
+    showScreen('result-screen');
+    
+    // Track CTA clicks
+    document.getElementById('final-cta').addEventListener('click', () => {
+        trackEvent('quiz_cta_clicked', {
+            result_type: resultType,
+            percentage_score: percentageScore
+        });
+    });
+}
+
+// Auto-advance after selection (optional enhancement)
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('option')) {
+        setTimeout(() => {
+            if (document.getElementById('next-button').style.display === 'inline-block') {
+                // Auto-advance after 1 second for better UX
+                // document.getElementById('next-button').click();
+            }
+        }, 1000);
+    }
+});
+`
+  }
+}
