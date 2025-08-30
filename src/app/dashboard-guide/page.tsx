@@ -517,10 +517,10 @@ export default function SystemGuidePage() {
                   <div className="bg-red-50 p-3 rounded-lg">
                     <h4 className="font-semibold">Triggers de Ação:</h4>
                     <ul className="text-sm mt-1 space-y-1">
-                      <li>• <strong>Scale Up:</strong> ROAS > 4:1 por 2 dias</li>
-                      <li>• <strong>Scale Down:</strong> ROAS < 2:1 por 3 dias</li>
-                      <li>• <strong>Pause:</strong> ROAS < 1.5:1 por 2 dias</li>
-                      <li>• <strong>Optimize:</strong> CTR decline > 20%</li>
+                      <li>• <strong>Scale Up:</strong> ROAS &gt; 4:1 por 2 dias</li>
+                      <li>• <strong>Scale Down:</strong> ROAS &lt; 2:1 por 3 dias</li>
+                      <li>• <strong>Pause:</strong> ROAS &lt; 1.5:1 por 2 dias</li>
+                      <li>• <strong>Optimize:</strong> CTR decline &gt; 20%</li>
                     </ul>
                   </div>
 
