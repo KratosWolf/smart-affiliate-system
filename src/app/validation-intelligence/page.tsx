@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
+import BackToDashboard from '@/components/BackToDashboard'
 import { 
   Target, 
   Search, 
@@ -118,6 +119,8 @@ export default function ValidationIntelligencePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
       <div className="max-w-6xl mx-auto">
+        <BackToDashboard />
+        
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -126,9 +129,70 @@ export default function ValidationIntelligencePage() {
             </div>
             <h1 className="text-4xl font-bold text-gray-900">Product Validation + Intelligence</h1>
           </div>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-600 mb-6">
             Complete Product Analysis: Validation + YouTube + Ads + Competition
           </p>
+          
+          {/* Detailed Criteria Section */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-left max-w-6xl mx-auto">
+            <h3 className="text-lg font-bold text-blue-900 mb-4 text-center">📋 Critérios de Validação (Baseado no PLAYBOOK)</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white p-4 rounded-lg border">
+                <h4 className="font-semibold text-blue-800 mb-3">💰 CPA Targets (FIXOS)</h4>
+                <ul className="text-sm space-y-1">
+                  <li>🎯 <strong>CPA Target:</strong> 40-45% da comissão</li>
+                  <li>🚨 <strong>CPA Máximo:</strong> 80% da comissão</li>
+                  <li>🛑 <strong>Stop Loss:</strong> 100% da comissão (sem venda)</li>
+                  <li>💰 <strong>Budget Teste:</strong> R$350 mínimo ou 5x comissão</li>
+                  <li>📈 <strong>ROI Mínimo:</strong> 150% para prosseguir</li>
+                </ul>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border">
+                <h4 className="font-semibold text-blue-800 mb-3">🔍 Análise Automática</h4>
+                <ul className="text-sm space-y-1">
+                  <li>🏆 <strong>Top 10 Competidores:</strong> Análise completa automática</li>
+                  <li>💬 <strong>CTAs + Benefits:</strong> Extraídos dos concorrentes</li>
+                  <li>💲 <strong>CPC Estimado:</strong> Baseado em dados reais</li>
+                  <li>📊 <strong>Competition Level:</strong> Low/Medium/High/Very High</li>
+                  <li>🔍 <strong>Google Search API:</strong> Volume de busca real</li>
+                </ul>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border">
+                <h4 className="font-semibold text-blue-800 mb-3">📺 Intelligence Sources</h4>
+                <ul className="text-sm space-y-1">
+                  <li>👑 <strong>Golden Channels:</strong> @butecohits4948, @LizyRomance, @val_le</li>
+                  <li>📺 <strong>Monitor Channels:</strong> @legitdiv, @wrestlingfullhd, @wrestlingbest1, @RookieSubs</li>
+                  <li>🏢 <strong>Primary Advertiser:</strong> Y&F EMPREENDIMENTOS DIGITAIS LTDA</li>
+                  <li>💎 <strong>Exclusive Products:</strong> Glucosense (45%), NerveCalm (40%)</li>
+                </ul>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border">
+                <h4 className="font-semibold text-blue-800 mb-3">🎯 Scoring System</h4>
+                <ul className="text-sm space-y-1">
+                  <li>🔥 <strong>Hot Score (0-40):</strong> Frequency + recency</li>
+                  <li>💎 <strong>Exclusivity Score (0-30):</strong> Restriction level</li>
+                  <li>⚔️ <strong>Competition Score (0-30):</strong> YouTube vs Ads ratio</li>
+                  <li>🏆 <strong>80+ Score:</strong> Ação imediata recomendada</li>
+                  <li>🔐 <strong>Exclusive/Super-exclusive:</strong> Research processo afiliado</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mt-4">
+              <h4 className="font-semibold text-green-800 mb-2">✅ Como Funciona a Validação:</h4>
+              <ol className="text-sm space-y-1">
+                <li><strong>1.</strong> Insira produto e dados de comissão</li>
+                <li><strong>2.</strong> Sistema calcula CPA targets baseado na comissão</li>
+                <li><strong>3.</strong> Google API busca volume + top 10 competidores</li>
+                <li><strong>4.</strong> Intelligence analisa Golden Sources + Advertisers</li>
+                <li><strong>5.</strong> Scoring final determina viabilidade (0-100)</li>
+              </ol>
+            </div>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

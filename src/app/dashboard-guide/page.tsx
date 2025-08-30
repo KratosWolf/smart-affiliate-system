@@ -24,15 +24,35 @@ import {
   Play,
   Code,
   Database,
-  Cpu
+  Cpu,
+  FileText
 } from 'lucide-react'
 
 export default function SystemGuidePage() {
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const navigationSections = [
+    { id: 'overview', title: '🏗️ Visão Geral', icon: Cpu },
+    { id: 'discovery', title: '🔍 Discovery', icon: Search },
+    { id: 'validation', title: '🎯 Validation', icon: Target },
+    { id: 'presell', title: '📄 Pre-Sell', icon: FileText },
+    { id: 'campaigns', title: '📈 Campanhas', icon: BarChart3 },
+    { id: 'tracking', title: '📊 ROI Tracking', icon: Activity },
+    { id: 'domains', title: '🌐 Domínios', icon: Globe },
+    { id: 'metrics', title: '📈 Métricas', icon: TrendingUp }
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="text-center">
+        <div className="text-center" id="top">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
               <Settings className="w-8 h-8 text-white" />
@@ -52,13 +72,57 @@ export default function SystemGuidePage() {
           </div>
         </div>
 
+        {/* Navigation Menu */}
+        <Card className="sticky top-4 z-10 shadow-lg">
+          <CardContent className="py-4">
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              <span className="text-sm font-semibold text-gray-700 mr-2">Navegação Rápida:</span>
+              {navigationSections.map((section) => {
+                const IconComponent = section.icon
+                return (
+                  <Button
+                    key={section.id}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => scrollToSection(section.id)}
+                    className="text-xs flex items-center gap-1"
+                  >
+                    <IconComponent className="w-3 h-3" />
+                    {section.title}
+                  </Button>
+                )
+              })}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={scrollToTop}
+                className="text-xs flex items-center gap-1 ml-2"
+              >
+                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                Topo
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* System Overview */}
-        <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50">
+        <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50" id="overview">
           <CardHeader>
-            <CardTitle className="text-2xl text-blue-900 flex items-center gap-2">
-              <Cpu className="w-6 h-6" />
-              Visão Geral do Sistema
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl text-blue-900 flex items-center gap-2">
+                <Cpu className="w-6 h-6" />
+                Visão Geral do Sistema
+              </CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={scrollToTop}
+                className="text-xs flex items-center gap-1"
+              >
+                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                Topo
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4 text-blue-800">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -89,12 +153,23 @@ export default function SystemGuidePage() {
         </Card>
 
         {/* Discovery + Mining */}
-        <Card className="border-green-200">
+        <Card className="border-green-200" id="discovery">
           <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Search className="w-6 h-6 text-green-600" />
-              🔍 Discovery + Mining - Descoberta Automática de Produtos
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <Search className="w-6 h-6 text-green-600" />
+                🔍 Discovery + Mining - Descoberta Automática de Produtos
+              </CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={scrollToTop}
+                className="text-xs flex items-center gap-1"
+              >
+                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                Topo
+              </Button>
+            </div>
             <CardDescription>
               Sistema de mineração automática que descobre 15-30 produtos diariamente às 6:00 AM
             </CardDescription>
@@ -192,12 +267,23 @@ export default function SystemGuidePage() {
         </Card>
 
         {/* Validation + Intelligence */}
-        <Card className="border-blue-200">
+        <Card className="border-blue-200" id="validation">
           <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Target className="w-6 h-6 text-blue-600" />
-              🎯 Validation + Intelligence - Análise Completa de Produtos
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <Target className="w-6 h-6 text-blue-600" />
+                🎯 Validation + Intelligence - Análise Completa de Produtos
+              </CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={scrollToTop}
+                className="text-xs flex items-center gap-1"
+              >
+                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                Topo
+              </Button>
+            </div>
             <CardDescription>
               Validação profunda com Google API real + análise de competidores + YouTube Intelligence
             </CardDescription>
@@ -301,12 +387,23 @@ export default function SystemGuidePage() {
         </Card>
 
         {/* Presell Generator */}
-        <Card className="border-purple-200">
+        <Card className="border-purple-200" id="presell">
           <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <TrendingUp className="w-6 h-6 text-purple-600" />
-              💰 Presell Generator - Templates de Alta Conversão
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <TrendingUp className="w-6 h-6 text-purple-600" />
+                💰 Presell Generator - Templates de Alta Conversão
+              </CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={scrollToTop}
+                className="text-xs flex items-center gap-1"
+              >
+                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                Topo
+              </Button>
+            </div>
             <CardDescription>
               6 templates de presell otimizados com taxas de conversão entre 8-18%
             </CardDescription>
@@ -407,12 +504,23 @@ export default function SystemGuidePage() {
         </Card>
 
         {/* Campaign Builder */}
-        <Card className="border-orange-200">
+        <Card className="border-orange-200" id="campaigns">
           <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <BarChart3 className="w-6 h-6 text-orange-600" />
-              📈 Campaign Builder - Criação de Campanhas Google Ads
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <BarChart3 className="w-6 h-6 text-orange-600" />
+                📈 Campaign Builder - Criação de Campanhas Google Ads
+              </CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={scrollToTop}
+                className="text-xs flex items-center gap-1"
+              >
+                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                Topo
+              </Button>
+            </div>
             <CardDescription>
               Geração automática de campanhas Google Ads com export CSV e estrutura completa
             </CardDescription>
@@ -516,12 +624,23 @@ export default function SystemGuidePage() {
         </Card>
 
         {/* ROI Tracking */}
-        <Card className="border-red-200">
+        <Card className="border-red-200" id="tracking">
           <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Activity className="w-6 h-6 text-red-600" />
-              📊 ROI Tracking - Monitoramento e Auto-Scaling
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <Activity className="w-6 h-6 text-red-600" />
+                📊 ROI Tracking - Monitoramento e Auto-Scaling
+              </CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={scrollToTop}
+                className="text-xs flex items-center gap-1"
+              >
+                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                Topo
+              </Button>
+            </div>
             <CardDescription>
               Sistema de tracking com janela rolling de 3 dias e automação de scaling horizontal
             </CardDescription>
@@ -624,12 +743,23 @@ export default function SystemGuidePage() {
         </Card>
 
         {/* System Automation */}
-        <Card className="border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
+        <Card className="border-green-200 bg-gradient-to-r from-green-50 to-emerald-50" id="domains">
           <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2 text-green-900">
-              <Calendar className="w-6 h-6" />
-              ⏰ Sistema de Automação - 6:00 AM Daily Mining
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl flex items-center gap-2 text-green-900">
+                <Calendar className="w-6 h-6" />
+                ⏰ Sistema de Automação - 6:00 AM Daily Mining
+              </CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={scrollToTop}
+                className="text-xs flex items-center gap-1"
+              >
+                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                Topo
+              </Button>
+            </div>
             <CardDescription className="text-green-700">
               Rotina automática diária que roda todo o pipeline de descoberta às 6:00 AM
             </CardDescription>
@@ -720,12 +850,23 @@ export default function SystemGuidePage() {
         </Card>
 
         {/* Technical Architecture */}
-        <Card className="border-gray-200">
+        <Card className="border-gray-200" id="metrics">
           <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Database className="w-6 h-6 text-gray-600" />
-              🏗️ Arquitetura Técnica Completa
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <Database className="w-6 h-6 text-gray-600" />
+                🏗️ Arquitetura Técnica Completa
+              </CardTitle>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={scrollToTop}
+                className="text-xs flex items-center gap-1"
+              >
+                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                Topo
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import BackToDashboard from '@/components/BackToDashboard'
 import { 
   Search, 
   TrendingUp, 
@@ -84,9 +85,9 @@ export default function ProductDiscoveryPage() {
   ]
 
   const paymentModels = [
-    { id: 'both', name: 'CPA + Commission', description: 'Buscar todos os tipos de pagamento', icon: '💰' },
-    { id: 'cpa', name: 'CPA Only', description: 'Apenas produtos com CPA definido', icon: '🎯' },
-    { id: 'commission', name: 'Commission Only', description: 'Apenas produtos com comissão %', icon: '📈' }
+    { id: 'both', name: 'CPA + Commission', description: 'Buscar todos os tipos (PLAYBOOK: CPA 40-45%)', icon: '💰' },
+    { id: 'cpa', name: 'CPA Only', description: 'CPA Target: 40-45% da comissão (Máx: 80%)', icon: '🎯' },
+    { id: 'commission', name: 'Commission Only', description: 'Produtos exclusivos: 35-50% commission', icon: '📈' }
   ]
 
   const handleDiscover = async () => {
@@ -100,8 +101,8 @@ export default function ProductDiscoveryPage() {
           platforms: selectedPlatforms,
           paymentModel,
           searchMode,
-          countries: ['US', 'CA', 'GB', 'AU'],
-          languages: ['en', 'pt']
+          countries: ['US', 'FR', 'DE', 'GB', 'CA', 'DK', 'SE', 'PL', 'RO'],
+          languages: ['en', 'pt', 'fr', 'de']
         })
       })
       
@@ -171,15 +172,94 @@ export default function ProductDiscoveryPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-6">
       <div className="max-w-7xl mx-auto">
+        <BackToDashboard />
+        
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Search className="w-8 h-8 text-blue-600" />
-            <h1 className="text-4xl font-bold text-gray-900">Product Discovery</h1>
+            <h1 className="text-4xl font-bold text-gray-900">🔍 Product Discovery & Mining</h1>
           </div>
-          <p className="text-xl text-gray-600">
-            Automated product research from international affiliate platforms
+          <p className="text-xl text-gray-600 mb-6">
+            Sistema Quality-First com critérios rigorosos • 15-30 produtos/dia • Automação às 6:00 AM
           </p>
+          
+          {/* PLAYBOOK Quality-First Overview */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="bg-red-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                  <span className="text-2xl">📺</span>
+                </div>
+                <h4 className="font-semibold text-gray-800 mb-2">YouTube Mining</h4>
+                <p className="text-sm text-gray-600">5K+ subs, 50+ videos<br/>500K+ total views</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-purple-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                  <span className="text-2xl">🎩</span>
+                </div>
+                <h4 className="font-semibold text-gray-800 mb-2">Ads Transparency</h4>
+                <p className="text-sm text-gray-600">10+ produtos ativos<br/>$5K+ monthly spend</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-green-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                  <span className="text-2xl">🌍</span>
+                </div>
+                <h4 className="font-semibold text-gray-800 mb-2">Multi-Geo</h4>
+                <p className="text-sm text-gray-600">9 países simultâneos<br/>Gap detection 60+ dias</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* PLAYBOOK Criteria Details */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">📋 Critérios Quality-First (RIGOROSOS)</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-semibold text-red-800 mb-3">📺 YouTube Channels Mining</h4>
+              <ul className="text-sm space-y-1">
+                <li>📋 <strong>Subscribers:</strong> Mínimo 5.000 (não 1K)</li>
+                <li>📹 <strong>Videos:</strong> Mínimo 50 (muito ativo)</li>
+                <li>👁️ <strong>Views:</strong> Mínimo 500.000 total</li>
+                <li>📈 <strong>Engagement:</strong> 50+ views por subscriber</li>
+                <li>🏆 <strong>Premium:</strong> 5+ produtos únicos, 2+ recorrentes</li>
+                <li>🟡 <strong>Good:</strong> 3+ produtos únicos, 1+ recorrente</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-purple-800 mb-3">🎩 Ads Transparency Mining</h4>
+              <ul className="text-sm space-y-1">
+                <li>💼 <strong>Portfolio:</strong> Mínimo 10 produtos (não 5)</li>
+                <li>💰 <strong>Spend estimado:</strong> $5.000+ monthly</li>
+                <li>📅 <strong>Campaign duration:</strong> 30+ dias ativo</li>
+                <li>🎯 <strong>Targeting:</strong> Advanced ou Sophisticated</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div>
+              <h4 className="font-semibold text-blue-800 mb-3">🎆 Golden Sources (SEUS DADOS)</h4>
+              <ul className="text-sm space-y-1">
+                <li>📺 @butecohits4948 (Buteco Hits)</li>
+                <li>👩 @LizyRomance (LizyRomance)</li>
+                <li>👨‍💼 @val_le (Val Le)</li>
+                <li>⚖️ @legitdiv (Legitdiv)</li>
+                <li>🤼 @wrestlingfullhd, @wrestlingbest1</li>
+                <li>🎆 @RookieSubs (Rookie Subs)</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-green-800 mb-3">🌍 Multi-Geo Strategy</h4>
+              <ul className="text-sm space-y-1">
+                <li>🇺🇸 <strong>US, 🇫🇷 FR, 🇩🇪 DE, 🇬🇧 GB:</strong> Principais</li>
+                <li>🇨🇦 <strong>CA, 🇩🇰 DK, 🇸🇪 SE:</strong> Secundários</li>
+                <li>🇵🇱 <strong>PL, 🇷🇴 RO:</strong> Emergentes</li>
+                <li>🔍 <strong>Gap Patterns:</strong> Produtos ausentes 60+ dias</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         {/* Discovery Configuration */}
@@ -190,7 +270,7 @@ export default function ProductDiscoveryPage() {
               Discovery Configuration
             </CardTitle>
             <CardDescription>
-              Busca inteligente por produtos com maior potencial - CPA e comissões
+              Automação diária às 6:00 AM • Target 15-30 produtos/dia • Quality-First approach
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -279,6 +359,50 @@ export default function ProductDiscoveryPage() {
                   </div>
                   <div className="text-sm text-gray-600">
                     Filtrar por categorias específicas
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Exclusive Products & Primary Advertiser */}
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-orange-800 mb-3">🎆 Produtos Exclusivos</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>💊 Glucosense:</span>
+                      <span className="font-semibold">45% comm. (95% pop.)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>🧠 NerveCalm:</span>
+                      <span className="font-semibold">40% comm. (88% pop.)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>🩺 GlicoShield:</span>
+                      <span className="font-semibold">50% comm. (92% pop.)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>💧 GutDrops:</span>
+                      <span className="font-semibold">35% comm. (85% pop.)</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-orange-800 mb-3">💼 Primary Advertiser</h4>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="text-gray-600">Company:</span>
+                      <div className="font-semibold">Y&F EMPREENDIMENTOS DIGITAIS LTDA</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Domain:</span>
+                      <div className="font-semibold text-blue-600">global-review2025.blog</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Priority:</span>
+                      <div className="font-semibold text-red-600">VERY HIGH</div>
+                    </div>
                   </div>
                 </div>
               </div>

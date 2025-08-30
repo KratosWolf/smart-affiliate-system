@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import BackToDashboard from '@/components/BackToDashboard'
 import { Copy, Search, CheckCircle } from 'lucide-react'
 
 export default function ChannelConverterPage() {
@@ -63,6 +64,8 @@ export default function ChannelConverterPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
       <div className="max-w-4xl mx-auto">
+        <BackToDashboard />
+        
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">

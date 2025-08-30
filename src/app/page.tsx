@@ -73,28 +73,20 @@ export default function Home() {
       metrics: 'Real Google API • CPA 40-50% • Competition Intelligence • Multi-source analysis'
     },
     {
-      title: 'Presell Generator',
-      description: '5 high-converting templates (8-18% conversion)',
+      title: '📄 Presell Generator',
+      description: '✅ OPERATIONAL - Templates otimizados baseados em critérios PLAYBOOK',
       icon: <TrendingUp className="w-6 h-6 text-purple-600" />,
-      href: '/presell',
-      status: 'active',
-      metrics: '5 templates available'
+      href: '/presell-generator',
+      status: 'operational',
+      metrics: '5 templates • CPA 40-45% • Multi-geo support'
     },
     {
-      title: 'Campaign Builder',
-      description: 'Google Ads campaigns with CSV export',
-      icon: <BarChart3 className="w-6 h-6 text-orange-600" />,
-      href: '/campaigns',
-      status: 'active',
-      metrics: 'CSV + 5-file structure'
-    },
-    {
-      title: 'ROI Tracking',
-      description: '3-day rolling window with auto-scaling',
-      icon: <Activity className="w-6 h-6 text-red-600" />,
+      title: '📊 ROI Tracking',
+      description: '✅ OPERATIONAL - ROI tracking com scaling automático',
+      icon: <Activity className="w-6 h-6 text-orange-600" />,
       href: '/tracking',
-      status: 'active',
-      metrics: stats ? `${stats.tracking.activeCampaigns} campaigns` : 'Loading...'
+      status: 'operational',
+      metrics: 'Rolling 3-day window • Auto-scaling >60%'
     },
     {
       title: 'Domain Generator',
@@ -376,39 +368,64 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-gray-900">Módulos do Sistema</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {modules.map((module, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      {module.icon}
-                      <div>
-                        <CardTitle className="text-lg">{module.title}</CardTitle>
-                        <Badge 
-                          variant={module.status === 'active' ? 'default' : 'secondary'}
-                          className="mt-1"
-                        >
-                          {module.status}
-                        </Badge>
+              module.href !== '#' ? (
+                <Card key={index} 
+                      className="hover:shadow-lg transition-shadow cursor-pointer"
+                      onClick={() => window.open(module.href, '_blank')}>
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        {module.icon}
+                        <div>
+                          <CardTitle className="text-lg">{module.title}</CardTitle>
+                          <Badge 
+                            variant={module.status === 'operational' ? 'default' : module.status === 'active' ? 'secondary' : 'outline'}
+                            className={`mt-1 ${module.status === 'operational' ? 'bg-green-100 text-green-800' : ''}`}
+                          >
+                            {module.status}
+                          </Badge>
+                        </div>
+                      </div>
+                      <ArrowUpRight className="w-5 h-5 text-gray-400" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="mb-3">
+                      {module.description}
+                    </CardDescription>
+                    <div className="text-sm font-medium text-blue-600">
+                      {module.metrics}
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card key={index} className="hover:shadow-lg transition-shadow opacity-50">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        {module.icon}
+                        <div>
+                          <CardTitle className="text-lg">{module.title}</CardTitle>
+                          <Badge 
+                            variant="outline"
+                            className="mt-1"
+                          >
+                            Em desenvolvimento
+                          </Badge>
+                        </div>
                       </div>
                     </div>
-                    {module.href !== '#' && (
-                      <Link href={module.href as any}>
-                        <Button variant="ghost" size="sm">
-                          <ArrowUpRight className="w-4 h-4" />
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="mb-3">
-                    {module.description}
-                  </CardDescription>
-                  <div className="text-sm font-medium text-blue-600">
-                    {module.metrics}
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="mb-3">
+                      {module.description}
+                    </CardDescription>
+                    <div className="text-sm font-medium text-gray-500">
+                      {module.metrics}
+                    </div>
+                  </CardContent>
+                </Card>
+              )
             ))}
           </div>
         </div>
@@ -426,53 +443,49 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Link href="/discovery">
-                <Button variant="outline" className="w-full h-auto p-4">
-                  <div className="text-center">
-                    <Search className="w-6 h-6 mx-auto mb-2" />
-                    <div className="font-medium">Encontrar Produtos</div>
-                    <div className="text-xs text-muted-foreground">
-                      Descobrir novas oportunidades
-                    </div>
+              <Button variant="outline" className="w-full h-auto p-4" 
+                      onClick={() => window.open('/discovery', '_blank')}>
+                <div className="text-center">
+                  <Search className="w-6 h-6 mx-auto mb-2" />
+                  <div className="font-medium">Encontrar Produtos</div>
+                  <div className="text-xs text-muted-foreground">
+                    Descobrir novas oportunidades
                   </div>
-                </Button>
-              </Link>
+                </div>
+              </Button>
 
-              <Link href={"/presell" as any}>
-                <Button variant="outline" className="w-full h-auto p-4">
-                  <div className="text-center">
-                    <TrendingUp className="w-6 h-6 mx-auto mb-2" />
-                    <div className="font-medium">Gerar Presell</div>
-                    <div className="text-xs text-muted-foreground">
-                      5 templates disponíveis
-                    </div>
+              <Button variant="outline" className="w-full h-auto p-4"
+                      onClick={() => window.open('/presell-generator', '_blank')}>
+                <div className="text-center">
+                  <TrendingUp className="w-6 h-6 mx-auto mb-2" />
+                  <div className="font-medium">Gerar Presell</div>
+                  <div className="text-xs text-muted-foreground">
+                    5 templates disponíveis
                   </div>
-                </Button>
-              </Link>
+                </div>
+              </Button>
 
-              <Link href="/campaigns">
-                <Button variant="outline" className="w-full h-auto p-4">
-                  <div className="text-center">
-                    <BarChart3 className="w-6 h-6 mx-auto mb-2" />
-                    <div className="font-medium">Criar Campanha</div>
-                    <div className="text-xs text-muted-foreground">
-                      Google Ads + CSV
-                    </div>
+              <Button variant="outline" className="w-full h-auto p-4"
+                      onClick={() => window.open('/validation-intelligence', '_blank')}>
+                <div className="text-center">
+                  <Target className="w-6 h-6 mx-auto mb-2" />
+                  <div className="font-medium">Validar Produto</div>
+                  <div className="text-xs text-muted-foreground">
+                    CPA 40-45% + Intelligence
                   </div>
-                </Button>
-              </Link>
+                </div>
+              </Button>
 
-              <Link href="/tracking">
-                <Button variant="outline" className="w-full h-auto p-4">
-                  <div className="text-center">
-                    <Activity className="w-6 h-6 mx-auto mb-2" />
-                    <div className="font-medium">Monitorar ROI</div>
-                    <div className="text-xs text-muted-foreground">
-                      Tracking 3 dias
-                    </div>
+              <Button variant="outline" className="w-full h-auto p-4"
+                      onClick={() => window.open('/tracking', '_blank')}>
+                <div className="text-center">
+                  <Activity className="w-6 h-6 mx-auto mb-2" />
+                  <div className="font-medium">Monitorar ROI</div>
+                  <div className="text-xs text-muted-foreground">
+                    Tracking 3 dias
                   </div>
-                </Button>
-              </Link>
+                </div>
+              </Button>
             </div>
           </CardContent>
         </Card>

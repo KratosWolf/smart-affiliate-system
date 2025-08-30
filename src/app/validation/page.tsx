@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import BackToDashboard from '@/components/BackToDashboard'
 import { Target, Search, TrendingUp, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
@@ -88,6 +89,8 @@ export default function ValidationPage() {
   return (
     <div className="min-h-screen bg-gray-50/30 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
+        <BackToDashboard />
+        
         {/* Header */}
         <Card>
           <CardHeader className="text-center">

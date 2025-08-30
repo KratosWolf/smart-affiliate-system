@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import BackToDashboard from '@/components/BackToDashboard'
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -150,15 +151,51 @@ export default function ROITrackingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-6">
       <div className="max-w-7xl mx-auto">
+        <BackToDashboard />
+        
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Activity className="w-8 h-8 text-green-600" />
-            <h1 className="text-4xl font-bold text-gray-900">ROI Tracking</h1>
+            <h1 className="text-4xl font-bold text-gray-900">📈 ROI Tracking & Scaling</h1>
           </div>
-          <p className="text-xl text-gray-600">
-            Monitoramento de ROI com janela móvel de 3 dias • Scaling automático &gt; 60%
+          <p className="text-xl text-gray-600 mb-6">
+            Monitoramento baseado nos critérios PLAYBOOK • CPA 40-45% • ROI mínimo 150%
           </p>
+          
+          {/* PLAYBOOK Criteria Overview */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="bg-green-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                  <span className="text-2xl">🎯</span>
+                </div>
+                <h4 className="font-semibold text-gray-800 mb-2">CPA Target</h4>
+                <p className="text-sm text-gray-600">40-45% da comissão<br/>Máx: 80%</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-blue-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                  <span className="text-2xl">📈</span>
+                </div>
+                <h4 className="font-semibold text-gray-800 mb-2">ROI Mínimo</h4>
+                <p className="text-sm text-gray-600">150% para prosseguir<br/>Scaling > 60%</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-purple-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                  <span className="text-2xl">💵</span>
+                </div>
+                <h4 className="font-semibold text-gray-800 mb-2">Budget Teste</h4>
+                <p className="text-sm text-gray-600">R$350 mínimo<br/>ou 5x comissão</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-red-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                  <span className="text-2xl">🛑</span>
+                </div>
+                <h4 className="font-semibold text-gray-800 mb-2">Stop Loss</h4>
+                <p className="text-sm text-gray-600">100% da comissão<br/>Pause automático</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Controls */}
@@ -179,6 +216,40 @@ export default function ROITrackingPage() {
               Última atualização: {lastUpdate}
             </div>
           )}
+        </div>
+
+        {/* PLAYBOOK Criteria Details */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">📋 Critérios de Tracking</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h4 className="font-semibold text-green-800 mb-3">📊 Intelligence Sources</h4>
+              <ul className="text-sm space-y-1">
+                <li>📺 <strong>YouTube Channels:</strong> @butecohits4948, @LizyRomance</li>
+                <li>📺 <strong>Canais Premium:</strong> @val_le, @legitdiv</li>
+                <li>🏆 <strong>Wrestling:</strong> @wrestlingfullhd, @wrestlingbest1</li>
+                <li>🔄 <strong>Rookie Subs:</strong> @RookieSubs (novatos)</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-blue-800 mb-3">🎆 Produtos Exclusivos</h4>
+              <ul className="text-sm space-y-1">
+                <li>💊 <strong>Glucosense:</strong> 45% comm. (95% pop.)</li>
+                <li>🧠 <strong>NerveCalm:</strong> 40% comm. (88% pop.)</li>
+                <li>🩺 <strong>GlicoShield:</strong> 50% comm. (92% pop.)</li>
+                <li>💧 <strong>GutDrops:</strong> 35% comm. (85% pop.)</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-purple-800 mb-3">🌍 Multi-Geo Strategy</h4>
+              <ul className="text-sm space-y-1">
+                <li>🇺🇸 US, 🇫🇷 FR, 🇩🇪 DE, 🇬🇧 GB</li>
+                <li>🇨🇦 CA, 🇩🇰 DK, 🇸🇪 SE</li>
+                <li>🇵🇱 PL, 🇷🇴 RO (9 países)</li>
+                <li>🔍 <strong>Gap Detection:</strong> 60+ dias ausente</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         {/* Summary Cards */}
@@ -246,11 +317,87 @@ export default function ROITrackingPage() {
 
         {/* Main Content */}
         <Tabs defaultValue="campaigns" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="campaigns">Campanhas ({analyses.length})</TabsTrigger>
+            <TabsTrigger value="scoring">Scoring System</TabsTrigger>
             <TabsTrigger value="top-performers">Top Performers</TabsTrigger>
             <TabsTrigger value="scaling">Scaling ({analyses.filter(a => a.scalingRecommendation.action !== 'maintain').length})</TabsTrigger>
           </TabsList>
+
+          {/* Scoring System */}
+          <TabsContent value="scoring" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">📊 Sistema de Scoring</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Hot Score (0-40):</span>
+                      <span className="font-semibold">Frequência + Recency</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Exclusivity Score (0-30):</span>
+                      <span className="font-semibold">Público(5) → Super-exclusivo(30)</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Competition Score (0-30):</span>
+                      <span className="font-semibold">YouTube vs Ads ratio</span>
+                    </div>
+                  </div>
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium">Opportunity Score:</span>
+                      <span className="font-bold text-blue-600">Combined (max 100)</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">💼 Primary Advertiser</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <div className="text-sm text-gray-600">Company:</div>
+                    <div className="font-semibold">Y&F EMPREENDIMENTOS DIGITAIS LTDA</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-600">Domain:</div>
+                    <div className="font-semibold text-blue-600">global-review2025.blog</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-600">Priority:</div>
+                    <div className="font-semibold text-red-600">VERY HIGH</div>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-2">
+                    Sempre monitorar este anunciante para oportunidades exclusivas
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">🚀</span>
+                <div>
+                  <h4 className="font-semibold text-green-800 mb-2">Recomendações de Ação</h4>
+                  <ul className="text-sm text-green-700 space-y-1">
+                    <li>• <strong>Score 80+:</strong> Ação imediata recomendada</li>
+                    <li>• <strong>Exclusive/Super-exclusive:</strong> Pesquisar processo de afiliação</li>
+                    <li>• <strong>Frequência 3+:</strong> Monitoramento prioritário</li>
+                    <li>• <strong>Gap Pattern:</strong> Produto voltou após 60+ dias ausente</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
 
           {/* Todas as Campanhas */}
           <TabsContent value="campaigns" className="space-y-4">
