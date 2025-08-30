@@ -125,16 +125,38 @@ export default function SystemGuidePage() {
                 <h3 className="font-bold text-lg mb-3 text-green-700">📈 Parâmetros de Mineração</h3>
                 <div className="space-y-3">
                   <div className="bg-green-50 p-3 rounded-lg">
-                    <h4 className="font-semibold">Plataformas Suportadas:</h4>
+                    <h4 className="font-semibold">1. Affiliate Networks Mining:</h4>
                     <ul className="text-sm mt-1 space-y-1">
                       <li>• <strong>ClickBank:</strong> Produtos digitais globais</li>
                       <li>• <strong>SmartAdv:</strong> Ofertas premium Brasil</li>
                       <li>• <strong>Dr Cash:</strong> Suplementos e saúde</li>
                     </ul>
                   </div>
+
+                  <div className="bg-green-50 p-3 rounded-lg">
+                    <h4 className="font-semibold">2. YouTube Channel Mining (Quality-First):</h4>
+                    <ul className="text-sm mt-1 space-y-1">
+                      <li>📊 <strong>Critérios RIGOROSOS:</strong> Min. 5K subs, 50 videos, 500K total views</li>
+                      <li>🎯 <strong>Engagement:</strong> Min. 50 views/subscriber para qualificar</li>
+                      <li>💎 <strong>Premium Tier:</strong> 5+ produtos únicos, 2+ recorrentes</li>
+                      <li>🔥 <strong>Gap Detection:</strong> Produtos que sumiram 60+ dias e voltaram</li>
+                      <li>📺 <strong>Golden Sources:</strong> @butecohits4948, @LizyRomance, @val_le, @legitdiv, @wrestlingfullhd, @wrestlingbest1, @RookieSubs</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-green-50 p-3 rounded-lg">
+                    <h4 className="font-semibold">3. Google Ads Transparency Mining (High Standards):</h4>
+                    <ul className="text-sm mt-1 space-y-1">
+                      <li>💰 <strong>Portfolio Mínimo:</strong> 10+ produtos ativos (não aceita menos)</li>
+                      <li>📊 <strong>Spend Estimado:</strong> $5K+ monthly, 30+ dias ativo</li>
+                      <li>🎯 <strong>Targeting Level:</strong> Advanced ou Sophisticated apenas</li>
+                      <li>🏢 <strong>Your Primary Advertiser:</strong> Y&F EMPREENDIMENTOS DIGITAIS LTDA (global-review2025.blog)</li>
+                      <li>💎 <strong>Exclusive Products:</strong> Glucosense (45%), NerveCalm (40%), GlicoShield, GutDrops</li>
+                    </ul>
+                  </div>
                   
                   <div className="bg-green-50 p-3 rounded-lg">
-                    <h4 className="font-semibold">Categorias Mineradas:</h4>
+                    <h4 className="font-semibold">4. Categorias Mineradas:</h4>
                     <ul className="text-sm mt-1 space-y-1">
                       <li>• Health & Fitness (peso, suplementos)</li>
                       <li>• Make Money Online (cursos, métodos)</li>
@@ -144,12 +166,13 @@ export default function SystemGuidePage() {
                   </div>
                 </div>
 
-                <h3 className="font-bold text-lg mb-3 mt-6 text-green-700">🔄 Automação</h3>
+                <h3 className="font-bold text-lg mb-3 mt-6 text-green-700">🔄 Automação Multi-Geo</h3>
                 <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
                   <p className="text-sm">
-                    <strong>⏰ Mining Schedule:</strong> Ativo às 6:00 AM<br/>
-                    <strong>📊 Output:</strong> 15-30 produtos validados/dia<br/>
-                    <strong>🎯 Qualidade:</strong> Score mínimo 40/100, comissão mín. $30
+                    <strong>⏰ Mining Schedule:</strong> Diário às 6:00 AM (ATIVO)<br/>
+                    <strong>📊 Target Output:</strong> 15-30 produtos/dia (Quality-First)<br/>
+                    <strong>🌍 9 Países:</strong> US, FR, DE, GB, CA, DK, SE, PL, RO<br/>
+                    <strong>🎯 Standards:</strong> Score min. 40/100, comissão min. $30, critérios RIGOROSOS
                   </p>
                 </div>
               </div>
@@ -185,32 +208,36 @@ export default function SystemGuidePage() {
                 <h3 className="font-bold text-lg mb-3 text-blue-700">🔬 Análise Completa</h3>
                 <div className="space-y-3">
                   <div className="bg-blue-50 p-3 rounded-lg">
-                    <h4 className="font-semibold">1. Product Validation</h4>
+                    <h4 className="font-semibold">1. Product Validation (Critérios CPA Definidos)</h4>
                     <ul className="text-sm mt-1 space-y-1">
-                      <li>• Google Search API real para volume de busca</li>
-                      <li>• Análise de competitividade</li>
-                      <li>• CPA estimado (40-50% range)</li>
-                      <li>• Score de viabilidade 0-100</li>
+                      <li>🎯 <strong>CPA Target:</strong> 40-45% da comissão (FIXO)</li>
+                      <li>🚨 <strong>CPA Máximo:</strong> 80% da comissão</li>
+                      <li>🛑 <strong>Stop Loss:</strong> 100% da comissão (sem venda)</li>
+                      <li>💰 <strong>Budget Teste:</strong> R$350 mínimo ou 5x comissão</li>
+                      <li>📈 <strong>ROI Mínimo:</strong> 150% para prosseguir</li>
+                      <li>🔍 <strong>Google Search API:</strong> Volume de busca real + Top 10 competidores</li>
                     </ul>
                   </div>
 
                   <div className="bg-blue-50 p-3 rounded-lg">
-                    <h4 className="font-semibold">2. YouTube Intelligence</h4>
+                    <h4 className="font-semibold">2. Competition Analysis (Top 10 Automático)</h4>
                     <ul className="text-sm mt-1 space-y-1">
-                      <li>• Análise de canais concorrentes</li>
-                      <li>• 7 fontes golden: @butecohits4948, @LizyRomance, etc.</li>
-                      <li>• Métricas de vídeos e engagement</li>
-                      <li>• Estratégias de conteúdo</li>
+                      <li>🏆 <strong>Top 10 Competidores:</strong> Análise automática completa</li>
+                      <li>💬 <strong>CTAs Extraídas:</strong> Calls-to-action dos concorrentes</li>
+                      <li>✨ <strong>Benefits:</strong> Principais benefícios destacados</li>
+                      <li>🏷️ <strong>Promoções:</strong> Ofertas e descontos ativos</li>
+                      <li>💲 <strong>CPC Estimado:</strong> Custo por clique automático</li>
+                      <li>📊 <strong>Competition Level:</strong> Low/Medium/High/Very High</li>
                     </ul>
                   </div>
 
                   <div className="bg-blue-50 p-3 rounded-lg">
-                    <h4 className="font-semibold">3. Ads Intelligence</h4>
+                    <h4 className="font-semibold">3. Performance Prediction</h4>
                     <ul className="text-sm mt-1 space-y-1">
-                      <li>• Análise de anúncios ativos</li>
-                      <li>• Palavras-chave dos competidores</li>
-                      <li>• Estimativa de gastos publicitários</li>
-                      <li>• Oportunidades de nicho</li>
+                      <li>• Estimativa de CPA baseada em dados históricos</li>
+                      <li>• Projeção de volume de tráfego necessário</li>
+                      <li>• Análise de sazonalidade do produto</li>
+                      <li>• ROI esperado por canal de tráfego</li>
                     </ul>
                   </div>
                 </div>
