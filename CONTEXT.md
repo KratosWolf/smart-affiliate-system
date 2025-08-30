@@ -1,8 +1,19 @@
-# SMART AFFILIATE SYSTEM - CONTEXTO COMPLETO v1.1
-**Versão:** v1.1 - Sistema Avançado com Intelligence Mining e APIs Reais  
-**Data:** 28/08/2024  
-**Status:** ✅ 100% Implementado + Intelligence Mining + APIs Gratuitas Integradas  
-**Dashboard:** http://localhost:3000/dashboard
+# SMART AFFILIATE SYSTEM - CONTEXTO COMPLETO v1.1 (UPDATED)
+**Versão:** v1.1.1 - Sistema Corrigido + Protocolo Obrigatório
+**Data:** 30/08/2025 - MAJOR UPDATE
+**Status:** ✅ 100% Implementado + Documentação Corrigida + Zero Círculos
+**Homepage:** https://smart-affiliate-system-50jsrbmpy-tiagos-projects-126cfd6f.vercel.app
+
+## 🚨 **DECISÕES CRÍTICAS DO DIA (30/08/2025):**
+1. ✅ **PROTOCOLO OBRIGATÓRIO:** SEMPRE consultar PLAYBOOK antes de mudanças
+2. ✅ **Homepage Corrigida:** Dashboard no root URL (/) sem slug /dashboard  
+3. ✅ **System Guide Reescrito:** 100% baseado no PLAYBOOK, não na memória
+4. ✅ **Discovery ≠ Intelligence:** Mining descobre NOVOS, Intelligence analisa CONHECIDOS
+5. ✅ **Critérios FIXOS:** CPA 40-45%, YouTube 5K+ subs, Ads 10+ produtos - NUNCA ALTERAR
+6. ✅ **Zero Círculos:** Proibido redefinir decisões já tomadas
+7. ✅ **Produção Ativa:** Sistema deployed, mining 6:00 AM ativo
+
+## ⚠️ **IMPORTANTE:** Ler PROTOCOLO-OBRIGATORIO.md antes de qualquer mudança!
 
 ## 🎉 **SISTEMA COMPLETAMENTE EVOLUÍDO - v1.1**
 
