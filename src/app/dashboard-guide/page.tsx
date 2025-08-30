@@ -91,7 +91,7 @@ export default function SystemGuidePage() {
                 document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('bg-yellow-400'))
                 document.getElementById('btn-guide')!.classList.add('bg-yellow-400')
               }}
-              className="bg-blue-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-blue-700 shadow-lg transition-colors bg-yellow-400"
+              className="bg-yellow-400 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-blue-700 shadow-lg transition-colors"
             >
               📚 SYSTEM GUIDE
             </button>
@@ -1293,6 +1293,7 @@ export default function SystemGuidePage() {
               </div>
             </CardContent>
           </Card>
+        </div>
         </div>
       </div>
     </div>
