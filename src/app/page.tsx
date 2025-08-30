@@ -5,12 +5,12 @@ export default function Home() {
     {
       title: 'Discovery + Mining',
       description: 'High-volume product discovery with 15-30 products daily',
-      href: '/discovery',
+      href: '/discovery-mining', // CORRIGIDO - página correta!
     },
     {
       title: 'Validation + Intelligence',
       description: 'Validate viability & analyze top 10 competitors',
-      href: '/validation',
+      href: '/validation-intelligence', // CORRIGIDO - página correta!
     },
     {
       title: 'Presell Generator', 
@@ -20,12 +20,12 @@ export default function Home() {
     {
       title: 'Campaign Builder',
       description: 'Create Google Ads campaigns with CSV export',
-      href: '/tracking',
+      href: '/tracking', // Este usa tracking mesmo
     },
     {
-      title: 'ROI Tracking',
-      description: 'Monitor ROI with 3-day rolling window & auto-scaling',
-      href: '/tracking',
+      title: 'Intelligence Center',
+      description: 'AI-powered market intelligence and competitor analysis',
+      href: '/intelligence', // ADICIONADO - tínhamos isso!
     },
     {
       title: 'Dashboard',
