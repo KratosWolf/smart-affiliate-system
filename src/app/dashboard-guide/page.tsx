@@ -73,32 +73,36 @@ export default function SystemGuidePage() {
           </div>
         </div>
 
-        {/* TABS - Enhanced Visibility */}
-        <Card className="border-2 border-blue-500 bg-white shadow-xl mb-8">
-          <CardContent className="p-6">
-            <Tabs defaultValue="guide" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 h-16 bg-gray-100 rounded-lg p-2 mb-8">
-                <TabsTrigger 
-                  value="guide" 
-                  className="text-lg font-bold py-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                >
-                  📚 System Guide
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="playbook"
-                  className="text-lg font-bold py-4 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-                >
-                  📋 Playbook
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="implementation"
-                  className="text-lg font-bold py-4 data-[state=active]:bg-green-600 data-[state=active]:text-white"
-                >
-                  🚀 Implementation Plan
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="guide">
+        {/* SUPER VISIBLE TABS - FINAL VERSION */}
+        <div className="w-full bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-xl border-4 border-blue-600 shadow-2xl mb-8">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-blue-900">🎯 ESCOLHA SUA VISUALIZAÇÃO</h2>
+            <p className="text-gray-700 mt-2">Clique nas abas abaixo para acessar diferentes seções</p>
+          </div>
+          
+          <Tabs defaultValue="guide" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 h-20 bg-white rounded-xl p-3 shadow-lg border-2 border-gray-300">
+              <TabsTrigger 
+                value="guide" 
+                className="text-xl font-black py-6 px-4 rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-blue-100"
+              >
+                📚 System Guide
+              </TabsTrigger>
+              <TabsTrigger 
+                value="playbook"
+                className="text-xl font-black py-6 px-4 rounded-lg transition-all duration-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-100"
+              >
+                📋 Playbook
+              </TabsTrigger>
+              <TabsTrigger 
+                value="implementation"
+                className="text-xl font-black py-6 px-4 rounded-lg transition-all duration-200 data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-green-100"
+              >
+                🚀 Implementation Plan
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="guide" className="mt-8">
                 {/* Navigation Menu */}
                 <Card className="sticky top-4 z-10 shadow-lg mb-6">
                   <CardContent className="py-4">
@@ -1275,8 +1279,7 @@ export default function SystemGuidePage() {
           </Card>
               </TabsContent>
             </Tabs>
-          </CardContent>
-        </Card>
+        </div>
       </div>
     </div>
   )
