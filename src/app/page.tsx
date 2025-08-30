@@ -89,6 +89,14 @@ export default function Home() {
       metrics: 'Rolling 3-day window • Auto-scaling >60%'
     },
     {
+      title: '📊 Campaign Builder',
+      description: '✅ OPERATIONAL - Google Ads campaigns automáticas com targeting inteligente',
+      icon: <BarChart3 className="w-6 h-6 text-orange-600" />,
+      href: '/campaign-builder',
+      status: 'operational',
+      metrics: 'Google Ads API • CPA targeting • Multi-geo • Campaign automation'
+    },
+    {
       title: 'Domain Generator',
       description: 'Horizontal scaling with multiple URLs',
       icon: <Globe className="w-6 h-6 text-cyan-600" />,

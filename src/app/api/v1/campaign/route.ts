@@ -7,17 +7,49 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
-    const { validation, affiliateUrl, presellUrl, exportFormat } = body
+    // Support both full validation and basic campaign data
+    const { validation, affiliateUrl, presellUrl, exportFormat, productName, targetCountry, dailyBudget, targetCpa } = body
     
-    if (!validation || !affiliateUrl) {
+    let validationData: ProductValidationResponse
+    
+    if (validation) {
+      // Use full validation data if provided
+      validationData = validation
+    } else if (productName && targetCountry && affiliateUrl) {
+      // Create basic validation data for campaign builder
+      validationData = {
+        productName,
+        targetCountry,
+        validationScore: 75, // Default score
+        productData: {
+          name: productName,
+          description: `${productName} - Produto de alta qualidade`,
+          price: 100, // Default price
+          commission: 35, // Default commission %
+          vendor: 'Vendor',
+          category: 'Health'
+        },
+        marketAnalysis: {
+          avgCpc: targetCpa ? targetCpa * 0.4 : 2.5, // 40% of CPA or default
+          competition: 'medium',
+          searchVolume: 10000,
+          trend: 'stable'
+        },
+        recommendations: {
+          suggestedBudget: dailyBudget || 50,
+          estimatedRoi: 150,
+          launchRecommendation: 'LAUNCH'
+        }
+      } as ProductValidationResponse
+    } else {
       return NextResponse.json({
         success: false,
-        error: 'Dados de validação e URL de afiliado são obrigatórios'
+        error: 'É necessário fornecer dados de validação OU (productName + targetCountry + affiliateUrl)'
       }, { status: 400 })
     }
 
     // Gera estrutura da campanha
-    const campaign = await campaignBuilder.buildCampaign(validation, affiliateUrl, presellUrl)
+    const campaign = await campaignBuilder.buildCampaign(validationData, affiliateUrl, presellUrl)
     
     // Valida a campanha gerada
     const validation_result = csvExporter.validateCampaign(campaign)
@@ -47,13 +79,13 @@ export async function POST(request: NextRequest) {
         csvData,
         validation: validation_result,
         metadata: {
-          productName: validation.productName,
-          targetCountry: validation.targetCountry,
+          productName: validationData.productName,
+          targetCountry: validationData.targetCountry,
           estimatedPerformance: {
             dailyClicks: Math.round(campaign.campaign.budget / (campaign.keywords[0]?.maxCpc || 2.0)),
             estimatedConversions: Math.round((campaign.campaign.budget / (campaign.keywords[0]?.maxCpc || 2.0)) * 0.03), // 3% conversion rate
             estimatedCpa: campaign.campaign.targetCpa,
-            estimatedRoi: validation.recommendations.estimatedRoi
+            estimatedRoi: validationData.recommendations.estimatedRoi
           },
           generatedAt: new Date().toISOString()
         }
