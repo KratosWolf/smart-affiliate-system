@@ -108,7 +108,7 @@ export default function SystemGuidePage() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="guide" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="guide">📚 System Guide</TabsTrigger>
             <TabsTrigger value="playbook">📋 Playbook</TabsTrigger>
             <TabsTrigger value="implementation">🚀 Implementation Plan</TabsTrigger>
