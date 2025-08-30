@@ -73,78 +73,93 @@ export default function SystemGuidePage() {
           </div>
         </div>
 
-        {/* SUPER VISIBLE TABS - FINAL VERSION */}
-        <div className="w-full bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-xl border-4 border-blue-600 shadow-2xl mb-8">
+        {/* STANDALONE TAB SYSTEM - NO SHADCN DEPENDENCY */}
+        <div className="w-full bg-gradient-to-r from-blue-500 to-purple-500 p-8 rounded-xl mb-8">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-blue-900">🎯 ESCOLHA SUA VISUALIZAÇÃO</h2>
-            <p className="text-gray-700 mt-2">Clique nas abas abaixo para acessar diferentes seções</p>
+            <h2 className="text-3xl font-black text-white">⚠️ TABS ESTÃO AQUI! ⚠️</h2>
+            <p className="text-white text-xl mt-2 font-bold">CLIQUE NOS BOTÕES ABAIXO!</p>
           </div>
           
-          <Tabs defaultValue="guide" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 h-20 bg-white rounded-xl p-3 shadow-lg border-2 border-gray-300">
-              <TabsTrigger 
-                value="guide" 
-                className="text-xl font-black py-6 px-4 rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-blue-100"
-              >
-                📚 System Guide
-              </TabsTrigger>
-              <TabsTrigger 
-                value="playbook"
-                className="text-xl font-black py-6 px-4 rounded-lg transition-all duration-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-100"
-              >
-                📋 Playbook
-              </TabsTrigger>
-              <TabsTrigger 
-                value="implementation"
-                className="text-xl font-black py-6 px-4 rounded-lg transition-all duration-200 data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-green-100"
-              >
-                🚀 Implementation Plan
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="guide" className="mt-8">
-                {/* Navigation Menu */}
-                <Card className="sticky top-4 z-10 shadow-lg mb-6">
-                  <CardContent className="py-4">
-                    <div className="flex items-center gap-2 flex-wrap justify-center">
-                      <span className="text-sm font-semibold text-gray-700 mr-2">Navegação Rápida:</span>
-              {navigationSections.map((section) => {
-                const IconComponent = section.icon
-                return (
-                  <Button
-                    key={section.id}
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => scrollToSection(section.id)}
-                    className="text-xs flex items-center gap-1"
-                  >
-                    <IconComponent className="w-3 h-3" />
-                    {section.title}
-                  </Button>
-                )
-              })}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={scrollToTop}
-                className="text-xs flex items-center gap-1 ml-2"
-              >
-                <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
-                Topo
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+          {/* PURE JAVASCRIPT TAB BUTTONS */}
+          <div className="flex gap-4 justify-center mb-8" id="tab-buttons">
+            <button 
+              id="btn-guide"
+              onClick={() => {
+                document.getElementById('content-guide')!.style.display = 'block'
+                document.getElementById('content-playbook')!.style.display = 'none'
+                document.getElementById('content-implementation')!.style.display = 'none'
+                document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('bg-yellow-400'))
+                document.getElementById('btn-guide')!.classList.add('bg-yellow-400')
+              }}
+              className="bg-blue-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-blue-700 shadow-lg transition-colors bg-yellow-400"
+            >
+              📚 SYSTEM GUIDE
+            </button>
+            <button 
+              id="btn-playbook"
+              onClick={() => {
+                document.getElementById('content-guide')!.style.display = 'none'
+                document.getElementById('content-playbook')!.style.display = 'block'
+                document.getElementById('content-implementation')!.style.display = 'none'
+                document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('bg-yellow-400'))
+                document.getElementById('btn-playbook')!.classList.add('bg-yellow-400')
+              }}
+              className="bg-purple-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-purple-700 shadow-lg transition-colors"
+            >
+              📋 PLAYBOOK
+            </button>
+            <button 
+              id="btn-implementation"
+              onClick={() => {
+                document.getElementById('content-guide')!.style.display = 'none'
+                document.getElementById('content-playbook')!.style.display = 'none'
+                document.getElementById('content-implementation')!.style.display = 'block'
+                document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('bg-yellow-400'))
+                document.getElementById('btn-implementation')!.classList.add('bg-yellow-400')
+              }}
+              className="bg-green-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-green-700 shadow-lg transition-colors"
+            >
+              🚀 IMPLEMENTATION PLAN
+            </button>
+          </div>
+        </div>
 
-        {/* Main Content Tabs */}
-        <Tabs defaultValue="guide" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
-            <TabsTrigger value="guide">📚 System Guide</TabsTrigger>
-            <TabsTrigger value="playbook">📋 Playbook</TabsTrigger>
-            <TabsTrigger value="implementation">🚀 Implementation Plan</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="guide" className="space-y-8">
+        {/* TAB CONTENT - SYSTEM GUIDE */}
+        <div id="content-guide" className="block">
+          {/* Navigation Menu */}
+          <Card className="sticky top-4 z-10 shadow-lg mb-6">
+            <CardContent className="py-4">
+              <div className="flex items-center gap-2 flex-wrap justify-center">
+                <span className="text-sm font-semibold text-gray-700 mr-2">Navegação Rápida:</span>
+                {navigationSections.map((section) => {
+                  const IconComponent = section.icon
+                  return (
+                    <Button
+                      key={section.id}
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => scrollToSection(section.id)}
+                      className="text-xs flex items-center gap-1"
+                    >
+                      <IconComponent className="w-3 h-3" />
+                      {section.title}
+                    </Button>
+                  )
+                })}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={scrollToTop}
+                  className="text-xs flex items-center gap-1 ml-2"
+                >
+                  <ArrowRight className="w-3 h-3 rotate-[-90deg]" />
+                  Topo
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="space-y-8">
 
         {/* System Overview */}
         <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50" id="overview">
@@ -1013,9 +1028,10 @@ export default function SystemGuidePage() {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
+        </div>
 
-              <TabsContent value="playbook" className="space-y-6">
+        {/* TAB CONTENT - PLAYBOOK */}
+        <div id="content-playbook" className="hidden space-y-6">
                 <div className="text-center mb-8">
                   <h2 className="text-3xl font-bold text-purple-900 mb-4">📋 PLAYBOOK COMPLETO</h2>
                   <p className="text-xl text-purple-700">Sistema 100% Operacional - Status em Tempo Real</p>
@@ -1129,10 +1145,10 @@ export default function SystemGuidePage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
 
-        {/* Implementation Plan Tab */}
-        <TabsContent value="implementation" className="space-y-6">
+        {/* TAB CONTENT - IMPLEMENTATION PLAN */}
+        <div id="content-implementation" className="hidden space-y-6">
           <Card className="border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
             <CardHeader>
               <CardTitle className="text-2xl text-green-900 flex items-center gap-2">
@@ -1277,8 +1293,6 @@ export default function SystemGuidePage() {
               </div>
             </CardContent>
           </Card>
-              </TabsContent>
-            </Tabs>
         </div>
       </div>
     </div>
