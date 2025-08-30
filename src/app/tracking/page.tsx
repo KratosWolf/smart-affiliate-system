@@ -178,7 +178,7 @@ export default function ROITrackingPage() {
                   <span className="text-2xl">📈</span>
                 </div>
                 <h4 className="font-semibold text-gray-800 mb-2">ROI Mínimo</h4>
-                <p className="text-sm text-gray-600">150% para prosseguir<br/>Scaling > 60%</p>
+                <p className="text-sm text-gray-600">150% para prosseguir<br/>Scaling &gt; 60%</p>
               </div>
               <div className="text-center">
                 <div className="bg-purple-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
