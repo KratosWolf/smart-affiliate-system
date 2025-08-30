@@ -73,11 +73,37 @@ export default function SystemGuidePage() {
           </div>
         </div>
 
-        {/* Navigation Menu */}
-        <Card className="sticky top-4 z-10 shadow-lg">
-          <CardContent className="py-4">
-            <div className="flex items-center gap-2 flex-wrap justify-center">
-              <span className="text-sm font-semibold text-gray-700 mr-2">Navegação Rápida:</span>
+        {/* TABS - Enhanced Visibility */}
+        <Card className="border-2 border-blue-500 bg-white shadow-xl mb-8">
+          <CardContent className="p-6">
+            <Tabs defaultValue="guide" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 h-16 bg-gray-100 rounded-lg p-2 mb-8">
+                <TabsTrigger 
+                  value="guide" 
+                  className="text-lg font-bold py-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+                >
+                  📚 System Guide
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="playbook"
+                  className="text-lg font-bold py-4 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+                >
+                  📋 Playbook
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="implementation"
+                  className="text-lg font-bold py-4 data-[state=active]:bg-green-600 data-[state=active]:text-white"
+                >
+                  🚀 Implementation Plan
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="guide">
+                {/* Navigation Menu */}
+                <Card className="sticky top-4 z-10 shadow-lg mb-6">
+                  <CardContent className="py-4">
+                    <div className="flex items-center gap-2 flex-wrap justify-center">
+                      <span className="text-sm font-semibold text-gray-700 mr-2">Navegação Rápida:</span>
               {navigationSections.map((section) => {
                 const IconComponent = section.icon
                 return (
@@ -980,13 +1006,16 @@ export default function SystemGuidePage() {
               <Badge className="bg-green-100 text-green-800 px-4 py-2">
                 ✅ 100% Operacional - Deploy Ativo
               </Badge>
-            </div>
-          </CardContent>
-        </Card>
-        </TabsContent>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
-        {/* Playbook Tab */}
-        <TabsContent value="playbook" className="space-y-6">
+              <TabsContent value="playbook" className="space-y-6">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-bold text-purple-900 mb-4">📋 PLAYBOOK COMPLETO</h2>
+                  <p className="text-xl text-purple-700">Sistema 100% Operacional - Status em Tempo Real</p>
+                </div>
           <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
             <CardHeader>
               <CardTitle className="text-2xl text-purple-900 flex items-center gap-2">
@@ -1244,9 +1273,10 @@ export default function SystemGuidePage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-        
-        </Tabs>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
