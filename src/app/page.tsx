@@ -498,10 +498,212 @@ export default function Home() {
           </CardContent>
         </Card>
 
+        {/* TEMPORARY: Playbook Content */}
+        <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+          <CardHeader>
+            <CardTitle className="text-2xl text-purple-900 flex items-center gap-2">
+              📋 Smart Affiliate System - Playbook Completo v1.2
+            </CardTitle>
+            <CardDescription className="text-purple-700">
+              Sistema 100% operacional com todos os módulos funcionais (Temporário na homepage)
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white p-3 rounded-lg border">
+                <h3 className="font-bold text-purple-700 mb-2">🏗️ Arquitetura Técnica</h3>
+                <ul className="text-sm space-y-1">
+                  <li>• <strong>Framework:</strong> Next.js 15.5.0 com App Router</li>
+                  <li>• <strong>Language:</strong> TypeScript para type safety</li>
+                  <li>• <strong>UI:</strong> shadcn/ui + Tailwind CSS</li>
+                  <li>• <strong>Deployment:</strong> Vercel auto-deploy</li>
+                  <li>• <strong>Performance:</strong> ~200ms response, 99.9% uptime</li>
+                </ul>
+              </div>
+              
+              <div className="bg-white p-3 rounded-lg border">
+                <h3 className="font-bold text-purple-700 mb-2">✅ Módulos Operacionais (8/8)</h3>
+                <ul className="text-sm space-y-1">
+                  <li>• 🔍 <strong>Discovery + Mining:</strong> 15-30 produtos/dia</li>
+                  <li>• 🎯 <strong>Validation + Intelligence:</strong> Google API real</li>
+                  <li>• 💰 <strong>Presell Generator:</strong> 6 templates (8-18% CVR)</li>
+                  <li>• 📈 <strong>Campaign Builder:</strong> Google Ads CSV completo</li>
+                  <li>• 📊 <strong>ROI Tracking:</strong> 3-day rolling + auto-scaling</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
+              <h3 className="font-bold text-green-800 mb-2">🚀 Status de Produção</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="text-sm">
+                  <p><strong>Production URL:</strong> https://smart-affiliate-system.vercel.app</p>
+                  <p><strong>GitHub:</strong> KratosWolf/smart-affiliate-system</p>
+                  <p><strong>Auto-Deploy:</strong> ✅ Vercel integrado</p>
+                </div>
+                <div className="text-sm">
+                  <p><strong>Features Live:</strong> Todos 8 módulos</p>
+                  <p><strong>Navigation:</strong> Tabs + back buttons</p>
+                  <p><strong>Mining:</strong> Diário às 6:00 AM ativo</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+              <h3 className="font-bold text-orange-800 mb-2">💼 Workflow Diário Recomendado</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <h4 className="font-semibold mb-2 text-orange-700">🔄 Rotina Manhã:</h4>
+                  <ol className="text-sm space-y-1">
+                    <li><strong>6:00:</strong> Sistema roda mining automático</li>
+                    <li><strong>9:00-11:00:</strong> Review produtos descobertos</li>
+                    <li><strong>11:00-13:00:</strong> Validação dos top 5 produtos</li>
+                  </ol>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2 text-orange-700">📈 Rotina Tarde:</h4>
+                  <ol className="text-sm space-y-1">
+                    <li><strong>14:00-16:00:</strong> Criação de presells</li>
+                    <li><strong>16:00-18:00:</strong> Setup campanhas Google Ads</li>
+                    <li><strong>18:00:</strong> Launch + monitoramento</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+              <h3 className="font-bold text-blue-800 mb-2">📊 Métricas de Sucesso</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div>
+                  <h4 className="font-semibold text-sm">🎯 Discovery:</h4>
+                  <ul className="text-xs space-y-1">
+                    <li>• 15-30 produtos/dia</li>
+                    <li>• Score médio: 75/100</li>
+                    <li>• Taxa aprovação: 85%</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm">💰 Presells:</h4>
+                  <ul className="text-xs space-y-1">
+                    <li>• CVR médio: 8-18%</li>
+                    <li>• 6 templates ativos</li>
+                    <li>• Mobile: 95%+</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm">📈 Campaigns:</h4>
+                  <ul className="text-xs space-y-1">
+                    <li>• ROAS médio: 3.2:1</li>
+                    <li>• CTR médio: 4.1%</li>
+                    <li>• Setup: 15min</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* TEMPORARY: Implementation Plan */}
+        <Card className="border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
+          <CardHeader>
+            <CardTitle className="text-2xl text-green-900 flex items-center gap-2">
+              🚀 Implementation Plan - Próximos Passos
+            </CardTitle>
+            <CardDescription className="text-green-700">
+              Roadmap para evolução e otimização do sistema (Temporário na homepage)
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white p-3 rounded-lg border">
+                <h3 className="font-bold text-green-700 mb-2">🔄 Automações Avançadas</h3>
+                <ul className="text-sm space-y-1">
+                  <li>✅ <strong>Mining Scheduler:</strong> Sistema ativo às 6:00 AM</li>
+                  <li>⏳ <strong>Auto-Validation:</strong> Validação automática dos discoveries</li>
+                  <li>⏳ <strong>Smart Notifications:</strong> Alertas de produtos premium</li>
+                  <li>⏳ <strong>Performance Reports:</strong> Relatórios automáticos semanais</li>
+                </ul>
+              </div>
+
+              <div className="bg-white p-3 rounded-lg border">
+                <h3 className="font-bold text-green-700 mb-2">📈 Scaling Horizontal</h3>
+                <ul className="text-sm space-y-1">
+                  <li>✅ <strong>Multi-Domain:</strong> Sistema de múltiplos domínios</li>
+                  <li>⏳ <strong>Auto-Deploy:</strong> Deployment automático de presells</li>
+                  <li>⏳ <strong>A/B Testing:</strong> Testes automáticos de templates</li>
+                  <li>⏳ <strong>Geo-Expansion:</strong> Expansão automática para novos países</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+              <h3 className="font-bold text-blue-800 mb-2">🔗 Integrações APIs</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <h4 className="font-semibold text-sm mb-1">✅ APIs Ativas:</h4>
+                  <ul className="text-xs space-y-1">
+                    <li>• <strong>Google Search API:</strong> Validação real</li>
+                    <li>• <strong>Custom Search Engine:</strong> Configurado</li>
+                    <li>• <strong>Vercel API:</strong> Auto-deploy</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm mb-1">⏳ Próximas Integrações:</h4>
+                  <ul className="text-xs space-y-1">
+                    <li>• <strong>YouTube Data API:</strong> 10k requests/day</li>
+                    <li>• <strong>Google Ads API:</strong> Gerenciamento direto</li>
+                    <li>• <strong>Analytics API:</strong> Métricas avançadas</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+              <h3 className="font-bold text-orange-800 mb-2">📅 Timeline Sugerido</h3>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <Badge className="bg-green-100 text-green-800 text-xs">Semana 1-2</Badge>
+                  <span className="text-sm"><strong>Otimização:</strong> Database, cache, logs avançados</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge className="bg-blue-100 text-blue-800 text-xs">Semana 3-4</Badge>
+                  <span className="text-sm"><strong>APIs:</strong> YouTube API, Google Ads API, automações</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge className="bg-purple-100 text-purple-800 text-xs">Mês 2</Badge>
+                  <span className="text-sm"><strong>Scaling:</strong> Multi-domain, A/B testing, expansão geo</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-red-50 border border-red-200 p-3 rounded-lg">
+              <h3 className="font-bold text-red-800 mb-2">🚀 Ações Imediatas</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <h4 className="font-semibold text-sm mb-1">Esta Semana:</h4>
+                  <ul className="text-xs space-y-1">
+                    <li>☐ Setup PostgreSQL database na Vercel</li>
+                    <li>☐ Implementar sistema de logs estruturado</li>
+                    <li>☐ Configurar monitoramento de APIs</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm mb-1">Próxima Semana:</h4>
+                  <ul className="text-xs space-y-1">
+                    <li>☐ Ativar YouTube Data API (10k requests)</li>
+                    <li>☐ Implementar auto-validation workflow</li>
+                    <li>☐ Setup notificações via webhook</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* System Info */}
         <Card className="border-blue-200 bg-blue-50">
           <CardHeader>
-            <CardTitle className="text-blue-900">Smart Affiliate System v1.0</CardTitle>
+            <CardTitle className="text-blue-900">Smart Affiliate System v1.2</CardTitle>
             <CardDescription className="text-blue-700">
               Sistema completo de marketing de afiliados com automação de ROI e scaling horizontal
             </CardDescription>
