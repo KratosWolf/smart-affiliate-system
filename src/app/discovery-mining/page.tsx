@@ -18,39 +18,7 @@ export default function DiscoveryMiningPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedTier, setSelectedTier] = useState<'all' | 1 | 2 | 3>('all')
 
-  // Mock products for demo
-  const generateMockProducts = (): Product[] => {
-    const names = [
-      'ProDentim', 'Java Burn', 'Alpilean', 'GlucoTrust', 'Ikaria Juice',
-      'Red Boost', 'Quietum Plus', 'Cortexi', 'Prostadine', 'NeuroTonix',
-      'Kerassentials', 'Amiclear', 'Claritox Pro', 'TerraCalm', 'GlucoBerry'
-    ]
-    
-    return names.map((name, index) => {
-      const score = Math.floor(Math.random() * 60) + 40
-      const commission = Math.floor(Math.random() * 60) + 30
-      
-      let tier: 1 | 2 | 3 = 3
-      if (score >= 80) tier = 1
-      else if (score >= 60) tier = 2
 
-      return {
-        id: `prod-${index + 1}`,
-        name,
-        platform: ['ClickBank', 'SmartAdv', 'Dr Cash'][Math.floor(Math.random() * 3)],
-        category: ['Health', 'Weight Loss', 'Supplements'][Math.floor(Math.random() * 3)],
-        score,
-        commission,
-        tier,
-        status: ['new', 'testing', 'validated'][Math.floor(Math.random() * 3)]
-      }
-    })
-  }
-
-  useEffect(() => {
-    const mockProducts = generateMockProducts()
-    setProducts(mockProducts.sort((a, b) => b.score - a.score))
-  }, [])
 
   const startMining = async () => {
     setIsLoading(true)
@@ -87,8 +55,7 @@ export default function DiscoveryMiningPage() {
         }
       }
     } catch (error) {
-      console.log('Using fallback mock data')
-      setProducts(generateMockProducts())
+      console.log('API discovery failed:', error)
     } finally {
       setIsLoading(false)
     }
