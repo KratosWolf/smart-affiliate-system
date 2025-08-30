@@ -3,7 +3,7 @@
  * Monitora anunciantes e domínios no Ads Transparency
  */
 
-import puppeteer from 'puppeteer'
+// import puppeteer from 'puppeteer' // Temporarily disabled for Vercel deployment
 
 interface Advertiser {
   name: string
@@ -43,10 +43,15 @@ export class AdsTransparencyMonitor {
    * Monitora anunciantes conhecidos
    */
   async monitorKnownAdvertisers(): Promise<any[]> {
-    console.log('📊 Monitoring known advertisers in Ads Transparency...')
+    console.log('📊 Monitoring known advertisers (mock mode)...')
     
+    // Temporarily disabled puppeteer for Vercel deployment - return mock data
+    return this.getMockAdvertisersData()
+    
+    /*
     const discoveries = []
     const browser = await puppeteer.launch({ headless: true })
+    */
     
     try {
       for (const advertiser of this.knownGoodAdvertisers) {
@@ -298,6 +303,35 @@ export class AdsTransparencyMonitor {
     }
     
     return exclusiveAdvertisers
+  }
+
+  /**
+   * Mock data for Vercel deployment
+   */
+  private getMockAdvertisersData(): any[] {
+    return [
+      {
+        advertiser: 'HealthSuppCorp',
+        domain: 'healthsuppcorp.com',
+        adTitle: 'Revolutionary Weight Loss Formula',
+        adDescription: 'Lose 30 pounds in 30 days with our proven system',
+        source: 'ads-transparency-known'
+      },
+      {
+        advertiser: 'WellnessGroup',
+        domain: 'wellnessgroup.net',
+        adTitle: 'Blood Sugar Support Supplement',
+        adDescription: 'Natural ingredients for healthy glucose levels',
+        source: 'ads-transparency-known'
+      },
+      {
+        advertiser: 'VitalHealth',
+        domain: 'vitalhealth.co',
+        adTitle: 'Joint Pain Relief Solution',
+        adDescription: 'End joint pain naturally without side effects',
+        source: 'ads-transparency-known'
+      }
+    ]
   }
 }
 

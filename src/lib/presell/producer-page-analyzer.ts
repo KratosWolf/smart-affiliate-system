@@ -3,8 +3,8 @@
  * Analisa a página do produtor para extrair design system e conteúdo
  */
 
-import puppeteer from 'puppeteer'
-import sharp from 'sharp'
+// import puppeteer from 'puppeteer' // Temporarily disabled for Vercel deployment
+// import sharp from 'sharp' // Temporarily disabled for Vercel deployment
 import crypto from 'crypto'
 
 export interface ProducerPageAnalysis {
@@ -48,12 +48,17 @@ export class ProducerPageAnalyzer {
    * Analisa página do produtor ANTES de criar qualquer pre-sell
    */
   async analyzePage(producerUrl: string): Promise<ProducerPageAnalysis> {
-    console.log('🔍 Analyzing producer page:', producerUrl)
+    console.log('🔍 Analyzing producer page (mock mode):', producerUrl)
     
+    // Temporarily disabled puppeteer for Vercel deployment - return mock data
+    return this.getMockAnalysis(producerUrl)
+    
+    /*
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     })
+    */
     
     try {
       const page = await browser.newPage()
@@ -384,5 +389,76 @@ export class ProducerPageAnalyzer {
 </body>
 </html>
     `
+  }
+
+  /**
+   * Mock analysis data for Vercel deployment
+   */
+  private getMockAnalysis(producerUrl: string): ProducerPageAnalysis {
+    return {
+      url: producerUrl,
+      designSystem: {
+        primaryColor: '#2563eb',
+        secondaryColor: '#10b981',
+        backgroundColor: '#ffffff',
+        fontFamily: '"Inter", sans-serif',
+        fontSize: '16px',
+        buttonStyle: {
+          backgroundColor: '#2563eb',
+          textColor: '#ffffff',
+          borderRadius: '8px',
+          padding: '12px 24px',
+          fontSize: '16px',
+          fontWeight: '600'
+        }
+      },
+      content: {
+        headline: 'Produto Revolucionário',
+        subheadline: 'A solução que você estava procurando',
+        benefits: [
+          'Resultados comprovados',
+          'Fácil de usar',
+          'Garantia de satisfação',
+          'Suporte completo'
+        ],
+        ctaButtons: [
+          'Quero Conhecer Agora',
+          'Garantir Minha Vaga',
+          'Acessar Oferta Especial'
+        ],
+        testimonials: [
+          {
+            name: 'Cliente Satisfeito',
+            text: 'Produto excelente, recomendo!',
+            rating: 5
+          }
+        ],
+        price: 'R$ 97,00',
+        guarantee: '30 dias de garantia incondicional',
+        urgency: ['Oferta limitada - apenas hoje!'],
+        socialProof: '+ de 10.000 clientes satisfeitos'
+      },
+      images: {
+        hero: '/images/product-hero.jpg',
+        product: '/images/product-shot.jpg',
+        testimonials: ['/images/testimonial-1.jpg'],
+        logos: ['/images/guarantee-badge.png']
+      },
+      metadata: {
+        title: 'Produto - Oferta Especial',
+        description: 'Produto revolucionário com resultados comprovados',
+        keywords: ['produto', 'oferta', 'resultado'],
+        author: 'Vendedor',
+        price: 'R$ 97,00'
+      },
+      technicalInfo: {
+        platform: 'custom',
+        hasChat: false,
+        hasPixels: true,
+        mobileOptimized: true,
+        loadTime: 2.5,
+        seoScore: 85
+      }
+    }
   }
 }
