@@ -1,0 +1,19 @@
+{
+  "source": "https://5y1c6.doctormurin.com/l",
+  "downloadDate": "2025-08-29T17:28:26.939Z",
+  "totalImages": 1,
+  "images": [
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/header_img1.png",
+      "cleanedFile": "correct-heroheadertop-0-70a53efc.jpg",
+      "context": "hero|header|top",
+      "hasLightBackground": true,
+      "backgroundAnalysis": {
+        "hasLightBackground": true,
+        "lightPercentage": 100,
+        "analysis": "100.0% light pixels"
+      }
+    }
+  ],
+  "criteria": "Only images with light backgrounds matching original design"
+}

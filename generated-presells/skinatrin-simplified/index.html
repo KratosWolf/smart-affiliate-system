@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skinatrin - Skuteczne leczenie grzybicy paznokci</title>
+    <meta name="description" content="Skinatrin to kompleksowy preparat przeciw grzybicy paznokci. 50% zniżki tylko dziś!">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Section */
+        .header {
+            background: #ffffff;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .discount-badge {
+            background: #ff4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #666666;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        /* CTA Button - Matching Original */
+        .cta-button {
+            background-color: #28a745;
+            color: #ffffff;
+            padding: 14px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .cta-button:hover {
+            background-color: #218838;
+        }
+        
+        /* Content Sections */
+        .section {
+            margin: 40px 0;
+            padding: 30px 0;
+        }
+        
+        .section h2 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* Benefits List */
+        .benefits {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .benefit-item:last-child {
+            border-bottom: none;
+        }
+        
+        .benefit-icon {
+            color: #28a745;
+            margin-right: 12px;
+            font-size: 18px;
+            margin-top: 2px;
+        }
+        
+        .benefit-text {
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .benefit-text strong {
+            color: #2c3e50;
+        }
+        
+        /* Price Section */
+        .price-section {
+            background: #ffffff;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .old-price {
+            font-size: 18px;
+            color: #999999;
+            text-decoration: line-through;
+            margin-bottom: 10px;
+        }
+        
+        .new-price {
+            font-size: 36px;
+            color: #28a745;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .discount-info {
+            color: #ff4444;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 40px 0;
+        }
+        
+        .testimonial {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 10px;
+            color: #555555;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        /* Expert Section */
+        .expert-section {
+            background: #e8f5e9;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .expert-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .expert-quote {
+            font-style: italic;
+            color: #555555;
+            margin-bottom: 10px;
+        }
+        
+        .expert-name {
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        /* Statistics */
+        .stats {
+            text-align: center;
+            background: #fff3cd;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .stats h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .stat-text {
+            color: #856404;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #666666;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+            margin-top: 50px;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+            }
+            
+            .section {
+                padding: 20px 0;
+            }
+            
+            .benefits, .testimonials, .price-section {
+                padding: 20px;
+            }
+            
+            .new-price {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="discount-badge">50% ZNIŻKI DZIŚ</div>
+            <h1>Skinatrin - Kompleksowe działanie przeciw grzybicy</h1>
+            <p class="subtitle">
+                Wysoka skuteczność bez efektów ubocznych.<br>
+                Potwierdzona badaniami i tysięcy zadowolonych klientów w Europie.
+            </p>
+            
+            <a href="https://5y1c6.doctormurin.com/l" class="cta-button">
+                ZAMAWIAM SKINATRIN
+            </a>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="benefits">
+            <h2>Dlaczego Skinatrin jest tak skuteczny?</h2>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">✓</span>
+                <div class="benefit-text">
+                    <strong>Walczy z grzybicą paznokci</strong><br>
+                    Skutecznie eliminuje grzyby odpowiedzialne za infekcje paznokci
+                </div>
+            </div>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">✓</span>
+                <div class="benefit-text">
+                    <strong>Zmiękoza stwardniałą skórę</strong><br>
+                    Pomaga w leczeniu pęknięć pięt i stwardniałej skóry
+                </div>
+            </div>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">✓</span>
+                <div class="benefit-text">
+                    <strong>Odżywia paznokcie</strong><br>
+                    Reaktywuje płytkę paznokciową i promuje wzrost nowych, silniejszych paznokci
+                </div>
+            </div>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">✓</span>
+                <div class="benefit-text">
+                    <strong>Chroni przed infekcjami grzybiczymi</strong><br>
+                    Zapobiega ponownym infekcjom i chroni przed nowymi zakażeniami
+                </div>
+            </div>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">✓</span>
+                <div class="benefit-text">
+                    <strong>Zmniejsza potliwość stóp i dłoni</strong><br>
+                    Skutecznie redukuje nadmierne pocenie się
+                </div>
+            </div>
+        </div>
+
+        <!-- Price Section -->
+        <div class="price-section">
+            <h2>Oferta specjalna - tylko dziś!</h2>
+            
+            <div class="old-price">Cena regularna: 194 PLN</div>
+            <div class="new-price">97 PLN</div>
+            <div class="discount-info">Oszczędzasz 97 PLN (50% zniżki)</div>
+            
+            <a href="https://5y1c6.doctormurin.com/l" class="cta-button">
+                ZAMAWIAM ZE ZNIŻKĄ
+            </a>
+        </div>
+
+        <!-- Expert Section -->
+        <div class="expert-section">
+            <h3>Rekomendacja specjalisty</h3>
+            <div class="expert-quote">
+                "Skinatrin to przełom w leczeniu grzybicy paznokci. 
+                Jego skuteczność została potwierdzona badaniami klinicznymi."
+            </div>
+            <div class="expert-name">Podolog Jan Korzeniewski</div>
+        </div>
+
+        <!-- Testimonials -->
+        <div class="testimonials">
+            <h2>Opinie naszych klientów</h2>
+            
+            <div class="testimonial">
+                <div class="testimonial-text">
+                    "Wreszcie znalazłam coś, co działa! Po 3 tygodniach grzyby zaczęły zanikać. 
+                    Bardzo polecam!"
+                </div>
+                <div class="testimonial-author">- Maja, 34 lata</div>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-text">
+                    "Cierpiałem na grzybicę przez lata. Skinatrin rozwiązał problem definitywnie. 
+                    Wart każdej wydanej złotówki."
+                </div>
+                <div class="testimonial-author">- Arkadiusz, 28 lat</div>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-text">
+                    "Oprócz wyeliminowania grzybów, moje paznokcie stały się dużo ładniejsze 
+                    i zdrowsze. Produkt wyjątkowy!"
+                </div>
+                <div class="testimonial-author">- Maria, 42 lata</div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats">
+            <h3>Ważne dane statystyczne</h3>
+            <div class="stat-text">
+                <strong>51% mężczyzn</strong> i <strong>47% kobiet</strong> 
+                zmaga się z grzybicą i potliwością stóp
+            </div>
+        </div>
+
+        <!-- Final CTA -->
+        <div class="price-section">
+            <h2>Ostatnia szansa - nie przegap!</h2>
+            <p style="margin-bottom: 20px; color: #666;">
+                Pozwól sobie na zdrowe paznokcie już dziś.<br>
+                <strong>Oferta ważna tylko dziś!</strong>
+            </p>
+            
+            <a href="https://5y1c6.doctormurin.com/l" class="cta-button">
+                TAK! CHCĘ SKINATRIN ZE ZNIŻKĄ
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2025 Skinatrin - Wszystkie prawa zastrzeżone</p>
+            <p>Ta strona nie jest powiązana z Facebookiem ani żadną jednostką Facebooka.</p>
+        </div>
+    </div>
+
+    <script>
+        // Simple click tracking
+        function trackClick(element) {
+            console.log('Click tracked:', element);
+        }
+        
+        // Add click tracking to buttons
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', () => trackClick('cta'));
+        });
+    </script>
+</body>
+</html>

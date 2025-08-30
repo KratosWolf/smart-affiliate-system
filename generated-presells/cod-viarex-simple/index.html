@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viarex - Comandați cu reducere</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+        
+        .timer {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .product-image {
+            width: 200px;
+            height: 250px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            margin: 0 auto 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .pricing {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .price-old {
+            font-size: 1.5rem;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
+        .price-new {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .form-container {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            border-color: #ff6b35;
+            outline: none;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .required {
+            color: red;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>VIAREX</h1>
+            <p>Șansa dvs. de a prelungi tinerețea</p>
+            <div class="timer">
+                <h3>⏰ Doar astăzi - REDUCERE -50%</h3>
+                <p>Comandați acum cu preț promoțional!</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="product-image">
+                VIAREX<br>💊<br>Capsule
+            </div>
+            
+            <h2>Restabilirea nivelului de testosteron</h2>
+            <p style="font-size: 1.1rem; margin: 20px 0; color: #666;">
+                Ajută la restabilirea nivelului de testosteron, îmbunătățind sănătatea masculină. 
+                Ajută la creșterea erecției și oprirea îmbătrânirii.
+            </p>
+            
+            <!-- Pricing -->
+            <div class="pricing">
+                <div class="price-old">Prețul vechi: 298 RON</div>
+                <div class="price-new">149 RON</div>
+                <p>🚚 Livrare gratuită | 📦 Plata la livrare</p>
+            </div>
+            
+            <!-- Order Form -->
+            <div class="form-container">
+                <h3>Comandați cu reducere</h3>
+                <p>Completați datele și veți fi contactat în 15 minute</p>
+                
+                <form action="https://2xs1b.doctormurin.com/l" method="POST">
+                    <!-- Your affiliate data -->
+                    <input type="hidden" name="_bid" value="215762">
+                    <input type="hidden" name="_v" value="d39ac2f1-608f-4c98-a31b-30b4392ccd76">
+                    <input type="hidden" name="unique_id" value="d39ac2f1-608f-4c98-a31b-30b4392ccd76">
+                    
+                    <div class="form-group">
+                        <label>Numele <span class="required">*</span></label>
+                        <input type="text" name="name" placeholder="Numele" required class="input name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Telefon <span class="required">*</span></label>
+                        <input type="tel" name="phone" placeholder="Telefon" required class="input phone">
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        🛒 Comandați cu reducere - 149 RON
+                    </button>
+                    
+                    <p style="text-align: center; margin-top: 15px; color: #666; font-size: 0.9rem;">
+                        * Funcționează asupra mărfurilor în limitele unui canal de distribuție
+                    </p>
+                </form>
+            </div>
+            
+            <!-- Security -->
+            <div style="display: flex; justify-content: center; gap: 30px; margin-top: 30px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="color: #ff6b35;">🔒</span>
+                    <span>Date protejate</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="color: #ff6b35;">📞</span>
+                    <span>Apel în 15 min</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="color: #ff6b35;">💰</span>
+                    <span>Plata la livrare</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

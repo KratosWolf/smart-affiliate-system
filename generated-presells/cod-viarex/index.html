@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viarex - Comandați cu reducere</title>
+    <meta name="description" content="Viarex - Restabilirea testosteronului și sănătății masculine">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .timer-warning {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .timer-warning h3 {
+            color: #ffeb3b;
+            margin-bottom: 10px;
+        }
+        
+        /* Product Section */
+        .product-section {
+            background: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+        
+        .product-image {
+            width: 250px;
+            height: 300px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            margin: 0 auto 30px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.4);
+            position: relative;
+        }
+        
+        .product-image::after {
+            content: "VIAREX";
+            position: absolute;
+            bottom: 20px;
+            font-size: 24px;
+            font-weight: 900;
+        }
+        
+        .product-title {
+            font-size: 2.5rem;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .product-description {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+        
+        /* Benefits */
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .benefit {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: left;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #ff6b35;
+        }
+        
+        .benefit h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .benefit p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Pricing */
+        .pricing-section {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+        
+        .price-comparison {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .price-old {
+            font-size: 2rem;
+            text-decoration: line-through;
+            opacity: 0.7;
+            background: rgba(255,255,255,0.1);
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+        
+        .price-new {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: rgba(255,255,255,0.2);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .discount-badge {
+            background: #d32f2f;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* COD Form Section */
+        .cod-form-section {
+            background: white;
+            padding: 60px 0;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .form-header h2 {
+            font-size: 2.5rem;
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+        
+        .form-header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+        
+        .cod-form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 30px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #1e3c72;
+            font-size: 1.1rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .required {
+            color: #d32f2f;
+        }
+        
+        /* Order Summary */
+        .order-summary {
+            background: white;
+            border: 3px solid #ff6b35;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+        
+        .order-summary h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.1rem;
+        }
+        
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 3px solid #ff6b35;
+        }
+        
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 22px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.6);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Security Info */
+        .security-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .security-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            color: #666;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .security-icon {
+            font-size: 1.5rem;
+            color: #ff6b35;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .product-title {
+                font-size: 2rem;
+            }
+            
+            .price-new {
+                font-size: 3rem;
+            }
+            
+            .cod-form {
+                padding: 30px 20px;
+                margin: 0 10px;
+            }
+            
+            .form-header h2 {
+                font-size: 2rem;
+            }
+            
+            .security-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .benefits {
+                grid-template-columns: 1fr;
+            }
+            
+            .price-comparison {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+        
+        /* Loading State */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .loading .submit-btn {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>VIAREX</h1>
+            <p class="subtitle">Șansa dvs. de a prelungi tinerețea</p>
+            
+            <div class="timer-warning">
+                <h3>⏰ Doar astăzi 29 august</h3>
+                <p>Până la sfârșitul promoției au rămas: 02:26:57</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Product Section -->
+    <section class="product-section">
+        <div class="container">
+            <div class="product-image">
+                💊<br>Capsule<br>Naturale
+            </div>
+            
+            <h2 class="product-title">Restabilirea nivelului de testosteron</h2>
+            
+            <p class="product-description">
+                Ajută la restabilirea nivelului de testosteron, îmbunătățind sănătatea masculină. 
+                Ajută la creșterea erecției, normalizând activitatea sistemului genito-urinar. 
+                Ajută la oprirea îmbătrânirii, restabilind nivelul hormonilor masculini.
+            </p>
+            
+            <div class="benefits">
+                <div class="benefit">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Restabilește testosteronul</h3>
+                    <p>Ajută la restabilirea nivelului natural de testosteron în organism</p>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">💪</div>
+                    <h3>Îmbunătățește erecția</h3>
+                    <p>Normalizează activitatea sistemului genito-urinar și potența</p>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">🌟</div>
+                    <h3>Oprește îmbătrânirea</h3>
+                    <p>Restabilește nivelul hormonilor masculini și energia</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="discount-badge">REDUCERE -50%</div>
+            
+            <div class="price-comparison">
+                <div class="price-old">Prețul vechi: 298 RON</div>
+                <div class="price-new">149 RON</div>
+            </div>
+            
+            <p style="font-size: 1.2rem;">🚚 Livrare gratuită | 📦 Plata la primirea coletului</p>
+        </div>
+    </section>
+
+    <!-- COD Form Section -->
+    <section class="cod-form-section">
+        <div class="container">
+            <div class="form-header">
+                <h2>Comandați cu reducere</h2>
+                <p>Completați datele și veți fi contactat în 15 minute</p>
+            </div>
+            
+            <form class="cod-form" action="https://2xs1b.doctormurin.com/l" method="POST" id="codForm">
+                <!-- Hidden tracking fields with your affiliate data -->
+                <input type="hidden" name="_bid" value="215762">
+                <input type="hidden" name="_v" value="d39ac2f1-608f-4c98-a31b-30b4392ccd76">
+                <input type="hidden" name="unique_id" value="d39ac2f1-608f-4c98-a31b-30b4392ccd76">
+                
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <h3>📦 Comanda dvs.</h3>
+                    <div class="order-item">
+                        <span>Viarex (1 pachet)</span>
+                        <span>149 RON</span>
+                    </div>
+                    <div class="order-item">
+                        <span>Livrare gratuită</span>
+                        <span>0 RON</span>
+                    </div>
+                    <div class="order-total">
+                        <span>TOTAL:</span>
+                        <span>149 RON</span>
+                    </div>
+                </div>
+                
+                <!-- Form Fields - EXACT same as producer -->
+                <div class="form-group">
+                    <label for="name">Numele <span class="required">*</span></label>
+                    <input type="text" 
+                           id="name" 
+                           name="name" 
+                           placeholder="Numele" 
+                           class="input name"
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Telefon <span class="required">*</span></label>
+                    <input type="tel" 
+                           id="phone" 
+                           name="phone" 
+                           placeholder="Telefon" 
+                           class="input phone"
+                           required>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">
+                    🛒 Comandați cu reducere
+                </button>
+                
+                <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.9rem;">
+                    * Funcționează asupra mărfurilor în limitele unui canal de distribuție
+                </p>
+                
+                <!-- Security Info -->
+                <div class="security-info">
+                    <div class="security-item">
+                        <span class="security-icon">🔒</span>
+                        <span>Date protejate</span>
+                    </div>
+                    <div class="security-item">
+                        <span class="security-icon">📞</span>
+                        <span>Apel în 15 min</span>
+                    </div>
+                    <div class="security-item">
+                        <span class="security-icon">💰</span>
+                        <span>Plata la livrare</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        // Minimal JavaScript - only essential functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Viarex COD template loaded');
+            
+            // Basic form validation only
+            const form = document.getElementById('codForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const name = document.getElementById('name').value.trim();
+                    const phone = document.getElementById('phone').value.trim();
+                    
+                    if (!name || !phone) {
+                        e.preventDefault();
+                        alert('Te rog completează toate câmpurile obligatorii!');
+                        return false;
+                    }
+                    
+                    // Form will submit naturally to producer
+                    return true;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

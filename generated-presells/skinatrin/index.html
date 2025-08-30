@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skinatrin - Tratamento Completo Contra Fungos nas Unhas</title>
+    <meta name="description" content="Skinatrin combate fungos nas unhas e pés com 50% de desconto. Testado por milhares na Europa. Resultados garantidos sem efeitos colaterais.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .discount-badge {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .subheadline {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        /* CTA Button */
+        .cta-button {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 20px 0;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.6);
+        }
+        
+        /* Benefits */
+        .benefits {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .benefits h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .benefit-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: #27ae60;
+        }
+        
+        /* Price */
+        .price-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .old-price {
+            text-decoration: line-through;
+            font-size: 1.2rem;
+            color: #ecf0f1;
+            opacity: 0.8;
+        }
+        
+        .new-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #f39c12;
+            margin: 10px 0;
+        }
+        
+        .discount-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .testimonial {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+        
+        /* Expert */
+        .expert-section {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .cta-button {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            z-index: 9999;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="discount-badge">🔥 50% DE DESCONTO HOJE</div>
+            <h1>Skinatrin: Elimine Fungos nas Unhas de Forma Definitiva</h1>
+            <p class="subheadline">
+                Tratamento completo e comprovado cientificamente.<br>
+                Usado por milhares de pessoas na Europa com resultados surpreendentes!
+            </p>
+            
+            <a href="https://5y1c6.doctormurin.com/l" class="cta-button" onclick="trackClick('header')">
+                ✨ QUERO ELIMINAR OS FUNGOS AGORA
+            </a>
+        </div>
+
+        <!-- Benefits -->
+        <div class="benefits">
+            <h3>💪 Por que Skinatrin é a Solução Definitiva?</h3>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">🦠</span>
+                <span><strong>Combate Fungos Eficazmente:</strong> Elimina fungos nas unhas e pés de forma definitiva</span>
+            </div>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">💅</span>
+                <span><strong>Nutre e Fortalece:</strong> Reativa a placa ungueal promovendo unhas novas e mais fortes</span>
+            </div>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">👣</span>
+                <span><strong>Suaviza a Pele:</strong> Trata pele endurecida e calcanhares rachados</span>
+            </div>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">💧</span>
+                <span><strong>Para o Suor Excessivo:</strong> Reduz suor nos pés e mãos significativamente</span>
+            </div>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">🛡️</span>
+                <span><strong>Sem Efeitos Colaterais:</strong> Fórmula natural e segura para uso prolongado</span>
+            </div>
+            
+            <div class="benefit-item">
+                <span class="benefit-icon">🔬</span>
+                <span><strong>Comprovado Cientificamente:</strong> Eficácia confirmada por estudos clínicos</span>
+            </div>
+        </div>
+
+        <!-- Price Section -->
+        <div class="price-section">
+            <h3>🎯 Oferta Especial - Por Tempo Limitado</h3>
+            
+            <div class="old-price">De: R$ 198,00</div>
+            <div class="new-price">Por apenas: R$ 99,00</div>
+            <div class="discount-text">💥 Economia de R$ 99,00 (50% OFF)</div>
+            
+            <a href="https://5y1c6.doctormurin.com/l" class="cta-button" onclick="trackClick('price')">
+                🚀 APROVEITAR DESCONTO AGORA
+            </a>
+        </div>
+
+        <!-- Expert -->
+        <div class="expert-section">
+            <h3>👨‍⚕️ Recomendado por Especialistas</h3>
+            <p style="font-size: 1.1rem; margin: 15px 0;">
+                <strong>Jan Korzeniewski, Podólogo:</strong><br>
+                "Skinatrin é o tratamento mais eficaz que já recomendei. 
+                Os resultados são visíveis em poucas semanas e sem riscos à saúde."
+            </p>
+        </div>
+
+        <!-- Testimonials -->
+        <div class="testimonials">
+            <h3>💬 O Que Dizem Nossos Clientes</h3>
+            
+            <div class="testimonial">
+                <p>"Finalmente encontrei algo que funciona! Em 3 semanas os fungos começaram a desaparecer. Recomendo muito!"</p>
+                <div class="testimonial-author">⭐⭐⭐⭐⭐ Maja, 34 anos</div>
+            </div>
+            
+            <div class="testimonial">
+                <p>"Sofria com fungos há anos. Skinatrin resolveu o problema de forma definitiva. Vale cada centavo investido."</p>
+                <div class="testimonial-author">⭐⭐⭐⭐⭐ Arkadiusz, 28 anos</div>
+            </div>
+            
+            <div class="testimonial">
+                <p>"Além de eliminar os fungos, minhas unhas ficaram muito mais bonitas e saudáveis. Produto excepcional!"</p>
+                <div class="testimonial-author">⭐⭐⭐⭐⭐ Maria, 42 anos</div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="benefits">
+            <h3>📊 Dados Importantes</h3>
+            <div style="text-align: center; font-size: 1.1rem; color: #e74c3c;">
+                <p><strong>51% dos homens</strong> e <strong>47% das mulheres</strong> sofrem com fungos e suor nos pés</p>
+                <p style="margin-top: 15px; color: #27ae60;"><strong>Milhares de clientes satisfeitos em toda a Europa!</strong></p>
+            </div>
+        </div>
+
+        <!-- Final CTA -->
+        <div class="price-section">
+            <h3>⚡ Última Chance - Não Perca!</h3>
+            <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                Elimine os fungos de vez e tenha unhas saudáveis novamente.<br>
+                <strong>Oferta válida apenas hoje!</strong>
+            </p>
+            
+            <a href="https://5y1c6.doctormurin.com/l" class="cta-button" onclick="trackClick('final')">
+                💥 SIM! QUERO MEU SKINATRIN COM 50% OFF
+            </a>
+            
+            <p style="font-size: 0.9rem; margin-top: 15px; opacity: 0.9;">
+                🚚 Entrega rápida | 🔒 Compra 100% segura | ⭐ Milhares de avaliações positivas
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Este site não é afiliado ao Facebook ou a qualquer entidade do Facebook.</p>
+            <p>Depois que você sair do Facebook, a responsabilidade não é mais deles e sim do nosso site.</p>
+            <p><a href="/privacy" style="color: #7f8c8d;">Política de Privacidade</a> | <a href="/terms" style="color: #7f8c8d;">Termos de Uso</a></p>
+            <p style="margin-top: 15px;">© 2025 - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Click tracking
+        function trackClick(position) {
+            console.log('Click tracked:', position);
+            
+            // Google Analytics / Facebook Pixel aqui
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'click', {
+                    'event_category': 'CTA',
+                    'event_label': position
+                });
+            }
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animate elements on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.benefits, .testimonials, .price-section');
+            elements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Urgency countdown (opcional)
+        let timeLeft = 3600; // 1 hora
+        const countdownElement = document.querySelector('.discount-badge');
+        
+        if (countdownElement) {
+            setInterval(() => {
+                timeLeft--;
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+                
+                if (timeLeft > 0) {
+                    countdownElement.innerHTML = `🔥 OFERTA EXPIRA EM: ${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

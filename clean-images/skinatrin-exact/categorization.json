@@ -1,0 +1,203 @@
+{
+  "analysis": [
+    {
+      "filename": "exact-image-0-7de41f92.jpg",
+      "width": 170,
+      "height": 57,
+      "aspectRatio": "2.98",
+      "backgroundType": "dark",
+      "likelyUse": "hero or banner image"
+    },
+    {
+      "filename": "exact-image-10-27bea320.jpg",
+      "width": 219,
+      "height": 53,
+      "aspectRatio": "4.13",
+      "backgroundType": "dark",
+      "likelyUse": "hero or banner image"
+    },
+    {
+      "filename": "exact-image-11-4e444fb0.jpg",
+      "width": 97,
+      "height": 55,
+      "aspectRatio": "1.76",
+      "backgroundType": "dark",
+      "likelyUse": "hero or banner image"
+    },
+    {
+      "filename": "exact-image-2-dfc1e522.jpg",
+      "width": 400,
+      "height": 400,
+      "aspectRatio": "1.00",
+      "backgroundType": "dark",
+      "likelyUse": "before/after or detail image"
+    },
+    {
+      "filename": "exact-image-3-6d7c9317.jpg",
+      "width": 400,
+      "height": 400,
+      "aspectRatio": "1.00",
+      "backgroundType": "dark",
+      "likelyUse": "before/after or detail image"
+    },
+    {
+      "filename": "exact-image-4-bbad0c46.jpg",
+      "width": 191,
+      "height": 195,
+      "aspectRatio": "0.98",
+      "backgroundType": "dark",
+      "likelyUse": "testimonial or small icon"
+    },
+    {
+      "filename": "exact-image-5-9fdb60d6.jpg",
+      "width": 191,
+      "height": 195,
+      "aspectRatio": "0.98",
+      "backgroundType": "dark",
+      "likelyUse": "testimonial or small icon"
+    },
+    {
+      "filename": "exact-image-6-c60b854d.jpg",
+      "width": 191,
+      "height": 195,
+      "aspectRatio": "0.98",
+      "backgroundType": "dark",
+      "likelyUse": "testimonial or small icon"
+    },
+    {
+      "filename": "exact-image-7-0d92d302.jpg",
+      "width": 714,
+      "height": 702,
+      "aspectRatio": "1.02",
+      "backgroundType": "dark",
+      "likelyUse": "before/after or detail image"
+    },
+    {
+      "filename": "exact-image-8-059fe60a.jpg",
+      "width": 191,
+      "height": 191,
+      "aspectRatio": "1.00",
+      "backgroundType": "dark",
+      "likelyUse": "testimonial or small icon"
+    },
+    {
+      "filename": "exact-image-9-cb917a7f.jpg",
+      "width": 504,
+      "height": 571,
+      "aspectRatio": "0.88",
+      "backgroundType": "dark",
+      "likelyUse": "before/after or detail image"
+    }
+  ],
+  "categories": {
+    "hero": [
+      {
+        "filename": "exact-image-0-7de41f92.jpg",
+        "width": 170,
+        "height": 57,
+        "aspectRatio": "2.98",
+        "backgroundType": "dark",
+        "likelyUse": "hero or banner image"
+      },
+      {
+        "filename": "exact-image-10-27bea320.jpg",
+        "width": 219,
+        "height": 53,
+        "aspectRatio": "4.13",
+        "backgroundType": "dark",
+        "likelyUse": "hero or banner image"
+      },
+      {
+        "filename": "exact-image-11-4e444fb0.jpg",
+        "width": 97,
+        "height": 55,
+        "aspectRatio": "1.76",
+        "backgroundType": "dark",
+        "likelyUse": "hero or banner image"
+      }
+    ],
+    "product": [],
+    "testimonial": [
+      {
+        "filename": "exact-image-4-bbad0c46.jpg",
+        "width": 191,
+        "height": 195,
+        "aspectRatio": "0.98",
+        "backgroundType": "dark",
+        "likelyUse": "testimonial or small icon"
+      },
+      {
+        "filename": "exact-image-5-9fdb60d6.jpg",
+        "width": 191,
+        "height": 195,
+        "aspectRatio": "0.98",
+        "backgroundType": "dark",
+        "likelyUse": "testimonial or small icon"
+      },
+      {
+        "filename": "exact-image-6-c60b854d.jpg",
+        "width": 191,
+        "height": 195,
+        "aspectRatio": "0.98",
+        "backgroundType": "dark",
+        "likelyUse": "testimonial or small icon"
+      },
+      {
+        "filename": "exact-image-8-059fe60a.jpg",
+        "width": 191,
+        "height": 191,
+        "aspectRatio": "1.00",
+        "backgroundType": "dark",
+        "likelyUse": "testimonial or small icon"
+      }
+    ],
+    "results": [
+      {
+        "filename": "exact-image-2-dfc1e522.jpg",
+        "width": 400,
+        "height": 400,
+        "aspectRatio": "1.00",
+        "backgroundType": "dark",
+        "likelyUse": "before/after or detail image"
+      },
+      {
+        "filename": "exact-image-3-6d7c9317.jpg",
+        "width": 400,
+        "height": 400,
+        "aspectRatio": "1.00",
+        "backgroundType": "dark",
+        "likelyUse": "before/after or detail image"
+      },
+      {
+        "filename": "exact-image-7-0d92d302.jpg",
+        "width": 714,
+        "height": 702,
+        "aspectRatio": "1.02",
+        "backgroundType": "dark",
+        "likelyUse": "before/after or detail image"
+      },
+      {
+        "filename": "exact-image-9-cb917a7f.jpg",
+        "width": 504,
+        "height": 571,
+        "aspectRatio": "0.88",
+        "backgroundType": "dark",
+        "likelyUse": "before/after or detail image"
+      }
+    ]
+  },
+  "recommendations": {
+    "hero": "exact-image-0-7de41f92.jpg",
+    "product": "Not found",
+    "testimonials": [
+      "exact-image-4-bbad0c46.jpg",
+      "exact-image-5-9fdb60d6.jpg",
+      "exact-image-6-c60b854d.jpg"
+    ],
+    "results": [
+      "exact-image-2-dfc1e522.jpg",
+      "exact-image-3-6d7c9317.jpg",
+      "exact-image-7-0d92d302.jpg"
+    ]
+  }
+}

@@ -22,18 +22,20 @@ export async function GET(request: NextRequest) {
     ],
     parameters: {
       platforms: 'array - Platforms to search (clickbank, smartadv, drcash, etc.)',
-      categories: 'array - Product categories to focus on',
-      minCommission: 'number - Minimum commission percentage (default: 30)',
-      maxCommission: 'number - Maximum commission percentage (default: 100)',
+      paymentModel: 'string - Payment preference: cpa, commission, both',
+      searchMode: 'string - Search type: general, filtered',
+      categories: 'array - Product categories (optional for general search)',
+      minCommission: 'number - Minimum commission percentage (optional)',
+      minCPA: 'number - Minimum CPA value (optional)',
       countries: 'array - Target countries for products',
       languages: 'array - Languages for product search'
     },
     example: {
       platforms: ['clickbank', 'smartadv', 'drcash'],
-      categories: ['health_fitness', 'make_money_online'],
-      minCommission: 50,
+      paymentModel: 'both',
+      searchMode: 'general',
       countries: ['US', 'CA', 'GB'],
-      languages: ['en']
+      languages: ['en', 'pt']
     }
   })
 }
@@ -70,8 +72,9 @@ export async function POST(request: NextRequest) {
 
     console.log('🔍 Starting product discovery with config:', {
       platforms: discoveryConfig.platforms,
+      paymentModel: discoveryConfig.paymentModel,
+      searchMode: discoveryConfig.searchMode,
       categories: discoveryConfig.categories,
-      minCommission: discoveryConfig.minCommission,
       countries: discoveryConfig.countries
     })
 
@@ -133,8 +136,9 @@ export async function POST(request: NextRequest) {
         summary,
         config: {
           platforms: discoveryConfig.platforms,
+          paymentModel: discoveryConfig.paymentModel,
+          searchMode: discoveryConfig.searchMode,
           categories: discoveryConfig.categories,
-          minCommission: discoveryConfig.minCommission,
           countries: discoveryConfig.countries
         },
         recommendations: generateRecommendations(topOpportunities)
@@ -189,10 +193,16 @@ function generateRecommendations(opportunities: any[]) {
   // Top opportunity recommendation
   const topOpportunity = opportunities[0]
   if (topOpportunity && topOpportunity.opportunityScore >= 70) {
+    const paymentInfo = topOpportunity.paymentType === 'cpa' 
+      ? `CPA: $${topOpportunity.cpaValue}`
+      : topOpportunity.paymentType === 'hybrid'
+        ? `CPA: $${topOpportunity.cpaValue} + ${topOpportunity.commission}%`
+        : `Commission: ${topOpportunity.commission}%`
+    
     recommendations.push({
       type: 'high_opportunity',
       title: `High-Value Opportunity: ${topOpportunity.productName}`,
-      description: `Score: ${topOpportunity.opportunityScore}/100, Commission: ${topOpportunity.commission}%`,
+      description: `Score: ${topOpportunity.opportunityScore}/100, ${paymentInfo}`,
       action: 'Validate this product immediately',
       productId: topOpportunity.id
     })

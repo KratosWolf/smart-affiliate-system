@@ -26,6 +26,33 @@
 
 ---
 
+### **v1.0.1 - Templates Testados** (30 de Agosto 2024)
+**Status:** 🧪 Testes em Andamento
+
+**Templates Implementados e Testados:**
+- ✅ **Cookie Template:** APROVADO - Screenshot real capturado, cookie centralizado, responsivo
+- 🟡 **Simplified Template (Skinatrin V13):** SEMI-APROVADO - Funcional, necessita ajustes nas imagens
+- ⏳ **Review Template:** Aguardando teste
+- ⏳ **Expert Review Template:** Aguardando teste  
+- ⏳ **Quiz Template:** Aguardando teste
+- ⏳ **COD Template:** Aguardando teste
+
+**Tecnologias Implementadas:**
+- ✅ **Screenshot Capture:** Puppeteer + Chrome para captura automática
+- ✅ **Remove.bg API:** Processamento profissional de imagens
+- ✅ **Responsive Design:** Mobile/Desktop otimizado
+- ✅ **Click Tracking:** Redirecionamento total para afiliado
+
+**Arquivos Criados:**
+- `/generated-presells/cookie-skinatrin/` - Template Cookie completo
+- `/generated-presells/skinatrin-v13/` - Template Simplified
+- `capture-direct.js` - Script de captura de screenshots
+- `setup-removebg.js` - Processamento de imagens
+
+**Próximos Testes:** Review, Expert Review, Quiz, COD templates
+
+---
+
 ### **Próximas versões (planejadas)**
 
 ### **v1.1 - Integrações Reais** (Em planejamento)

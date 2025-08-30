@@ -1,0 +1,85 @@
+{
+  "source": "https://5y1c6.doctormurin.com/l",
+  "downloadDate": "2025-08-29T17:29:17.629Z",
+  "totalImages": 11,
+  "images": [
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/logo.png",
+      "cleanedFile": "exact-image-0-7de41f92.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 2541
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/form.png",
+      "cleanedFile": "exact-image-2-dfc1e522.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 55581
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/header_img1.png",
+      "cleanedFile": "exact-image-3-6d7c9317.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 56225
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/opinie1.png",
+      "cleanedFile": "exact-image-4-bbad0c46.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 22682
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/opinie2.png",
+      "cleanedFile": "exact-image-5-9fdb60d6.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 25616
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/opinie3.png",
+      "cleanedFile": "exact-image-6-c60b854d.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 20995
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/zamow1.png",
+      "cleanedFile": "exact-image-7-0d92d302.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 333712
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/zamow2.png",
+      "cleanedFile": "exact-image-8-059fe60a.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 24340
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/efekty1.png",
+      "cleanedFile": "exact-image-9-cb917a7f.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 291943
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/efekty2.png",
+      "cleanedFile": "exact-image-10-27bea320.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 12178
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/efekty3.png",
+      "cleanedFile": "exact-image-11-4e444fb0.jpg",
+      "alt": "unnamed",
+      "metadataRemoved": true,
+      "size": 6236
+    }
+  ],
+  "note": "Filtered out PRZED/PO text images, kept only real photos"
+}

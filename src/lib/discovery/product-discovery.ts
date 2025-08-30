@@ -10,6 +10,8 @@ export interface ProductOpportunity {
   platform: 'clickbank' | 'smartadv' | 'drcash' | 'warriorplus' | 'jvzoo' | 'digistore24' | 'other'
   category: string
   commission: number
+  paymentType: 'cpa' | 'commission' | 'hybrid'
+  cpaValue?: number // Fixed CPA amount
   gravity?: number // ClickBank metric
   conversionRate?: number
   averagePrice: number
@@ -35,14 +37,17 @@ export interface ProductOpportunity {
 
 export interface DiscoveryConfig {
   platforms: string[]
-  categories: string[]
-  minCommission: number
-  maxCommission: number
+  paymentModel: 'cpa' | 'commission' | 'both'
+  searchMode: 'general' | 'filtered'
+  categories?: string[]
+  minCommission?: number
+  maxCommission?: number
+  minCPA?: number
   minGravity?: number // ClickBank
   languages: string[]
   countries: string[]
-  excludeKeywords: string[]
-  includeKeywords: string[]
+  excludeKeywords?: string[]
+  includeKeywords?: string[]
 }
 
 export class ProductDiscoveryEngine {
@@ -236,19 +241,32 @@ export class ProductDiscoveryEngine {
       {
         nickname: 'leptitox',
         title: 'Leptitox - Weight Loss Supplement',
-        category: 'Health & Fitness',
+        category: 'health_fitness',
         gravity: 156.2,
         commission: 75,
+        paymentType: 'commission' as const,
         averagePrice: 69,
         hasAffPage: true
       },
       {
         nickname: 'manifestation',
         title: 'Manifestation Magic',
-        category: 'Self Help',
+        category: 'personal_development',
         gravity: 89.4,
         commission: 60,
+        paymentType: 'commission' as const,
         averagePrice: 47,
+        hasAffPage: true
+      },
+      {
+        nickname: 'ecom-secrets',
+        title: 'Ecom Success Academy',
+        category: 'econ',
+        gravity: 124.8,
+        commission: 0,
+        paymentType: 'cpa' as const,
+        cpaValue: 89,
+        averagePrice: 197,
         hasAffPage: true
       }
     ]
@@ -538,19 +556,23 @@ export class ProductDiscoveryEngine {
  */
 export const defaultDiscoveryConfig: DiscoveryConfig = {
   platforms: ['clickbank', 'smartadv', 'drcash', 'warriorplus', 'jvzoo'],
+  paymentModel: 'both',
+  searchMode: 'general',
   categories: [
     'health_fitness',
     'make_money_online', 
     'personal_development',
     'business_marketing',
     'technology_software',
-    'relationships_dating'
+    'relationships_dating',
+    'econ'
   ],
   minCommission: 30,
   maxCommission: 100,
+  minCPA: 25,
   minGravity: 20, // ClickBank specific
   languages: ['en', 'pt', 'es'],
   countries: ['US', 'CA', 'GB', 'AU', 'BR', 'DE', 'FR'],
   excludeKeywords: ['scam', 'fake', 'illegal', 'adult'],
-  includeKeywords: ['course', 'system', 'method', 'software', 'program']
+  includeKeywords: ['course', 'system', 'method', 'software', 'program', 'product']
 }

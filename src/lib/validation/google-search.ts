@@ -9,7 +9,7 @@ export class GoogleSearchClient {
   private baseUrl = 'https://www.googleapis.com/customsearch/v1';
 
   constructor(apiKey?: string, searchEngineId?: string) {
-    this.apiKey = apiKey || process.env.GOOGLE_SEARCH_API_KEY || '';
+    this.apiKey = apiKey || process.env.GOOGLE_API_KEY || '';
     this.searchEngineId = searchEngineId || process.env.GOOGLE_SEARCH_ENGINE_ID || '';
     
     if (!this.apiKey || !this.searchEngineId) {

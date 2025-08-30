@@ -1,0 +1,85 @@
+{
+  "source": "/Users/tiagofernandes/Desktop/VIBE/smart-affiliate-system/clean-images/skinatrin-exact",
+  "processDate": "2025-08-29T17:50:24.871Z",
+  "totalProcessed": 11,
+  "images": [
+    {
+      "originalFile": "exact-image-0-7de41f92.jpg",
+      "cleanedFile": "skinatrin-clean-0-49711240.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-10-27bea320.jpg",
+      "cleanedFile": "skinatrin-clean-1-92654914.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-11-4e444fb0.jpg",
+      "cleanedFile": "skinatrin-clean-2-d616019b.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-2-dfc1e522.jpg",
+      "cleanedFile": "skinatrin-clean-3-befaa27e.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-3-6d7c9317.jpg",
+      "cleanedFile": "skinatrin-clean-4-aaa6a609.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-4-bbad0c46.jpg",
+      "cleanedFile": "skinatrin-clean-5-5d03fe2c.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-5-9fdb60d6.jpg",
+      "cleanedFile": "skinatrin-clean-6-750f9746.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-6-c60b854d.jpg",
+      "cleanedFile": "skinatrin-clean-7-211f6ef9.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-7-0d92d302.jpg",
+      "cleanedFile": "skinatrin-clean-8-4ffa5448.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-8-059fe60a.jpg",
+      "cleanedFile": "skinatrin-clean-9-a6b536d0.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    },
+    {
+      "originalFile": "exact-image-9-cb917a7f.jpg",
+      "cleanedFile": "skinatrin-clean-10-00252799.png",
+      "backgroundRemoved": true,
+      "transparent": true,
+      "format": "PNG"
+    }
+  ],
+  "note": "Dark backgrounds removed, converted to PNG with transparency"
+}

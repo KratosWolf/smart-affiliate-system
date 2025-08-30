@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKINATRIN - Zwycięzca grzybicy paznokci</title>
+    <meta name="description" content="Skinatrin spray przeciwko grzybicy paznokci. Skuteczne działanie, wysoka skuteczność.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #20B2AA;
+            color: #ffffff;
+            line-height: 1.4;
+        }
+        
+        /* Header with turquoise background */
+        .header {
+            background: linear-gradient(135deg, #20B2AA 0%, #17a2b8 100%);
+            padding: 20px 0;
+            position: relative;
+        }
+        
+        .nav {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 0;
+            text-align: center;
+        }
+        
+        .nav .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .nav .menu {
+            color: white;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #E8F5F5 0%, #B8E6E6 100%);
+            padding: 40px 20px;
+            text-align: center;
+            color: #333;
+            position: relative;
+        }
+        
+        .product-image {
+            float: left;
+            width: 150px;
+            height: 200px;
+            background: #20B2AA;
+            border-radius: 10px;
+            margin: 0 30px 20px 0;
+            position: relative;
+        }
+        
+        .product-image::before {
+            content: "SKINATRIN";
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .hero h1 {
+            font-size: 36px;
+            color: #20B2AA;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .hero-benefits {
+            text-align: left;
+            color: #333;
+            margin: 20px 0;
+        }
+        
+        .hero-benefits li {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        
+        .hero-benefits li::marker {
+            color: #20B2AA;
+        }
+        
+        .cta-button {
+            background: #20B2AA;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+        }
+        
+        .cta-button:hover {
+            background: #188e8a;
+        }
+        
+        .hands-image {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 200px;
+            height: 150px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150"><rect fill="%23f0f0f0" width="200" height="150"/><text x="100" y="75" text-anchor="middle" fill="%23999">Hands Image</text></svg>');
+            background-size: cover;
+        }
+        
+        /* Testimonials Section - Hexagonal */
+        .testimonials {
+            background: #20B2AA;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        
+        .testimonials-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .testimonial-hex {
+            width: 200px;
+            position: relative;
+        }
+        
+        .hex-photo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            position: relative;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+        
+        .testimonial-text {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .testimonial-name {
+            color: white;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        /* Stats Section */
+        .stats {
+            background: #20B2AA;
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: #20B2AA;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        /* Features Grid */
+        .features {
+            background: #E8F5F5;
+            padding: 50px 20px;
+            color: #333;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .feature-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            color: #20B2AA;
+            margin-bottom: 15px;
+        }
+        
+        .feature-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #20B2AA;
+            margin-bottom: 10px;
+        }
+        
+        /* Product Section */
+        .product-section {
+            background: #F0F8F8;
+            padding: 50px 20px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .product-images {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .product-bottle {
+            width: 120px;
+            height: 180px;
+            background: #20B2AA;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .product-bottle::after {
+            content: "SKINATRIN";
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .shipping-info {
+            background: #20B2AA;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        
+        /* Before After Section */
+        .before-after {
+            background: white;
+            padding: 50px 20px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .ba-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .ba-section {
+            text-align: center;
+        }
+        
+        .ba-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #20B2AA;
+            margin-bottom: 20px;
+        }
+        
+        .ba-images {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .ba-image {
+            width: 100px;
+            height: 100px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            border: 3px solid #20B2AA;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 24px;
+            }
+            
+            .testimonials-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .ba-container {
+                flex-direction: column;
+            }
+            
+            .product-images {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hands-image {
+                position: static;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav">
+        <div class="container">
+            <div class="logo">🌿 SKINATRIN</div>
+            <div class="menu">OPINIE • INFORMACJE • ZAKUPY • EFEKTY</div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <div class="product-image"></div>
+            <div class="hands-image"></div>
+            
+            <h1>SKINATRIN</h1>
+            
+            <ul class="hero-benefits">
+                <li>• Zwycięzca grzybicy paznokci</li>
+                <li>• Zmiękoza twardą naskórek</li>
+                <li>• Odżywia paznokcie</li>
+                <li>• Zabezpiecza przed infekcjami grzybiczymi</li>
+                <li>• Zmniejsza potliwość stóp i dłoni</li>
+            </ul>
+            
+            <a href="https://5y1c6.doctormurin.com/l" class="cta-button">
+                Zamawiam
+            </a>
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <div class="testimonials">
+        <div class="container">
+            <div class="testimonials-grid">
+                <div class="testimonial-hex">
+                    <div class="hex-photo"></div>
+                    <div class="testimonial-text">
+                        "Wreszcie znalazłam coś, co działa! Po 3 tygodniach grzyby zaczęły zanikać. Bardzo polecam!"
+                    </div>
+                    <div class="testimonial-name">Maja, 34 lata</div>
+                </div>
+                
+                <div class="testimonial-hex">
+                    <div class="hex-photo"></div>
+                    <div class="testimonial-text">
+                        "Cierpiałem na grzybicę przez lata. Skinatrin rozwiązał problem definitywnie. Wart każdej złotówki."
+                    </div>
+                    <div class="testimonial-name">Arkadiusz, 53 lata</div>
+                </div>
+                
+                <div class="testimonial-hex">
+                    <div class="hex-photo"></div>
+                    <div class="testimonial-text">
+                        "Oprócz wyeliminowania grzybów, moje paznokcie stały się dużo ładniejsze i zdrowsze."
+                    </div>
+                    <div class="testimonial-name">Maria, 35 lata</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="container">
+            <strong>51% mężczyzn i 47% kobiet zmaga się z grzybicą i potliwością stóp</strong> Tu niestecznym przypadek nakłada się długie leczenie. Proste rozwiązanie na poważny problem i zysk metodę dla tego długotrwałej procedur. Dzisiaj badania wykonywały, że płyty paznokciowe bez zabezpieczeń nie zawsze najlepszym wariancie zna przyjętą efektywną technickę.
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <div class="container">
+            <a href="https://5y1c6.doctormurin.com/l" class="cta-button">
+                Zamawiam!
+            </a>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">KOMPLEKSOWE DZIAŁANIE</div>
+                    <p>Jedna aplikacja Skinatrin aktywuje płynną paznokciową do produkcji substancji odżywczych!</p>
+                </div>
+                
+                <div class="feature-box">
+                    <div class="feature-icon">✨</div>
+                    <div class="feature-title">WYSOKA SKUTECZNOŚĆ</div>
+                    <p>Tysiące zadowolonych użytkowników w całej Europie potwierdziło działanie Skinatrin na grzybice!</p>
+                </div>
+                
+                <div class="feature-box">
+                    <div class="feature-icon">🛡️</div>
+                    <div class="feature-title">BRAK EFEKTÓW UBOCZNYCH</div>
+                    <p>Preparat został przysięć bez faktów zjawisk ubocznych przy stosowaniu zgodnie z instrukcją!</p>
+                </div>
+                
+                <div class="feature-box">
+                    <div class="feature-icon">🔬</div>
+                    <div class="feature-title">POTWIERDZONA BADANIAMI</div>
+                    <p>Zderenia medicy przasłały już w wynikach pomyślne przy skomplikowany grzybicy przedłożyć z Skuteczności!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Section -->
+    <div class="product-section">
+        <div class="container">
+            <h2 style="color: #20B2AA; font-size: 32px; margin-bottom: 20px;">
+                JAK DZIAŁA SPRAY SKINATRIN:
+            </h2>
+            
+            <div class="product-images">
+                <div class="product-bottle"></div>
+                <div class="product-bottle"></div>
+                <div class="product-bottle"></div>
+            </div>
+            
+            <div class="shipping-info">
+                <h3>🛒 WYSYŁKA I PŁATNOŚCI</h3>
+                <p>Przesyłka za spraworem będną realizowana.<br>
+                Zostanie Ci cena 73 zł za początku przekazani<br>
+                Oferujemy prawne, dostawę możliwość...</p>
+            </div>
+            
+            <a href="https://5y1c6.doctormurin.com/l" class="cta-button">
+                Zamów teraz!
+            </a>
+        </div>
+    </div>
+
+    <!-- Before After Section -->
+    <div class="before-after">
+        <div class="container">
+            <div class="ba-container">
+                <div class="ba-section">
+                    <div class="ba-title">PRZED</div>
+                    <div class="ba-images">
+                        <div class="ba-image"></div>
+                        <div class="ba-image"></div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; align-items: center;">
+                    <a href="https://5y1c6.doctormurin.com/l" class="cta-button">
+                        Zamawiam!
+                    </a>
+                </div>
+                
+                <div class="ba-section">
+                    <div class="ba-title">PO</div>
+                    <div class="ba-images">
+                        <div class="ba-image"></div>
+                        <div class="ba-image"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple click tracking
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('CTA clicked:', this.textContent);
+            });
+        });
+    </script>
+</body>
+</html>

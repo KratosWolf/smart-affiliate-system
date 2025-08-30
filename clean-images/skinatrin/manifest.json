@@ -1,0 +1,79 @@
+{
+  "source": "https://5y1c6.doctormurin.com/l",
+  "downloadDate": "2025-08-29T17:07:44.353Z",
+  "totalImages": 12,
+  "images": [
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/logo.png",
+      "cleanedFile": "skinatrin-0-fcf6e844c01d.jpg",
+      "name": "extracted-0",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/close.png",
+      "cleanedFile": "skinatrin-1-0d1ca31641a4.jpg",
+      "name": "extracted-1",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/form.png",
+      "cleanedFile": "skinatrin-2-17ecd38f6649.jpg",
+      "name": "extracted-2",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/header_img1.png",
+      "cleanedFile": "skinatrin-3-3b3956a96d1d.jpg",
+      "name": "extracted-3",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/opinie1.png",
+      "cleanedFile": "skinatrin-4-508035f8d83c.jpg",
+      "name": "extracted-4",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/opinie2.png",
+      "cleanedFile": "skinatrin-5-eca04695db63.jpg",
+      "name": "extracted-5",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/opinie3.png",
+      "cleanedFile": "skinatrin-6-f662f3b44bb9.jpg",
+      "name": "extracted-6",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/zamow1.png",
+      "cleanedFile": "skinatrin-7-cb613a6d02eb.jpg",
+      "name": "extracted-7",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/zamow2.png",
+      "cleanedFile": "skinatrin-8-60af6dcd6358.jpg",
+      "name": "extracted-8",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/efekty1.png",
+      "cleanedFile": "skinatrin-9-5623960a78e6.jpg",
+      "name": "extracted-9",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/efekty2.png",
+      "cleanedFile": "skinatrin-10-81ed3121ac53.jpg",
+      "name": "extracted-10",
+      "metadataRemoved": true
+    },
+    {
+      "originalUrl": "https://static.statthroat.tech/pages/0af9f6b4-c2d5-46b5-987c-f421c8f9921f/images/efekty3.png",
+      "cleanedFile": "skinatrin-11-71419cbeb655.jpg",
+      "name": "extracted-11",
+      "metadataRemoved": true
+    }
+  ]
+}

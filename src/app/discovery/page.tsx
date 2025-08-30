@@ -71,8 +71,8 @@ export default function ProductDiscoveryPage() {
   const [isDiscovering, setIsDiscovering] = useState(false)
   const [discoveryData, setDiscoveryData] = useState<DiscoveryResponse | null>(null)
   const [selectedPlatforms, setSelectedPlatforms] = useState(['clickbank', 'smartadv', 'drcash'])
-  const [selectedCategories, setSelectedCategories] = useState(['health_fitness', 'make_money_online'])
-  const [minCommission, setMinCommission] = useState(30)
+  const [paymentModel, setPaymentModel] = useState<'cpa' | 'commission' | 'both'>('both')
+  const [searchMode, setSearchMode] = useState<'general' | 'filtered'>('general')
 
   const platforms = [
     { id: 'clickbank', name: 'ClickBank', description: 'Global marketplace' },
@@ -83,13 +83,10 @@ export default function ProductDiscoveryPage() {
     { id: 'digistore24', name: 'DigiStore24', description: 'European marketplace' }
   ]
 
-  const categories = [
-    { id: 'health_fitness', name: 'Health & Fitness', icon: '💪' },
-    { id: 'make_money_online', name: 'Make Money Online', icon: '💰' },
-    { id: 'personal_development', name: 'Personal Development', icon: '🧠' },
-    { id: 'business_marketing', name: 'Business & Marketing', icon: '📈' },
-    { id: 'technology_software', name: 'Technology & Software', icon: '💻' },
-    { id: 'relationships_dating', name: 'Relationships & Dating', icon: '❤️' }
+  const paymentModels = [
+    { id: 'both', name: 'CPA + Commission', description: 'Buscar todos os tipos de pagamento', icon: '💰' },
+    { id: 'cpa', name: 'CPA Only', description: 'Apenas produtos com CPA definido', icon: '🎯' },
+    { id: 'commission', name: 'Commission Only', description: 'Apenas produtos com comissão %', icon: '📈' }
   ]
 
   const handleDiscover = async () => {
@@ -101,10 +98,10 @@ export default function ProductDiscoveryPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           platforms: selectedPlatforms,
-          categories: selectedCategories,
-          minCommission,
+          paymentModel,
+          searchMode,
           countries: ['US', 'CA', 'GB', 'AU'],
-          languages: ['en']
+          languages: ['en', 'pt']
         })
       })
       
@@ -193,7 +190,7 @@ export default function ProductDiscoveryPage() {
               Discovery Configuration
             </CardTitle>
             <CardDescription>
-              Configure your product discovery parameters
+              Busca inteligente por produtos com maior potencial - CPA e comissões
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -224,48 +221,66 @@ export default function ProductDiscoveryPage() {
               </div>
             </div>
 
-            {/* Category Selection */}
+            {/* Payment Model Selection */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">Categories</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {categories.map(category => (
+              <h3 className="text-lg font-semibold mb-3">Tipo de Pagamento</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {paymentModels.map(model => (
                   <div
-                    key={category.id}
-                    className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                      selectedCategories.includes(category.id)
-                        ? 'border-blue-500 bg-blue-50'
+                    key={model.id}
+                    className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                      paymentModel === model.id
+                        ? 'border-green-500 bg-green-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
-                    onClick={() => {
-                      if (selectedCategories.includes(category.id)) {
-                        setSelectedCategories(prev => prev.filter(c => c !== category.id))
-                      } else {
-                        setSelectedCategories(prev => [...prev, category.id])
-                      }
-                    }}
+                    onClick={() => setPaymentModel(model.id as any)}
                   >
-                    <div className="flex items-center gap-2 font-medium">
-                      <span>{category.icon}</span>
-                      {category.name}
+                    <div className="flex items-center gap-2 font-medium mb-1">
+                      <span>{model.icon}</span>
+                      {model.name}
                     </div>
+                    <div className="text-sm text-gray-600">{model.description}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Commission Filter */}
+            {/* Search Mode */}
             <div>
-              <h3 className="text-lg font-semibold mb-3">Minimum Commission</h3>
-              <div className="flex items-center gap-4">
-                <input
-                  type="range"
-                  min="10"
-                  max="100"
-                  value={minCommission}
-                  onChange={(e) => setMinCommission(Number(e.target.value))}
-                  className="flex-1"
-                />
-                <span className="text-lg font-medium">{minCommission}%</span>
+              <h3 className="text-lg font-semibold mb-3">Modo de Busca</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div
+                  className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                    searchMode === 'general'
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                  onClick={() => setSearchMode('general')}
+                >
+                  <div className="flex items-center gap-2 font-medium mb-1">
+                    <span>🎯</span>
+                    Busca Geral (Recomendado)
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Produtos com maior potencial de todas as categorias
+                  </div>
+                </div>
+                <div
+                  className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                    searchMode === 'filtered'
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                  onClick={() => setSearchMode('filtered')}
+                >
+                  <div className="flex items-center gap-2 font-medium mb-1">
+                    <span>🔍</span>
+                    Busca Específica
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Filtrar por categorias específicas
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -372,7 +387,9 @@ export default function ProductDiscoveryPage() {
                           <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
                             <span>Vendor: {opportunity.vendor}</span>
                             <span>Platform: {opportunity.platform.toUpperCase()}</span>
-                            <span>Category: {opportunity.category}</span>
+                            <Badge variant="outline" className="text-xs">
+                              {opportunity.category.replace('_', ' ').toUpperCase()}
+                            </Badge>
                           </div>
                         </div>
                         
@@ -388,8 +405,12 @@ export default function ProductDiscoveryPage() {
                         <div className="flex items-center gap-2">
                           <DollarSign className="w-4 h-4 text-green-600" />
                           <div>
-                            <div className="font-medium">{opportunity.commission}%</div>
-                            <div className="text-xs text-gray-500">Commission</div>
+                            <div className="font-medium">
+                              {opportunity.commission > 0 ? `${opportunity.commission}%` : 'CPA'}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {opportunity.commission > 0 ? 'Commission' : 'Fixed CPA'}
+                            </div>
                           </div>
                         </div>
                         

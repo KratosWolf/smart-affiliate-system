@@ -13,6 +13,7 @@ import {
   Activity,
   Globe,
   DollarSign,
+  Eye,
   Users,
   Zap,
   CheckCircle,
@@ -56,20 +57,20 @@ export default function DashboardPage() {
 
   const modules = [
     {
-      title: 'Product Validation',
-      description: 'Validate product viability with Google Search analysis',
-      icon: <Target className="w-6 h-6 text-blue-600" />,
-      href: '/',
-      status: 'active',
-      metrics: '10+ products validated'
+      title: '🔍 Discovery + Mining',
+      description: '✅ OPERATIONAL - High-volume discovery (15-30 products/day)',
+      icon: <Search className="w-6 h-6 text-green-600" />,
+      href: '/discovery-mining',
+      status: 'operational', 
+      metrics: 'Daily 6:00 AM • Multi-Geo (9 countries) • Quality-first'
     },
     {
-      title: 'Product Discovery',
-      description: 'Automated research from international platforms',
-      icon: <Search className="w-6 h-6 text-green-600" />,
-      href: '/discovery',
-      status: 'active',
-      metrics: stats ? `${stats.discovery.totalProducts} products found` : 'Loading...'
+      title: '🎯 Product Validation + Intelligence',
+      description: '✅ OPERATIONAL - Complete product analysis: Validation + YouTube + Ads + Competition',
+      icon: <Target className="w-6 h-6 text-blue-600" />,
+      href: '/validation-intelligence',
+      status: 'operational',
+      metrics: 'Real Google API • CPA 40-50% • Competition Intelligence • Multi-source analysis'
     },
     {
       title: 'Presell Generator',
@@ -199,20 +200,52 @@ export default function DashboardPage() {
             </div>
             <h1 className="text-4xl font-bold text-gray-900">Smart Affiliate System</h1>
           </div>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-600 mb-4">
             Dashboard de Performance • Sistema Completo de Marketing de Afiliados
           </p>
+          <div className="flex justify-center gap-4 mb-4">
+            <Link href="/dashboard-guide">
+              <Button variant="outline">
+                📚 Guia Completo - Como Usar Cada Ferramenta
+              </Button>
+            </Link>
+            <Link href="/channel-converter">
+              <Button variant="outline" className="text-blue-600 border-blue-600">
+                🔍 Channel ID Converter
+              </Button>
+            </Link>
+            <Button variant="outline" className="text-green-600 border-green-600">
+              ✅ Sistema Operacional v1.1
+            </Button>
+          </div>
         </div>
 
-        {/* System Status */}
-        <Card className="border-green-200 bg-green-50">
+        {/* OPERATIONAL STATUS - SISTEMA COMPLETO */}
+        <Card className="border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-green-600" />
-                <CardTitle className="text-green-900">Sistema Operacional</CardTitle>
+                <CardTitle className="text-green-900">🚀 SISTEMA 100% OPERACIONAL</CardTitle>
               </div>
               <div className="flex items-center gap-4">
+                <Button 
+                  onClick={async () => {
+                    const response = await fetch('/api/schedule-mining', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ action: 'start' })
+                    })
+                    const data = await response.json()
+                    if (data.success) {
+                      alert('✅ Mining diário agendado para 6:00 AM!')
+                    }
+                  }}
+                  className="bg-green-600 text-white hover:bg-green-700"
+                  size="sm"
+                >
+                  ⏰ Ativar Mining Diário 6:00 AM
+                </Button>
                 <Button onClick={loadDashboardStats} disabled={loading} variant="outline" size="sm">
                   <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                   Atualizar
@@ -227,26 +260,37 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {stats?.system.modulesActive || 6}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <h3 className="font-semibold text-green-900">🎯 SYSTEMS OPERATIONAL</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span>Product Validation - Real Google Search API</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span>Discovery + Mining - 15-30 products/day</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span>Active Intelligence - 7 User Channels</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span>Multi-Geo Mining - 9 Countries</span>
+                  </div>
                 </div>
-                <div className="text-sm text-green-700">Módulos Ativos</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {stats?.system.uptime || '99.9%'}
+              <div className="space-y-3">
+                <h3 className="font-semibold text-green-900">🏆 USER GOLDEN SOURCES</h3>
+                <div className="space-y-1 text-sm">
+                  <div>📺 @butecohits4948, @LizyRomance, @val_le</div>
+                  <div>📺 @legitdiv, @wrestlingfullhd, @wrestlingbest1</div>
+                  <div>📺 @RookieSubs</div>
+                  <div>📊 Y&F EMPREENDIMENTOS DIGITAIS LTDA</div>
+                  <div>🎯 Glucosense, NerveCalm, GlicoShield, GutDrops</div>
                 </div>
-                <div className="text-sm text-green-700">Uptime</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">Healthy</div>
-                <div className="text-sm text-green-700">Status</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">✓</div>
-                <div className="text-sm text-green-700">All Systems</div>
               </div>
             </div>
           </CardContent>
@@ -348,7 +392,7 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     {module.href !== '#' && (
-                      <Link href={module.href}>
+                      <Link href={module.href as any}>
                         <Button variant="ghost" size="sm">
                           <ArrowUpRight className="w-4 h-4" />
                         </Button>
@@ -394,7 +438,7 @@ export default function DashboardPage() {
                 </Button>
               </Link>
 
-              <Link href="/presell">
+              <Link href={"/presell" as any}>
                 <Button variant="outline" className="w-full h-auto p-4">
                   <div className="text-center">
                     <TrendingUp className="w-6 h-6 mx-auto mb-2" />

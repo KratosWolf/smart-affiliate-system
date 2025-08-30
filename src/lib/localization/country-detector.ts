@@ -205,6 +205,459 @@ const COUNTRY_DATABASE: Record<string, CountrySettings> = {
       thousands: ' ',
       currencyPosition: 'after'
     }
+  },
+  
+  // English-speaking markets
+  'Canadá': {
+    country: 'Canadá',
+    language: 'en-CA',
+    currency: 'CAD',
+    locale: 'en-CA',
+    timezone: 'America/Toronto',
+    adWordsCountryCode: '2124',
+    adWordsLanguageCode: '1033',
+    commonWords: {
+      buy: 'buy',
+      now: 'now',
+      free: 'free',
+      guarantee: 'guarantee',
+      discount: 'discount',
+      limited: 'limited',
+      today: 'today',
+      official: 'official'
+    },
+    numberFormat: {
+      decimal: '.',
+      thousands: ',',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Reino Unido': {
+    country: 'Reino Unido',
+    language: 'en-GB',
+    currency: 'GBP',
+    locale: 'en-GB',
+    timezone: 'Europe/London',
+    adWordsCountryCode: '2826',
+    adWordsLanguageCode: '2057',
+    commonWords: {
+      buy: 'buy',
+      now: 'now',
+      free: 'free',
+      guarantee: 'guarantee',
+      discount: 'discount',
+      limited: 'limited',
+      today: 'today',
+      official: 'official'
+    },
+    numberFormat: {
+      decimal: '.',
+      thousands: ',',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Austrália': {
+    country: 'Austrália',
+    language: 'en-AU',
+    currency: 'AUD',
+    locale: 'en-AU',
+    timezone: 'Australia/Sydney',
+    adWordsCountryCode: '2036',
+    adWordsLanguageCode: '3081',
+    commonWords: {
+      buy: 'buy',
+      now: 'now',
+      free: 'free',
+      guarantee: 'guarantee',
+      discount: 'discount',
+      limited: 'limited',
+      today: 'today',
+      official: 'official'
+    },
+    numberFormat: {
+      decimal: '.',
+      thousands: ',',
+      currencyPosition: 'before'
+    }
+  },
+  
+  // Major European markets
+  'Itália': {
+    country: 'Itália',
+    language: 'it-IT',
+    currency: 'EUR',
+    locale: 'it-IT',
+    timezone: 'Europe/Rome',
+    adWordsCountryCode: '2380',
+    adWordsLanguageCode: '1040',
+    commonWords: {
+      buy: 'acquista',
+      now: 'ora',
+      free: 'gratis',
+      guarantee: 'garanzia',
+      discount: 'sconto',
+      limited: 'limitato',
+      today: 'oggi',
+      official: 'ufficiale'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'after'
+    }
+  },
+  
+  'Holanda': {
+    country: 'Holanda',
+    language: 'nl-NL',
+    currency: 'EUR',
+    locale: 'nl-NL',
+    timezone: 'Europe/Amsterdam',
+    adWordsCountryCode: '2528',
+    adWordsLanguageCode: '1043',
+    commonWords: {
+      buy: 'kopen',
+      now: 'nu',
+      free: 'gratis',
+      guarantee: 'garantie',
+      discount: 'korting',
+      limited: 'beperkt',
+      today: 'vandaag',
+      official: 'officieel'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Bélgica': {
+    country: 'Bélgica',
+    language: 'nl-BE',
+    currency: 'EUR',
+    locale: 'nl-BE',
+    timezone: 'Europe/Brussels',
+    adWordsCountryCode: '2056',
+    adWordsLanguageCode: '2067',
+    commonWords: {
+      buy: 'kopen',
+      now: 'nu',
+      free: 'gratis',
+      guarantee: 'garantie',
+      discount: 'korting',
+      limited: 'beperkt',
+      today: 'vandaag',
+      official: 'officieel'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Suécia': {
+    country: 'Suécia',
+    language: 'sv-SE',
+    currency: 'SEK',
+    locale: 'sv-SE',
+    timezone: 'Europe/Stockholm',
+    adWordsCountryCode: '2752',
+    adWordsLanguageCode: '1053',
+    commonWords: {
+      buy: 'köp',
+      now: 'nu',
+      free: 'gratis',
+      guarantee: 'garanti',
+      discount: 'rabatt',
+      limited: 'begränsad',
+      today: 'idag',
+      official: 'officiell'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: ' ',
+      currencyPosition: 'after'
+    }
+  },
+  
+  'Noruega': {
+    country: 'Noruega',
+    language: 'nb-NO',
+    currency: 'NOK',
+    locale: 'nb-NO',
+    timezone: 'Europe/Oslo',
+    adWordsCountryCode: '2578',
+    adWordsLanguageCode: '1044',
+    commonWords: {
+      buy: 'kjøp',
+      now: 'nå',
+      free: 'gratis',
+      guarantee: 'garanti',
+      discount: 'rabatt',
+      limited: 'begrenset',
+      today: 'i dag',
+      official: 'offisiell'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: ' ',
+      currencyPosition: 'after'
+    }
+  },
+  
+  'Dinamarca': {
+    country: 'Dinamarca',
+    language: 'da-DK',
+    currency: 'DKK',
+    locale: 'da-DK',
+    timezone: 'Europe/Copenhagen',
+    adWordsCountryCode: '2208',
+    adWordsLanguageCode: '1030',
+    commonWords: {
+      buy: 'køb',
+      now: 'nu',
+      free: 'gratis',
+      guarantee: 'garanti',
+      discount: 'rabat',
+      limited: 'begrænset',
+      today: 'i dag',
+      official: 'officiel'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'after'
+    }
+  },
+  
+  'Suíça': {
+    country: 'Suíça',
+    language: 'de-CH',
+    currency: 'CHF',
+    locale: 'de-CH',
+    timezone: 'Europe/Zurich',
+    adWordsCountryCode: '2756',
+    adWordsLanguageCode: '2055',
+    commonWords: {
+      buy: 'kaufen',
+      now: 'jetzt',
+      free: 'kostenlos',
+      guarantee: 'garantie',
+      discount: 'rabatt',
+      limited: 'begrenzt',
+      today: 'heute',
+      official: 'offiziell'
+    },
+    numberFormat: {
+      decimal: '.',
+      thousands: '\'',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Áustria': {
+    country: 'Áustria',
+    language: 'de-AT',
+    currency: 'EUR',
+    locale: 'de-AT',
+    timezone: 'Europe/Vienna',
+    adWordsCountryCode: '2040',
+    adWordsLanguageCode: '3079',
+    commonWords: {
+      buy: 'kaufen',
+      now: 'jetzt',
+      free: 'kostenlos',
+      guarantee: 'garantie',
+      discount: 'rabatt',
+      limited: 'begrenzt',
+      today: 'heute',
+      official: 'offiziell'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'before'
+    }
+  },
+  
+  // Latin America
+  'Argentina': {
+    country: 'Argentina',
+    language: 'es-AR',
+    currency: 'ARS',
+    locale: 'es-AR',
+    timezone: 'America/Buenos_Aires',
+    adWordsCountryCode: '2032',
+    adWordsLanguageCode: '11274',
+    commonWords: {
+      buy: 'comprar',
+      now: 'ahora',
+      free: 'gratis',
+      guarantee: 'garantía',
+      discount: 'descuento',
+      limited: 'limitado',
+      today: 'hoy',
+      official: 'oficial'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Chile': {
+    country: 'Chile',
+    language: 'es-CL',
+    currency: 'CLP',
+    locale: 'es-CL',
+    timezone: 'America/Santiago',
+    adWordsCountryCode: '2152',
+    adWordsLanguageCode: '13322',
+    commonWords: {
+      buy: 'comprar',
+      now: 'ahora',
+      free: 'gratis',
+      guarantee: 'garantía',
+      discount: 'descuento',
+      limited: 'limitado',
+      today: 'hoy',
+      official: 'oficial'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Colômbia': {
+    country: 'Colômbia',
+    language: 'es-CO',
+    currency: 'COP',
+    locale: 'es-CO',
+    timezone: 'America/Bogota',
+    adWordsCountryCode: '2170',
+    adWordsLanguageCode: '9226',
+    commonWords: {
+      buy: 'comprar',
+      now: 'ahora',
+      free: 'gratis',
+      guarantee: 'garantía',
+      discount: 'descuento',
+      limited: 'limitado',
+      today: 'hoy',
+      official: 'oficial'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Peru': {
+    country: 'Peru',
+    language: 'es-PE',
+    currency: 'PEN',
+    locale: 'es-PE',
+    timezone: 'America/Lima',
+    adWordsCountryCode: '2604',
+    adWordsLanguageCode: '10250',
+    commonWords: {
+      buy: 'comprar',
+      now: 'ahora',
+      free: 'gratis',
+      guarantee: 'garantía',
+      discount: 'descuento',
+      limited: 'limitado',
+      today: 'hoy',
+      official: 'oficial'
+    },
+    numberFormat: {
+      decimal: '.',
+      thousands: ',',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'México': {
+    country: 'México',
+    language: 'es-MX',
+    currency: 'MXN',
+    locale: 'es-MX',
+    timezone: 'America/Mexico_City',
+    adWordsCountryCode: '2484',
+    adWordsLanguageCode: '8202',
+    commonWords: {
+      buy: 'comprar',
+      now: 'ahora',
+      free: 'gratis',
+      guarantee: 'garantía',
+      discount: 'descuento',
+      limited: 'limitado',
+      today: 'hoy',
+      official: 'oficial'
+    },
+    numberFormat: {
+      decimal: '.',
+      thousands: ',',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Uruguai': {
+    country: 'Uruguai',
+    language: 'es-UY',
+    currency: 'UYU',
+    locale: 'es-UY',
+    timezone: 'America/Montevideo',
+    adWordsCountryCode: '2858',
+    adWordsLanguageCode: '14346',
+    commonWords: {
+      buy: 'comprar',
+      now: 'ahora',
+      free: 'gratis',
+      guarantee: 'garantía',
+      discount: 'descuento',
+      limited: 'limitado',
+      today: 'hoy',
+      official: 'oficial'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'before'
+    }
+  },
+  
+  'Equador': {
+    country: 'Equador',
+    language: 'es-EC',
+    currency: 'USD',
+    locale: 'es-EC',
+    timezone: 'America/Guayaquil',
+    adWordsCountryCode: '2218',
+    adWordsLanguageCode: '12298',
+    commonWords: {
+      buy: 'comprar',
+      now: 'ahora',
+      free: 'gratis',
+      guarantee: 'garantía',
+      discount: 'descuento',
+      limited: 'limitado',
+      today: 'hoy',
+      official: 'oficial'
+    },
+    numberFormat: {
+      decimal: '.',
+      thousands: ',',
+      currencyPosition: 'before'
+    }
   }
 };
 
@@ -241,10 +694,30 @@ export class CountryDetector {
         '.br': 'Brasil',
         '.pl': 'Polônia',
         '.com': 'Estados Unidos',
+        '.ca': 'Canadá',
+        '.uk': 'Reino Unido',
+        '.co.uk': 'Reino Unido',
+        '.au': 'Austrália',
+        '.com.au': 'Austrália',
         '.de': 'Alemanha',
         '.fr': 'França',
         '.es': 'Espanha',
-        '.pt': 'Portugal'
+        '.pt': 'Portugal',
+        '.it': 'Itália',
+        '.nl': 'Holanda',
+        '.be': 'Bélgica',
+        '.se': 'Suécia',
+        '.no': 'Noruega',
+        '.dk': 'Dinamarca',
+        '.ch': 'Suíça',
+        '.at': 'Áustria',
+        '.ar': 'Argentina',
+        '.cl': 'Chile',
+        '.co': 'Colômbia',
+        '.pe': 'Peru',
+        '.mx': 'México',
+        '.uy': 'Uruguai',
+        '.ec': 'Equador'
       };
       
       for (const [tld, country] of Object.entries(tldMap)) {
@@ -409,11 +882,35 @@ export class CountryDetector {
       'poland': 'Polônia',
       'usa': 'Estados Unidos',
       'us': 'Estados Unidos',
+      'united states': 'Estados Unidos',
+      'canada': 'Canadá',
+      'uk': 'Reino Unido',
+      'united kingdom': 'Reino Unido',
+      'great britain': 'Reino Unido',
+      'britain': 'Reino Unido',
+      'england': 'Reino Unido',
+      'australia': 'Austrália',
       'germany': 'Alemanha',
       'france': 'França',
       'spain': 'Espanha',
       'brazil': 'Brasil',
-      'portugal': 'Portugal'
+      'portugal': 'Portugal',
+      'italy': 'Itália',
+      'netherlands': 'Holanda',
+      'holland': 'Holanda',
+      'belgium': 'Bélgica',
+      'sweden': 'Suécia',
+      'norway': 'Noruega',
+      'denmark': 'Dinamarca',
+      'switzerland': 'Suíça',
+      'austria': 'Áustria',
+      'argentina': 'Argentina',
+      'chile': 'Chile',
+      'colombia': 'Colômbia',
+      'peru': 'Peru',
+      'mexico': 'México',
+      'uruguay': 'Uruguai',
+      'ecuador': 'Equador'
     };
     
     return variations[cleaned.toLowerCase()] || cleaned;
