@@ -26,11 +26,9 @@ export function middleware(request: NextRequest) {
     response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   }
   
-  // Content Security Policy - Stricter for affiliate system
-  const isDev = process.env.NODE_ENV === 'development';
-  const cspPolicy = isDev 
-    ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://www.googleapis.com https://googleads.googleapis.com;"
-    : "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://www.googleapis.com https://googleads.googleapis.com;";
+  // Content Security Policy - Fixed for Next.js production
+  // Next.js requires 'unsafe-inline' and 'unsafe-eval' for client-side hydration
+  const cspPolicy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://www.googleapis.com https://googleads.googleapis.com;";
   
   response.headers.set('Content-Security-Policy', cspPolicy);
 
