@@ -163,9 +163,9 @@ export default function PlaybookPage() {
                   <h4 className="font-semibold mb-3 text-orange-700">📈 Scaling Process:</h4>
                   <ol className="text-sm space-y-2">
                     <li><strong>1.</strong> Monitor ROI por 3 dias (rolling window)</li>
-                    <li><strong>2.</strong> ROAS > 3:1 = Scale vertical (+50% budget)</li>
-                    <li><strong>3.</strong> ROAS > 4:1 = Scale horizontal (novos domínios)</li>
-                    <li><strong>4.</strong> ROAS < 2:1 = Otimizar ou pausar</li>
+                    <li><strong>2.</strong> ROAS &gt; 3:1 = Scale vertical (+50% budget)</li>
+                    <li><strong>3.</strong> ROAS &gt; 4:1 = Scale horizontal (novos domínios)</li>
+                    <li><strong>4.</strong> ROAS &lt; 2:1 = Otimizar ou pausar</li>
                     <li><strong>5.</strong> Repetir processo para próximo produto</li>
                   </ol>
                 </div>
@@ -188,9 +188,9 @@ export default function PlaybookPage() {
                   <h4 className="font-semibold mb-2">📋 Daily Checklist:</h4>
                   <ul className="text-sm space-y-1">
                     <li>☑️ Mining rodou às 6:00? (Check logs)</li>
-                    <li>☑️ Produtos novos têm score > 40?</li>
-                    <li>☑️ Campanhas ativas têm ROAS > 2:1?</li>
-                    <li>☑️ Presells têm CVR > 5%?</li>
+                    <li>☑️ Produtos novos têm score &gt; 40?</li>
+                    <li>☑️ Campanhas ativas têm ROAS &gt; 2:1?</li>
+                    <li>☑️ Presells têm CVR &gt; 5%?</li>
                   </ul>
                 </div>
               </div>

@@ -163,9 +163,9 @@ export default function ManualGuidePage() {
                   <h4 className="font-semibold mb-2">📋 Daily Checklist:</h4>
                   <ul className="text-sm space-y-1">
                     <li>☑️ Mining rodou às 6:00? (Check logs)</li>
-                    <li>☑️ Produtos novos têm score > 40?</li>
-                    <li>☑️ Campanhas ativas têm ROAS > 2:1?</li>
-                    <li>☑️ Presells têm CVR > 5%?</li>
+                    <li>☑️ Produtos novos têm score &gt; 40?</li>
+                    <li>☑️ Campanhas ativas têm ROAS &gt; 2:1?</li>
+                    <li>☑️ Presells têm CVR &gt; 5%?</li>
                   </ul>
                 </div>
               </div>
