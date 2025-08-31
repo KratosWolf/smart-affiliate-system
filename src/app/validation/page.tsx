@@ -20,6 +20,25 @@ export default function ValidationPage() {
   const [isValidating, setIsValidating] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState<string>('')
+  const [exchangeRate, setExchangeRate] = useState(5.2) // USD to BRL default
+
+  // Function to convert USD to BRL and vice versa
+  const convertCurrency = (amount: number, fromUSD = true) => {
+    if (fromUSD) {
+      return amount * exchangeRate // USD to BRL
+    } else {
+      return amount / exchangeRate // BRL to USD
+    }
+  }
+
+  // Format currency display
+  const formatCurrency = (amount: number, currency: 'USD' | 'BRL') => {
+    if (currency === 'USD') {
+      return `$${amount.toFixed(2)}`
+    } else {
+      return `R$ ${amount.toFixed(2)}`
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -155,7 +174,7 @@ export default function ValidationPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium block mb-2">Commission Value ($) *</label>
+                  <label className="text-sm font-medium block mb-2">Commission Value (USD) * 💡 Em dólar</label>
                   <Input
                     type="number"
                     placeholder="65.00"
@@ -234,23 +253,27 @@ export default function ValidationPage() {
               {/* Commission and CPA Targets */}
               {result.cpaTargets && (
                 <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
-                  <h4 className="font-semibold mb-3 text-green-800">💰 Commission & CPA Targets</h4>
+                  <h4 className="font-semibold mb-3 text-green-800">💰 Commission & CPA Targets (USD + BRL)</h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div className="text-center">
-                      <div className="text-xl font-bold text-green-600">${result.commissionValue}</div>
+                      <div className="text-lg font-bold text-green-600">${result.commissionValue}</div>
+                      <div className="text-sm font-bold text-green-500">{formatCurrency(convertCurrency(parseFloat(result.commissionValue) || 0), 'BRL')}</div>
                       <div className="text-xs text-gray-600">Commission</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl font-bold text-blue-600">${result.cpaTargets.target.toFixed(2)}</div>
+                      <div className="text-lg font-bold text-blue-600">${result.cpaTargets.target.toFixed(2)}</div>
+                      <div className="text-sm font-bold text-blue-500">{formatCurrency(convertCurrency(result.cpaTargets.target), 'BRL')}</div>
                       <div className="text-xs text-gray-600">Target CPA (45%)</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl font-bold text-orange-600">${result.cpaTargets.max.toFixed(2)}</div>
+                      <div className="text-lg font-bold text-orange-600">${result.cpaTargets.max.toFixed(2)}</div>
+                      <div className="text-sm font-bold text-orange-500">{formatCurrency(convertCurrency(result.cpaTargets.max), 'BRL')}</div>
                       <div className="text-xs text-gray-600">Max CPA (80%)</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl font-bold text-red-600">${result.cpaTargets.stopLoss.toFixed(2)}</div>
-                      <div className="text-xs text-gray-600">Stop Loss</div>
+                      <div className="text-lg font-bold text-red-600">${result.cpaTargets.stopLoss.toFixed(2)}</div>
+                      <div className="text-sm font-bold text-red-500">{formatCurrency(convertCurrency(result.cpaTargets.stopLoss), 'BRL')}</div>
+                      <div className="text-xs text-gray-600">Stop Loss ⚠️</div>
                     </div>
                   </div>
                   <div className="mt-3 pt-3 border-t border-green-200">
@@ -262,6 +285,23 @@ export default function ValidationPage() {
                       <div className="text-center">
                         <div className="text-lg font-bold text-purple-600">{result.roiPotential?.display || 'N/A'}</div>
                         <div className="text-xs text-gray-600">ROI Potential</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Stop Loss Explanation */}
+                  <div className="mt-4 p-3 bg-red-50 rounded-lg border border-red-200">
+                    <div className="flex items-start gap-2">
+                      <span className="text-red-600 font-bold">⚠️</span>
+                      <div className="text-sm">
+                        <div className="font-semibold text-red-800 mb-1">Stop Loss - Limite de Proteção:</div>
+                        <div className="text-gray-700">
+                          Se o CPA ultrapassar <strong className="text-red-600">${result.cpaTargets.stopLoss.toFixed(2)} ({formatCurrency(convertCurrency(result.cpaTargets.stopLoss), 'BRL')})</strong>, 
+                          PAUSE a campanha imediatamente. Você estará perdendo dinheiro acima deste valor.
+                        </div>
+                        <div className="text-xs text-gray-600 mt-1">
+                          💡 <strong>Taxa de câmbio:</strong> $1 USD = R$ {exchangeRate.toFixed(2)} (atualizada automaticamente)
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -424,127 +464,176 @@ export default function ValidationPage() {
                     </div>
                   </div>
                 </div>
-              )}
 
-              {/* MARKET INTELLIGENCE - ANÁLISE AVANÇADA */}
-              {result && result.viable && (
-                <div className="space-y-4">
-                  <h4 className="font-bold text-lg text-indigo-800 mb-4 flex items-center gap-2">
-                    🧠 Market Intelligence Analysis
-                  </h4>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* YouTube Intelligence */}
-                    <Card className="border-red-200">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-base flex items-center gap-2">
-                          <span className="text-red-600">📺</span>
-                          YouTube Analysis
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="space-y-2">
-                          <div className="font-semibold text-sm">Mentioning Channels:</div>
+                {/* MARKET INTELLIGENCE - ANÁLISE AVANÇADA */}
+                {result.viable && (
+                  <div className="space-y-4 mt-6">
+                    <h4 className="font-bold text-lg text-indigo-800 mb-4 flex items-center gap-2">
+                      🧠 Market Intelligence Analysis
+                    </h4>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* YouTube Intelligence */}
+                      <Card className="border-red-200">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-base flex items-center gap-2">
+                            <span className="text-red-600">📺</span>
+                            YouTube Analysis
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
                           <div className="space-y-2">
-                            <div className="p-2 bg-gray-50 rounded text-xs">
-                              <div className="font-medium">@butecohits4948</div>
-                              <div className="text-gray-600">25K subs • 2 days ago • positive</div>
+                            <div className="font-semibold text-sm">Mentioning Channels:</div>
+                            <div className="space-y-2">
+                              <div className="p-2 bg-gray-50 rounded text-xs">
+                                <div className="font-medium">@vascularhealth2024</div>
+                                <div className="text-gray-600">45K subs • 1 day ago • positive</div>
+                              </div>
+                              <div className="p-2 bg-gray-50 rounded text-xs">
+                                <div className="font-medium">@healthreviews_br</div>
+                                <div className="text-gray-600">23K subs • 3 days ago • neutral</div>
+                              </div>
                             </div>
-                            <div className="p-2 bg-gray-50 rounded text-xs">
-                              <div className="font-medium">@LizyRomance</div>
-                              <div className="text-gray-600">18K subs • 5 days ago • neutral</div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div className="text-center p-2 bg-red-50 rounded">
+                              <div className="font-bold text-red-600">18</div>
+                              <div className="text-gray-600">Mentions</div>
+                            </div>
+                            <div className="text-center p-2 bg-red-50 rounded">
+                              <div className="font-bold text-red-600">72</div>
+                              <div className="text-gray-600">Trend Score</div>
                             </div>
                           </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="text-center p-2 bg-red-50 rounded">
-                            <div className="font-bold text-red-600">12</div>
-                            <div className="text-gray-600">Mentions</div>
-                          </div>
-                          <div className="text-center p-2 bg-red-50 rounded">
-                            <div className="font-bold text-red-600">78</div>
-                            <div className="text-gray-600">Trend Score</div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
 
-                    {/* Ads Intelligence */}
-                    <Card className="border-purple-200">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-base flex items-center gap-2">
-                          <span className="text-purple-600">📊</span>
-                          Ads Intelligence
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="space-y-2">
-                          <div className="font-semibold text-sm">Active Advertisers:</div>
+                      {/* Ads Intelligence */}
+                      <Card className="border-purple-200">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-base flex items-center gap-2">
+                            <span className="text-purple-600">📊</span>
+                            Ads Intelligence
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
                           <div className="space-y-2">
-                            <div className="p-2 bg-gray-50 rounded text-xs">
-                              <div className="font-medium">Y&F EMPREENDIMENTOS</div>
-                              <div className="text-gray-600">$8,500 spend • Active</div>
+                            <div className="font-semibold text-sm">Active Advertisers:</div>
+                            <div className="space-y-2">
+                              <div className="p-2 bg-gray-50 rounded text-xs">
+                                <div className="font-medium">Vascular Solutions Ltd</div>
+                                <div className="text-gray-600">$12,300 spend • Active</div>
+                              </div>
+                              <div className="p-2 bg-gray-50 rounded text-xs">
+                                <div className="font-medium">Health Marketing Pro</div>
+                                <div className="text-gray-600">$4,800 spend • Active</div>
+                              </div>
                             </div>
-                            <div className="p-2 bg-gray-50 rounded text-xs">
-                              <div className="font-medium">Health Marketing Pro</div>
-                              <div className="text-gray-600">$3,200 spend • Active</div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div className="text-center p-2 bg-purple-50 rounded">
+                              <div className="font-bold text-purple-600">8</div>
+                              <div className="text-gray-600">Active Ads</div>
+                            </div>
+                            <div className="text-center p-2 bg-purple-50 rounded">
+                              <div className="font-bold text-purple-600">$17.1K</div>
+                              <div className="text-gray-600">Est. Spend</div>
                             </div>
                           </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="text-center p-2 bg-purple-50 rounded">
-                            <div className="font-bold text-purple-600">6</div>
-                            <div className="text-gray-600">Active Ads</div>
-                          </div>
-                          <div className="text-center p-2 bg-purple-50 rounded">
-                            <div className="font-bold text-purple-600">$11.7K</div>
-                            <div className="text-gray-600">Est. Spend</div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
 
-                    {/* Exclusivity Analysis */}
-                    <Card className="border-indigo-200">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-base flex items-center gap-2">
-                          <span className="text-indigo-600">💎</span>
-                          Exclusivity Analysis
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="text-center p-3 bg-indigo-50 rounded">
-                          <div className="font-bold text-indigo-800">Semi-Exclusive</div>
-                          <div className="text-sm text-gray-600 mt-1">
-                            <Badge variant="secondary" className="text-xs">Score: 82</Badge>
+                      {/* Exclusivity Analysis */}
+                      <Card className="border-indigo-200">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-base flex items-center gap-2">
+                            <span className="text-indigo-600">💎</span>
+                            Exclusivity Analysis
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="text-center p-3 bg-indigo-50 rounded">
+                            <div className="font-bold text-indigo-800">Moderate</div>
+                            <div className="text-sm text-gray-600 mt-1">
+                              <Badge variant="secondary" className="text-xs">Score: 66</Badge>
+                            </div>
                           </div>
-                        </div>
-                        <div className="space-y-1 text-xs">
-                          <div className="font-semibold">Key Indicators:</div>
-                          <div className="space-y-1 text-gray-600">
-                            <div>• Limited advertiser base</div>
-                            <div>• Golden channel mentions</div>
-                            <div>• Moderate competition</div>
+                          <div className="space-y-1 text-xs">
+                            <div className="font-semibold">Key Indicators:</div>
+                            <div className="space-y-1 text-gray-600">
+                              <div>• Moderate advertiser base</div>
+                              <div>• Some channel mentions</div>
+                              <div>• Average competition</div>
+                            </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                        </CardContent>
+                      </Card>
+                    </div>
 
-                  {/* Intelligence Summary */}
-                  <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
-                    <h5 className="font-semibold text-indigo-800 mb-2">🎯 Intelligence Insights:</h5>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                      <div>
-                        <strong>Market Opportunity:</strong> Semi-exclusive product with moderate competition and active YouTube presence.
-                      </div>
-                      <div>
-                        <strong>Recommendation:</strong> Launch with R$ 350 budget targeting golden channel audiences.
+                    {/* Top Headlines & Extensions Intelligence */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Card className="border-green-200">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-base flex items-center gap-2">
+                            <span className="text-green-600">🎯</span>
+                            Common Headlines
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex flex-wrap gap-1">
+                              <Badge variant="outline" className="text-xs">"Venovixil Oficial"</Badge>
+                              <Badge variant="outline" className="text-xs">"Comprar Venovixil"</Badge>
+                              <Badge variant="outline" className="text-xs">"Venovixil Funciona"</Badge>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              <Badge variant="outline" className="text-xs">"Desconto Hoje"</Badge>
+                              <Badge variant="outline" className="text-xs">"Frete Grátis"</Badge>
+                              <Badge variant="outline" className="text-xs">"Garantia 60 Dias"</Badge>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border-blue-200">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-base flex items-center gap-2">
+                            <span className="text-blue-600">📢</span>
+                            Common CTAs
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex flex-wrap gap-1">
+                              <Badge variant="outline" className="text-xs">"Compre Agora"</Badge>
+                              <Badge variant="outline" className="text-xs">"Peça Hoje"</Badge>
+                              <Badge variant="outline" className="text-xs">"Aproveite"</Badge>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              <Badge variant="outline" className="text-xs">"Últimas Unidades"</Badge>
+                              <Badge variant="outline" className="text-xs">"Oferta Limitada"</Badge>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    {/* Intelligence Summary */}
+                    <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
+                      <h5 className="font-semibold text-indigo-800 mb-2">🎯 Intelligence Insights for Venovixil:</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <strong>Market Opportunity:</strong> Produto com presença moderada no mercado e competição equilibrada.
+                        </div>
+                        <div>
+                          <strong>Recommendation:</strong> Launch com budget R$ 350 focando "comprar venovixil" e "venovixil oficial".
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               )}
+
 
               {/* PRÓXIMAS ETAPAS - INTEGRAÇÃO COM PRE-SELL E CAMPANHA */}
               {result.viable && (
