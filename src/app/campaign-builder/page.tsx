@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -78,6 +78,39 @@ export default function CampaignBuilderPage() {
   const [generatedCampaign, setGeneratedCampaign] = useState<GeneratedCampaign | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [activeTab, setActiveTab] = useState('setup')
+
+  // Carrega dados da validação quando a página carrega
+  useEffect(() => {
+    const validatedProduct = localStorage.getItem('validatedProduct')
+    const savedCampaignData = localStorage.getItem('campaignData')
+    
+    if (validatedProduct && savedCampaignData) {
+      try {
+        const validation = JSON.parse(validatedProduct)
+        const campaign = JSON.parse(savedCampaignData)
+        
+        // Preenche o formulário automaticamente
+        setCampaignData({
+          productName: validation.productName || campaign.productName,
+          affiliateUrl: validation.affiliateLink || validation.productUrl || '',
+          presellUrl: '', // Pre-sell será separada
+          targetCountry: validation.targetCountry || validation.country,
+          dailyBudget: 350, // Metodologia Luiz - fixo R$ 350
+          targetCpa: validation.cpaTargets?.target || campaign.unitPrice * 0.3 * 1.1 || 25
+        })
+        
+        // Limpa dados após usar (evita conflito)
+        localStorage.removeItem('validatedProduct')
+        localStorage.removeItem('campaignData')
+        
+        // Mostra alerta de sucesso
+        console.log('✅ Dados da validação carregados automaticamente!')
+        
+      } catch (error) {
+        console.error('Erro ao carregar dados da validação:', error)
+      }
+    }
+  }, [])
 
   const countries = [
     { code: 'Brasil', flag: '🇧🇷' },

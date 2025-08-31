@@ -426,6 +426,113 @@ export default function ValidationPage() {
                 </div>
               )}
 
+              {/* PRÓXIMAS ETAPAS - INTEGRAÇÃO COM PRE-SELL E CAMPANHA */}
+              {result.viable && (
+                <div className="p-6 bg-gradient-to-r from-emerald-50 via-blue-50 to-purple-50 rounded-lg border border-emerald-200">
+                  <h4 className="font-bold text-lg text-emerald-800 mb-3 flex items-center gap-2">
+                    🚀 Produto Validado! Próximas Etapas
+                  </h4>
+                  <p className="text-sm text-gray-700 mb-4">
+                    Produto aprovado para lançamento. Gere sua pre-sell e campanha usando a metodologia Luiz.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Botão Pre-sell */}
+                    <Button 
+                      onClick={() => {
+                        // Salva dados da validação no localStorage para usar na pre-sell
+                        const validationData = {
+                          productName: result.productName,
+                          country: formData.country,
+                          affiliateLink: formData.affiliateLink,
+                          commissionValue: formData.commissionValue,
+                          commissionType: formData.commissionType,
+                          validationScore: result.score,
+                          competitorData: result.competitorIntelligence,
+                          cpaTargets: result.cpaTargets,
+                          validatedAt: new Date().toISOString()
+                        }
+                        localStorage.setItem('validatedProduct', JSON.stringify(validationData))
+                        window.open('/presell-generator', '_blank')
+                      }}
+                      className="h-16 text-left flex-col items-start bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                    >
+                      <div className="font-semibold">📝 Gerar Pre-sell</div>
+                      <div className="text-xs text-blue-100">Landing page otimizada</div>
+                    </Button>
+                    
+                    {/* Botão Campanha */}
+                    <Button 
+                      onClick={() => {
+                        // Salva dados da validação no localStorage para usar na campanha
+                        const validationData = {
+                          productName: result.productName,
+                          targetCountry: formData.country,
+                          productUrl: formData.affiliateLink,
+                          validationScore: result.score,
+                          productData: {
+                            title: result.productName,
+                            description: `${result.productName} - Produto validado`,
+                            price: parseFloat(formData.commissionValue) || 100,
+                            currency: formData.country === 'Brasil' ? 'BRL' : 'USD',
+                            images: [],
+                            category: 'Health'
+                          },
+                          marketAnalysis: {
+                            searchVolume: result.totalResults || 10000,
+                            competitionLevel: result.competitionData?.competitionLevel?.toLowerCase() || 'medium',
+                            avgCpc: result.cpaTargets?.target || 25,
+                            trend: 'stable'
+                          },
+                          viabilityMetrics: {
+                            profitability: Math.min(result.score / 10, 10),
+                            competitiveness: result.competitionData?.competitionLevel === 'Low' ? 9 : 6,
+                            demand: Math.min(result.totalResults / 1000, 10),
+                            scalability: 8
+                          },
+                          recommendations: {
+                            suggestedBudget: 350,
+                            estimatedRoi: result.roiPotential?.value || 200,
+                            launchRecommendation: 'LAUNCH'
+                          },
+                          validatedAt: new Date(),
+                          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                        }
+                        localStorage.setItem('validatedProduct', JSON.stringify(validationData))
+                        
+                        // Gera campanha usando metodologia Luiz
+                        const campaignData = {
+                          productName: result.productName,
+                          guarantee: 60,
+                          unitPrice: parseFloat(formData.commissionValue) || 147,
+                          discountPercent: 50,
+                          valueDiscount: Math.round((parseFloat(formData.commissionValue) || 147) * 0.5),
+                          country: formData.country,
+                          language: formData.country === 'Brasil' ? 'Portuguese' : 'English',
+                          currency: formData.country === 'Brasil' ? 'BRL' : 'USD',
+                          currencyExample: formData.country === 'Brasil' ? 'R$ 1.000,00' : '$1,000.00'
+                        }
+                        localStorage.setItem('campaignData', JSON.stringify(campaignData))
+                        window.open('/campaign-builder', '_blank')
+                      }}
+                      className="h-16 text-left flex-col items-start bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800"
+                    >
+                      <div className="font-semibold">🎯 Gerar Campanha</div>
+                      <div className="text-xs text-emerald-100">Metodologia Luiz + CSVs</div>
+                    </Button>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-white/70 rounded-lg border">
+                    <div className="text-xs text-gray-600 space-y-1">
+                      <div>✅ <strong>Budget sugerido:</strong> R$ 350/dia (metodologia Luiz)</div>
+                      <div>✅ <strong>CPA Target:</strong> R$ {result.cpaTargets?.target?.toFixed(2) || 'N/A'} (110% margem)</div>
+                      <div>✅ <strong>ROI Estimado:</strong> {result.roiPotential?.display || '200%'}</div>
+                      <div>✅ <strong>Dados salvos:</strong> Informações disponíveis para pre-sell e campanha</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* API Status */}
               <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
