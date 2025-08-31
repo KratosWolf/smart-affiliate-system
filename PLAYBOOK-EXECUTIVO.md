@@ -82,12 +82,19 @@ O **Smart Affiliate System v1.1** é um sistema revolucionário que combina gari
 - HTML completo + CSS + JS + assets
 - SEO automático integrado
 
-### **✅ 4. Campaign Builder - FUNCIONANDO**
+### **✅ 4. Campaign Builder - FUNCIONANDO (ATUALIZADO v1.2)**
 **Interface:** http://localhost:3000/campaigns  
 **API:** `/api/v1/campaign`
 
+**NOVA ESTRATÉGIA DE CAMPANHAS:**
+- **Budget Mínimo:** R$ 350,00 (fixo para todos os testes)
+- **CPA Target:** até 110% da margem estimada (mais agressivo)
+- **Estrutura:** 1 Campaign = 1 Ad (confirmada - sem múltiplas campanhas)
+- **Scaling Automático:** ROI > 2.0 → aumenta 20% budget
+- **Budget Máximo:** R$ 1.750,00 (5x o inicial)
+- **Kill Rule:** ROI < 0.5 → pausa campanha
+
 **Sistema Completo:**
-- Estrutura simplificada 1:1 (1 Campaign = 1 Ad)
 - CSV export + 5 arquivos por campanha
 - Character optimization rigoroso
 - Google Ads compliance total

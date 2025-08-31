@@ -2,38 +2,36 @@
 
 ## Fluxo Completo para Google Ads (Sem Facebook!)
 
-### Estrutura de Campanhas Google Ads
+### Estrutura de Campanhas Google Ads (ATUALIZADA)
 
 ```javascript
 const googleAdsCampaign = {
   campaignType: 'SEARCH', // Busca é o principal
   
+  // ESTRUTURA SIMPLIFICADA: 1 Campaign = 1 Ad
   structure: {
-    campaign: 'Product Name - Main',
-    adGroups: [
-      {
-        name: 'Brand Terms',
-        keywords: [
-          '[prodentim]',           // Exact match
-          '"prodentim review"',    // Phrase match
-          '+prodentim +buy'        // Broad match modifier
-        ]
-      },
-      {
-        name: 'Competitor Terms',
-        keywords: [
-          '[competitor product]',
-          '"alternative to X"'
-        ]
-      },
-      {
-        name: 'Problem/Solution Terms',
-        keywords: [
-          '"gum disease treatment"',
-          '"teeth health supplement"'
-        ]
-      }
-    ]
+    campaign: 'Product Name - País - Teste CPA',
+    budget: 350, // R$ 350,00 FIXO
+    targetCpa: 'até 110% da margem',
+    
+    // SEM AD GROUPS - estrutura simples
+    keywords: [
+      '[prodentim]',           // Exact match
+      '"prodentim review"',    // Phrase match
+      'prodentim',             // Broad match
+      '"alternative to X"',    // Competitor terms
+      '"teeth health"'         // Problem terms
+    ],
+    
+    // SEMPRE 1 AD POR CAMPANHA
+    ads: 1, // Confirmado: não múltiplas campanhas por anúncio
+    
+    // SCALING AUTOMÁTICO
+    scaling: {
+      threshold: 'ROI > 2.0',
+      increment: '20% budget increase',
+      maxBudget: 'R$ 1.750,00 (5x inicial)'
+    }
   }
 }
 ```
@@ -115,23 +113,29 @@ const landingPageCompliance = {
 }
 ```
 
-### 4. Campaign Setup Automation
+### 4. Campaign Setup Automation (ATUALIZADO)
 
 ```javascript
-// Google Ads API Integration
+// Google Ads API Integration - NOVA ESTRATÉGIA
 const campaignSetup = {
   
   // Step 1: Create Campaign
   campaign: {
     name: `${productName} - ${new Date().toISOString().split('T')[0]}`,
     type: 'SEARCH',
-    budget: dailyBudget,
+    budget: 350, // FIXO: R$ 350,00 (mínimo obrigatório)
     biddingStrategy: {
       type: 'TARGET_CPA',
-      targetCpa: commission * 0.45 // 45% da comissão
+      targetCpa: commission * 1.1 // 110% da margem (MAIS AGRESSIVO)
     },
     locations: ['United States', 'Canada', 'United Kingdom'],
-    languages: ['English']
+    languages: ['English'],
+    // SCALING STRATEGY
+    scalingRules: {
+      scaleUp: 'ROI > 2.0 → aumenta 20% budget',
+      scaleDown: 'ROI < 0.5 → pausa campanha',
+      maxBudget: 1750 // 5x o budget inicial
+    }
   },
   
   // Step 2: Create Ad Groups

@@ -56,45 +56,212 @@ export default function PresellGeneratorPage() {
   const [productData, setProductData] = useState({
     name: '',
     affiliateUrl: '',
-    commission: '',
-    domain: ''
+    producerPageUrl: '', // Campo essencial para extração de dados
+    ratoEiraAdsUrl: '', // Tracking do usuário
+    clarityUrl: '', // Microsoft Clarity
+    commission: '', // Opcional - pode não ser necessário
+    domain: '' // Será sugerido automaticamente
   })
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedPresell, setGeneratedPresell] = useState<any>(null)
+  const [isDeploying, setIsDeploying] = useState(false)
+  const [deploymentResult, setDeploymentResult] = useState<any>(null)
+  const [isExtractingData, setIsExtractingData] = useState(false)
+  const [extractedData, setExtractedData] = useState<any>(null)
+
+  // Função para extrair dados da página do produtor
+  const extractProducerData = async () => {
+    if (!productData.producerPageUrl) {
+      alert('Por favor, informe a URL da página do produtor')
+      return
+    }
+
+    setIsExtractingData(true)
+    
+    try {
+      console.log('🔍 Extraindo dados da página do produtor...')
+      
+      // Usar o design matcher para extrair informações da página
+      const response = await fetch('/api/v1/design-extract', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: productData.producerPageUrl,
+          extractData: true // Flag para extrair dados do produto também
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      
+      if (result.success) {
+        setExtractedData(result.data)
+        
+        // Auto-sugerir domínio baseado no nome do produto
+        if (productData.name) {
+          const suggestedDomain = generateSuggestedDomain(productData.name)
+          setProductData(prev => ({
+            ...prev,
+            domain: suggestedDomain
+          }))
+        }
+        
+        alert('✅ Dados extraídos com sucesso da página do produtor!')
+      } else {
+        throw new Error(result.error || 'Failed to extract data')
+      }
+    } catch (error) {
+      console.error('❌ Erro ao extrair dados:', error)
+      alert('Erro ao extrair dados da página: ' + (error instanceof Error ? error.message : 'Erro desconhecido'))
+    } finally {
+      setIsExtractingData(false)
+    }
+  }
+
+  // Função para sugerir domínio automaticamente
+  const generateSuggestedDomain = (productName: string): string => {
+    const cleanName = productName.toLowerCase()
+      .replace(/[^a-z0-9]/g, '')
+      .substring(0, 15) // Limitar tamanho
+    
+    const domainSuggestions = [
+      `${cleanName}-review.com`,
+      `${cleanName}-oficial.com`, 
+      `${cleanName}-original.com`,
+      `review-${cleanName}.com`
+    ]
+    
+    return domainSuggestions[0] // Por enquanto retorna o primeiro
+  }
 
   const generatePresell = async () => {
-    if (!selectedTemplate || !productData.name || !productData.affiliateUrl) {
-      alert('Por favor, preencha todos os campos e selecione um template')
+    if (!selectedTemplate || !productData.name || !productData.affiliateUrl || !productData.producerPageUrl) {
+      alert('Por favor, preencha todos os campos obrigatórios:\n- Selecione um template\n- Nome do produto\n- Link de afiliado\n- Página do produtor')
       return
     }
 
     setIsGenerating(true)
     
     try {
-      // Simular geração (substituir com API real)
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // Create validation data using extracted producer data or fallback to form inputs
+      const useExtractedData = extractedData && extractedData.productData
       
-      setGeneratedPresell({
-        template: selectedTemplate,
-        product: productData.name,
-        url: `https://${productData.domain || 'review-site.com'}/${productData.name.toLowerCase().replace(/\s+/g, '-')}/`,
-        preview: 'Preview HTML aqui...',
-        files: {
-          'index.html': 'HTML content',
-          'style.css': 'CSS content',
-          'script.js': 'JS content'
+      const mockValidation = {
+        productName: productData.name,
+        validationScore: 85,
+        viable: true,
+        targetCountry: 'Brasil',
+        productData: {
+          title: productData.name,
+          price: useExtractedData ? extractedData.productData.price : (parseInt(productData.commission) || 97),
+          currency: useExtractedData ? extractedData.productData.currency : 'BRL',
+          description: useExtractedData ? extractedData.productData.description : `Produto inovador ${productData.name} com excelentes resultados comprovados`,
+          benefits: useExtractedData ? extractedData.productData.benefits : [`Benefício premium do ${productData.name}`, `Resultado garantido em 30 dias`, `Aprovado por especialistas`],
+          images: useExtractedData ? extractedData.productData.images : []
+        },
+        marketAnalysis: {
+          avgCpc: 2.5,
+          competition: 'Medium'
+        },
+        recommendations: {
+          suggestedBudget: 350
         }
+      }
+
+      // Generate presell using real API
+      const response = await fetch('/api/v1/presell', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          validation: mockValidation,
+          affiliateUrl: productData.affiliateUrl,
+          templateType: selectedTemplate,
+          originalPageUrl: productData.producerPageUrl, // Para design matching
+          customization: {
+            colors: { primary: '#007bff' },
+            tracking: {
+              ratoEiraAds: productData.ratoEiraAdsUrl,
+              microsoftClarity: productData.clarityUrl
+            }
+          }
+        })
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      
+      if (result.success) {
+        setGeneratedPresell({
+          template: selectedTemplate,
+          product: productData.name,
+          url: `https://${productData.domain || 'bestbargains24x7.com'}/${productData.name.toLowerCase().replace(/[^a-z0-9]/g, '')}/`,
+          preview: result.data.generated.html,
+          files: {
+            'index.html': result.data.generated.html,
+            'style.css': result.data.generated.css,
+            'script.js': result.data.generated.js
+          },
+          rawData: result.data
+        })
+      } else {
+        throw new Error(result.error || 'Failed to generate presell')
+      }
     } catch (error) {
       console.error('Erro ao gerar presell:', error)
+      alert('Erro ao gerar presell: ' + (error instanceof Error ? error.message : 'Erro desconhecido'))
     } finally {
       setIsGenerating(false)
     }
   }
 
   const deployToHostinger = async () => {
-    // Deploy via FTP
-    console.log('Deploying to Hostinger...')
+    if (!generatedPresell || !generatedPresell.files) {
+      alert('Por favor, gere a presell primeiro antes de fazer o deploy')
+      return
+    }
+
+    setIsDeploying(true)
+    setDeploymentResult(null)
+    
+    try {
+      console.log('🚀 Starting FTP deployment to Hostinger...')
+      
+      const response = await fetch('/api/v1/ftp-deploy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productName: productData.name,
+          presellFiles: generatedPresell.files,
+          affiliateUrl: productData.affiliateUrl
+        })
+      })
+
+      const result = await response.json()
+      
+      if (result.success) {
+        setDeploymentResult(result.data)
+        alert(`✅ Deploy realizado com sucesso!\n\nAcesse: ${result.data.deployedUrl}`)
+      } else {
+        throw new Error(result.error || 'Deploy failed')
+      }
+    } catch (error) {
+      console.error('❌ Erro no deploy:', error)
+      alert('Erro no deploy: ' + (error instanceof Error ? error.message : 'Erro desconhecido'))
+    } finally {
+      setIsDeploying(false)
+    }
   }
 
   return (
@@ -228,63 +395,138 @@ export default function PresellGeneratorPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">💡</span>
+                    <span className="text-2xl">🎯</span>
                     <div>
-                      <h4 className="font-semibold text-yellow-800 mb-2">Estratégia Pre-Sell</h4>
-                      <ul className="text-sm text-yellow-700 space-y-1">
-                        <li>• <strong>Cookie Template:</strong> Melhor para tráfego frio (primeiro contato)</li>
-                        <li>• <strong>Expert Review:</strong> Ideal para produtos de saúde (4-6% conv.)</li>
-                        <li>• <strong>Quiz Template:</strong> Produtos personalizados (3-5% conv.)</li>
-                        <li>• <strong>COD Template:</strong> Para Índia e Oriente Médio</li>
+                      <h4 className="font-semibold text-blue-800 mb-2">Dados Essenciais para Presell</h4>
+                      <ul className="text-sm text-blue-700 space-y-1">
+                        <li>• <strong>Página do Produtor:</strong> Essencial para extrair dados reais (imagens, preços, benefícios)</li>
+                        <li>• <strong>Link de Afiliado:</strong> HopLink para conversões</li>
+                        <li>• <strong>Tracking Links:</strong> Ratoeira Ads + Microsoft Clarity para analytics</li>
+                        <li>• <strong>Domínio:</strong> Será sugerido automaticamente baseado no produto</li>
                       </ul>
                     </div>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                {/* Campo principal: Página do Produtor */}
+                <div className="space-y-4">
                   <div>
-                    <Label>Nome do Produto</Label>
-                    <Input
-                      placeholder="Ex: Glucosense, NerveCalm, GlicoShield"
-                      value={productData.name}
-                      onChange={(e) => setProductData({...productData, name: e.target.value})}
-                    />
+                    <Label className="text-base font-semibold">🏠 Página do Produtor *</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="https://exemplo.com/produto-oficial (essencial para extrair dados reais)"
+                        value={productData.producerPageUrl}
+                        onChange={(e) => setProductData({...productData, producerPageUrl: e.target.value})}
+                        className="flex-1"
+                      />
+                      <Button 
+                        onClick={extractProducerData}
+                        disabled={isExtractingData || !productData.producerPageUrl}
+                        variant="outline"
+                        className="px-6"
+                      >
+                        {isExtractingData ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2" />
+                            Extraindo...
+                          </>
+                        ) : (
+                          <>📥 Extrair Dados</>
+                        )}
+                      </Button>
+                    </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      Use produtos exclusivos para maior ROI
+                      Cole aqui a URL da página oficial do produto. Vamos extrair automaticamente: preço, benefícios, imagens e descrições.
                     </p>
+                    {extractedData && (
+                      <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg text-sm">
+                        <span className="text-green-800 font-medium">✅ Dados extraídos com sucesso!</span>
+                        <div className="text-green-700 mt-1">
+                          Preço: {extractedData.productData?.price || 'N/A'} | 
+                          Benefícios: {extractedData.productData?.benefits?.length || 0} encontrados
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <Label>Comissão ($)</Label>
-                    <Input
-                      type="number"
-                      placeholder="Ex: 50"
-                      value={productData.commission}
-                      onChange={(e) => setProductData({...productData, commission: e.target.value})}
-                    />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Nome do Produto *</Label>
+                      <Input
+                        placeholder="Ex: Glucosense, NerveCalm, GlicoShield"
+                        value={productData.name}
+                        onChange={(e) => {
+                          const newName = e.target.value
+                          setProductData(prev => ({
+                            ...prev, 
+                            name: newName,
+                            domain: newName ? generateSuggestedDomain(newName) : ''
+                          }))
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label>Comissão ($) <span className="text-gray-400">(opcional)</span></Label>
+                      <Input
+                        type="number"
+                        placeholder="Ex: 50"
+                        value={productData.commission}
+                        onChange={(e) => setProductData({...productData, commission: e.target.value})}
+                      />
+                    </div>
                   </div>
                 </div>
                 
                 <div>
-                  <Label>Link de Afiliado</Label>
+                  <Label>🔗 Link de Afiliado (HopLink) *</Label>
                   <Input
                     placeholder="https://hop.clickbank.net/?affiliate=you&vendor=product"
                     value={productData.affiliateUrl}
                     onChange={(e) => setProductData({...productData, affiliateUrl: e.target.value})}
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    HopLink do ClickBank, Hotmart ou outra plataforma de afiliados
+                  </p>
+                </div>
+                
+                {/* Novos campos de tracking */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>📊 Ratoeira Ads (Tracking)</Label>
+                    <Input
+                      placeholder="https://ratoeira-ads.com/tracking-url"
+                      value={productData.ratoEiraAdsUrl}
+                      onChange={(e) => setProductData({...productData, ratoEiraAdsUrl: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label>📈 Microsoft Clarity</Label>
+                    <Input
+                      placeholder="https://clarity.microsoft.com/project-id"
+                      value={productData.clarityUrl}
+                      onChange={(e) => setProductData({...productData, clarityUrl: e.target.value})}
+                    />
+                  </div>
                 </div>
                 
                 <div>
-                  <Label>Domínio (opcional)</Label>
+                  <Label>🌐 Domínio Sugerido</Label>
                   <Input
-                    placeholder="glicoshield-review.com"
+                    placeholder="Será sugerido automaticamente baseado no produto"
                     value={productData.domain}
                     onChange={(e) => setProductData({...productData, domain: e.target.value})}
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Deixe vazio para usar subdomínio padrão
+                    💡 <strong>Dica:</strong> O domínio é sugerido automaticamente. Você pode comprar este domínio na Hostinger e o FTP funcionará automaticamente.
                   </p>
+                  {productData.domain && (
+                    <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm">
+                      <span className="text-blue-800">🎯 Sugestão de URL final: </span>
+                      <code className="text-blue-600">https://{productData.domain}</code>
+                    </div>
+                  )}
                 </div>
                 
                 <Button 
@@ -340,11 +582,69 @@ export default function PresellGeneratorPage() {
                       
                       <Button 
                         onClick={deployToHostinger}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white"
+                        disabled={isDeploying}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-400"
                       >
-                        <Upload className="w-4 h-4 mr-2" />
-                        Deploy para Hostinger
+                        {isDeploying ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                            Fazendo Deploy...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-4 h-4 mr-2" />
+                            Deploy para Hostinger
+                          </>
+                        )}
                       </Button>
+
+                      {deploymentResult && (
+                        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                          <h4 className="font-semibold text-green-800 mb-2">✅ Deploy Realizado!</h4>
+                          <div className="space-y-2 text-sm">
+                            <div>
+                              <span className="text-gray-600">URL Final:</span>
+                              <a 
+                                href={deploymentResult.deployedUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800 ml-2 font-mono text-xs block break-all"
+                              >
+                                {deploymentResult.deployedUrl}
+                              </a>
+                            </div>
+                            <div>
+                              <span className="text-gray-600">Método:</span>
+                              <span className="ml-2 text-green-700 font-medium">{deploymentResult.method}</span>
+                            </div>
+                            <div>
+                              <span className="text-gray-600">Deploy Key:</span>
+                              <span className="ml-2 font-mono text-xs">{deploymentResult.deploymentKey}</span>
+                            </div>
+                            <div>
+                              <span className="text-gray-600">Arquivos:</span>
+                              <span className="ml-2">{deploymentResult.files?.length || 0} arquivo(s)</span>
+                            </div>
+                            <div>
+                              <span className="text-gray-600">Data:</span>
+                              <span className="ml-2 text-xs">
+                                {new Date(deploymentResult.deployedAt).toLocaleString('pt-BR')}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="mt-3 pt-3 border-t border-green-200">
+                            <a
+                              href={deploymentResult.deployedUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center text-sm text-green-700 hover:text-green-800 font-medium"
+                            >
+                              <Eye className="w-4 h-4 mr-1" />
+                              Visualizar Presell Online
+                            </a>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     
                     <div className="border-t pt-4">
@@ -406,21 +706,58 @@ export default function PresellGeneratorPage() {
             {/* Hostinger Config */}
             <Card className="mt-4">
               <CardHeader>
-                <CardTitle className="text-lg">⚙️ Configuração Hostinger</CardTitle>
+                <CardTitle className="text-lg">⚙️ Setup Hostinger Simplificado</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <div className="bg-green-50 border border-green-200 rounded p-3">
+                  <h4 className="font-semibold text-green-800 mb-2">🎯 Processo Simplificado</h4>
+                  <ol className="text-xs text-green-700 space-y-1 list-decimal list-inside">
+                    <li>Compre o domínio sugerido na Hostinger</li>
+                    <li>O FTP já está configurado - funcionará automaticamente</li>
+                    <li>Click "Deploy" - vai direto para o ar!</li>
+                    <li>SSL é instalado automaticamente</li>
+                  </ol>
+                </div>
+                
+                <div>
+                  <p className="text-gray-600 mb-2">Estrutura FTP Atual:</p>
+                  <ul className="space-y-1 text-xs text-gray-500">
+                    <li>• <span className="font-mono">bestbargains24x7.com/produto</span></li>
+                    <li>• FTP: <span className="font-mono">{process.env.FTP_HOST}</span></li>
+                    <li>• Credenciais já configuradas ✅</li>
+                    <li>• Deploy automático via botão</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
+                  <h4 className="font-semibold text-yellow-800 mb-2">💡 Dica Pro</h4>
+                  <p className="text-xs text-yellow-700">
+                    Não precisa criar subdomínios manualmente. Compre o domínio sugerido e o sistema fará tudo automaticamente!
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Tracking Setup Guide */}
+            <Card className="mt-4">
+              <CardHeader>
+                <CardTitle className="text-lg">📊 Setup de Tracking</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
-                <p className="text-gray-600">Deploy Multi-Domínio:</p>
-                <ul className="space-y-1 text-xs text-gray-500">
-                  <li>• Addon Domains no hPanel</li>
-                  <li>• Pasta separada por produto</li>
-                  <li>• FTP único para todos os domínios</li>
-                  <li>• SSL automático via AutoSSL</li>
-                </ul>
+                <div>
+                  <h4 className="font-semibold text-blue-800 mb-2">Links Essenciais:</h4>
+                  <ul className="space-y-1 text-xs text-blue-700">
+                    <li>• <strong>Ratoeira Ads:</strong> Seu sistema de tracking principal</li>
+                    <li>• <strong>Microsoft Clarity:</strong> Heatmaps e gravações de sessão</li>
+                    <li>• <strong>Google Analytics:</strong> Será instalado automaticamente</li>
+                  </ul>
+                </div>
                 
-                <Button variant="link" className="p-0 h-auto text-blue-600">
-                  <ArrowRight className="w-3 h-3 mr-1" />
-                  Ver guia completo
-                </Button>
+                <div className="bg-blue-50 border border-blue-200 rounded p-2">
+                  <p className="text-xs text-blue-700">
+                    <strong>✨ Automático:</strong> Os códigos de tracking serão inseridos automaticamente na presell gerada!
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>

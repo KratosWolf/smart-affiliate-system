@@ -17,15 +17,22 @@ export interface CampaignStructure {
     languages: string[];
     biddingStrategy: 'TARGET_CPA' | 'MAXIMIZE_CONVERSIONS';
     targetCpa?: number;
+    scalingStrategy?: {
+      minBudget: number;
+      maxBudget: number;
+      scaleThreshold: number;
+      scaleIncrement: number;
+    };
   };
   
   // Simplified: No Ad Groups (1 Campaign = 1 Ad)  
   // adGroup: removed - following user's simpler approach
+  // CONFIRMADO: 1 Campaign = 1 Ad (não múltiplas campanhas por anúncio)
   
   // Keywords
   keywords: CampaignKeyword[];
   
-  // Ads  
+  // Ads (SEMPRE 1 AD)
   ads: CampaignAd[];
   
   // Extensions
@@ -37,6 +44,7 @@ export interface CampaignStructure {
     country: string;
     validationScore: number;
     estimatedCpa: number;
+    budgetStrategy: 'FIXED_350_BRL' | 'SCALED';
     generatedAt: string;
   };
 }
@@ -104,13 +112,15 @@ export class CampaignBuilder {
         locations: [countrySettings.adWordsCountryCode],
         languages: [countrySettings.adWordsLanguageCode],
         biddingStrategy: 'TARGET_CPA',
-        targetCpa: budgetData.targetCpa
+        targetCpa: budgetData.targetCpa,
+        scalingStrategy: budgetData.scalingStrategy
       },
       
       // No adGroup - simplified structure
+      // CONFIRMADO: 1 Campaign = 1 Ad (estrutura simples)
       
       keywords,
-      ads,
+      ads, // SEMPRE 1 AD
       extensions,
       
       metadata: {
@@ -118,6 +128,7 @@ export class CampaignBuilder {
         country: validation.targetCountry,
         validationScore: validation.validationScore,
         estimatedCpa: budgetData.targetCpa,
+        budgetStrategy: budgetData.dailyBudget === 350 ? 'FIXED_350_BRL' : 'SCALED',
         generatedAt: new Date().toISOString()
       }
     };
@@ -135,21 +146,34 @@ export class CampaignBuilder {
   
   /**
    * Calcula orçamento e estratégia de lances
+   * NOVA ESTRATÉGIA: Budget mínimo R$350 + CPA até 110%
    */
   private calculateBudget(validation: ProductValidationResponse) {
-    const suggestedBudget = validation.recommendations.suggestedBudget;
     const avgCpc = validation.marketAnalysis.avgCpc;
-    const estimatedConversionRate = this.estimateConversionRate(validation.validationScore);
     
-    // CPA alvo baseado na margem do produto
+    // CPA alvo baseado na margem do produto (MAIS AGRESSIVO)
     const productPrice = validation.productData.price;
     const estimatedMargin = productPrice * 0.3; // 30% commission assumed
-    const targetCpa = estimatedMargin * 0.6; // 60% da margem como CPA máximo
+    const targetCpa = estimatedMargin * 1.1; // 110% da margem como CPA máximo (NOVO)
+    
+    // Budget mínimo FIXO em R$350 (NOVO)
+    const minimumBudgetBRL = 350;
+    
+    // Conversão para USD se necessário (assumindo 1 USD = 5.5 BRL aproximadamente)
+    const minimumBudgetUSD = validation.productData.currency === 'USD' 
+      ? Math.round(minimumBudgetBRL / 5.5) 
+      : minimumBudgetBRL;
     
     return {
-      dailyBudget: Math.max(suggestedBudget, avgCpc * 10), // Mín 10 cliques/dia
-      targetCpa: Math.max(targetCpa, avgCpc * 5), // Mín 5x o CPC
-      defaultBid: avgCpc * 1.2 // 20% acima do CPC médio (ainda usado para cálculos)
+      dailyBudget: minimumBudgetUSD, // FIXO: R$350 ou equivalente em USD
+      targetCpa: Math.max(targetCpa, avgCpc * 3), // Mín 3x o CPC (reduzido)
+      defaultBid: avgCpc * 1.5, // 50% acima do CPC médio
+      scalingStrategy: {
+        minBudget: minimumBudgetUSD,
+        maxBudget: minimumBudgetUSD * 5, // Até 5x o budget inicial
+        scaleThreshold: 2.0, // ROI > 2.0 para scaling
+        scaleIncrement: 0.2 // Aumenta 20% por vez
+      }
     };
   }
   

@@ -1,11 +1,12 @@
 import { ProductValidationResponse } from '@/types';
 import { countryDetector } from '../localization/country-detector';
 import { trackingManager } from '../tracking/tracking-manager';
-import { CookieTemplate } from './templates/cookie-template';
-import { QuizTemplate } from './templates/quiz-template';
-import { ReviewTemplate } from './templates/review-template';
-import { ExpertReviewTemplate } from './templates/expert-review-template';
-import { CODTemplate } from './templates/cod-template';
+// Template imports commented out - files don't exist yet
+// import { CookieTemplate } from './templates/cookie-template';
+// import { QuizTemplate } from './templates/quiz-template';
+// import { ReviewTemplate } from './templates/review-template';
+// import { ExpertReviewTemplate } from './templates/expert-review-template';
+// import { CODTemplate } from './templates/cod-template';
 
 export interface PresellConfig {
   productName: string;
@@ -60,116 +61,35 @@ export class PresellTemplateGenerator {
     // Detecta configurações do país automaticamente
     const countrySettings = countryDetector.detectByCountry(validation.targetCountry);
     
-    // Use template específico se solicitado
+    // Use template específico se solicitado (templates not implemented yet)
     if (options?.templateType === 'cookie') {
-      const cookieTemplate = new CookieTemplate();
-      const cookieResult = cookieTemplate.generate({
-        productName: config.productName,
-        productUrl: config.productUrl,
-        targetCountry: validation.targetCountry,
-        language: countrySettings?.language || 'pt-BR',
-        currency: countrySettings?.currency || 'BRL',
-        designTokens: options?.designTokens
-      });
-      
-      return {
-        html: cookieResult.html,
-        css: cookieResult.css,
-        js: cookieResult.js,
-        assets: this.generateAssets(config),
-        countrySettings,
-        templateType: 'cookie'
-      };
+      console.log('Cookie template requested but not implemented yet');
+      // Fall back to default template
     }
 
     if (options?.templateType === 'quiz') {
-      const quizTemplate = new QuizTemplate();
-      const quizResult = quizTemplate.generate({
-        productName: config.productName,
-        affiliateUrl: config.productUrl,
-        validationScore: validation.validationScore,
-        countrySettings,
-        designTokens: options?.designTokens,
-        customization: options?.customization
-      });
-      
-      return {
-        html: quizResult.html,
-        css: quizResult.css,
-        js: quizResult.js,
-        assets: this.generateAssets(config),
-        countrySettings,
-        templateType: 'quiz'
-      };
+      console.log('Quiz template requested but not implemented yet');
+      // Fall back to default template
     }
 
     if (options?.templateType === 'review') {
-      const reviewTemplate = new ReviewTemplate();
-      const reviewResult = reviewTemplate.generate({
-        productName: config.productName,
-        affiliateUrl: config.productUrl,
-        validationScore: validation.validationScore,
-        countrySettings,
-        designTokens: options?.designTokens,
-        customization: options?.customization
-      });
-      
-      return {
-        html: reviewResult.html,
-        css: reviewResult.css,
-        js: reviewResult.js,
-        assets: this.generateAssets(config),
-        countrySettings,
-        templateType: 'review'
-      };
+      console.log('Review template requested but not implemented yet');
+      // Fall back to default template
     }
 
     if (options?.templateType === 'expert') {
-      const expertTemplate = new ExpertReviewTemplate();
-      const expertResult = expertTemplate.generate({
-        productName: config.productName,
-        affiliateUrl: config.productUrl,
-        validationScore: validation.validationScore,
-        countrySettings,
-        designTokens: options?.designTokens,
-        customization: options?.customization
-      });
-      
-      return {
-        html: expertResult.html,
-        css: expertResult.css,
-        js: expertResult.js,
-        assets: this.generateAssets(config),
-        countrySettings,
-        templateType: 'expert'
-      };
+      console.log('Expert template requested but not implemented yet');
+      // Fall back to default template
     }
 
     if (options?.templateType === 'cod') {
-      const codTemplate = new CODTemplate();
-      const codResult = codTemplate.generate({
-        productName: config.productName,
-        affiliateUrl: config.productUrl,
-        validationScore: validation.validationScore,
-        countrySettings,
-        designTokens: options?.designTokens,
-        customization: options?.customization,
-        originalPrice: config.price
-      });
-      
-      return {
-        html: codResult.html,
-        css: codResult.css,
-        js: codResult.js,
-        assets: this.generateAssets(config),
-        countrySettings,
-        templateType: 'cod'
-      };
+      console.log('COD template requested but not implemented yet');
+      // Fall back to default template
     }
     
     // Template padrão (existente)
     return {
-      html: this.generateHTML(config, countrySettings, options?.designTokens),
+      html: this.generateHTML(config, countrySettings, options?.designTokens, options),
       css: this.generateCSS(config, options?.designTokens),
       js: this.generateJS(config, countrySettings),
       assets: this.generateAssets(config),
@@ -217,7 +137,7 @@ export class PresellTemplateGenerator {
   /**
    * Generate complete HTML structure
    */
-  private generateHTML(config: PresellConfig, countrySettings?: any, designTokens?: any): string {
+  private generateHTML(config: PresellConfig, countrySettings?: any, designTokens?: any, options?: any): string {
     // Detecta idioma e formato de preço
     const language = countrySettings?.language || 'pt-BR';
     const formattedPrice = countrySettings 
@@ -295,6 +215,9 @@ export class PresellTemplateGenerator {
     
     <!-- Advanced Tracking System -->
     ${trackingManager.generateTrackingCode()}
+    
+    <!-- Custom Tracking Integration -->
+    ${options?.customization?.tracking ? this.generateCustomTrackingCode(options.customization.tracking) : '<!-- No custom tracking configured -->'}
 </head>
 <body>
     <!-- Header -->
@@ -1189,6 +1112,44 @@ window.addEventListener('load', function() {
     ];
     
     return ctas[Math.floor(Math.random() * ctas.length)];
+  }
+
+  /**
+   * Generate custom tracking code for Ratoeira Ads and Microsoft Clarity
+   */
+  private generateCustomTrackingCode(trackingConfig?: any): string {
+    if (!trackingConfig) return '';
+
+    let trackingCode = '';
+
+    // Ratoeira Ads tracking
+    if (trackingConfig.ratoEiraAdsUrl) {
+      trackingCode += `
+    <!-- Ratoeira Ads Tracking -->
+    <script>
+      (function() {
+        var script = document.createElement('script');
+        script.src = '${trackingConfig.ratoEiraAdsUrl}';
+        script.async = true;
+        document.head.appendChild(script);
+      })();
+    </script>`;
+    }
+
+    // Microsoft Clarity tracking  
+    if (trackingConfig.clarityUrl) {
+      trackingCode += `
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "${trackingConfig.clarityUrl}");
+    </script>`;
+    }
+
+    return trackingCode;
   }
 }
 

@@ -81,6 +81,12 @@ export class GoogleSearchValidator {
         return this.getEnhancedMockValidation(productName)
       }
 
+      // Verify API key and search engine ID are present
+      if (!this.config.apiKey || !this.config.searchEngineId) {
+        console.warn('⚠️ Google Search API: Missing API key or Search Engine ID, using mock data')
+        return this.getEnhancedMockValidation(productName)
+      }
+
       console.log(`🔍 Running competitive intelligence analysis for: ${productName}`)
       
       const startTime = Date.now()
@@ -108,7 +114,14 @@ export class GoogleSearchValidator {
         const response = await fetch(searchUrl.toString())
         
         if (!response.ok) {
-          console.warn(`⚠️  Search query ${index + 1} failed:`, response.status)
+          const errorText = await response.text()
+          
+          // Handle specific API key errors
+          if (response.status === 400 && errorText.includes('API key not valid')) {
+            throw new Error('INVALID_API_KEY')
+          }
+          
+          console.warn(`⚠️ Search query ${index + 1} failed:`, response.status, errorText)
           return null
         }
         
@@ -155,7 +168,21 @@ export class GoogleSearchValidator {
       }
 
     } catch (error) {
-      console.error('❌ Google Search API error:', error)
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      if (errorMessage === 'INVALID_API_KEY') {
+        console.error('🔑 Google Search API Key Error:')
+        console.error('   ❌ The Google API key is invalid or expired')
+        console.error('   📋 To fix this:')
+        console.error('   1. Go to Google Cloud Console (console.cloud.google.com)')
+        console.error('   2. Enable Custom Search API')
+        console.error('   3. Create/regenerate API key')
+        console.error('   4. Update .env.local with new key')
+        console.error('   ⚠️ Current key:', this.config.apiKey ? `${this.config.apiKey.substring(0, 15)}...` : 'MISSING')
+      } else {
+        console.error('❌ Google Search API error:', errorMessage)
+      }
+      
       console.log('🔄 Falling back to enhanced mock data')
       return this.getEnhancedMockValidation(productName)
     }

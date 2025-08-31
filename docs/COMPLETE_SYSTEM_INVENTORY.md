@@ -87,6 +87,11 @@
 
 4. **`/api/v1/campaign`** - Campaign Builder
    - POST: Criar campanha Google Ads
+   - **NOVA ESTRATÉGIA:**
+     - Budget mínimo: **R$ 350,00**
+     - CPA Target: **até 110%** da margem
+     - Estrutura: **1 Campaign = 1 Ad** (simples)
+     - Scaling: aumenta budget conforme ROI
    - Gerar CSV para import
 
 5. **`/api/v1/tracking`** - ROI Tracking
