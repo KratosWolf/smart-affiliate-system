@@ -76,8 +76,8 @@ export default function SystemGuidePage() {
         {/* STANDALONE TAB SYSTEM - NO SHADCN DEPENDENCY */}
         <div className="w-full bg-gradient-to-r from-blue-500 to-purple-500 p-8 rounded-xl mb-8">
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-black text-white">⚠️⚠️ TABS AQUI - VERSÃO 2.0! ⚠️⚠️</h2>
-            <p className="text-white text-xl mt-2 font-bold">CLIQUE NOS BOTÕES ABAIXO!</p>
+            <h2 className="text-3xl font-black text-white">🔥🔥 TABS AGORA FUNCIONAM - V1.2.2! 🔥🔥</h2>
+            <p className="text-white text-xl mt-2 font-bold">✅ CLIQUE NOS BOTÕES PLAYBOOK E IMPLEMENTATION!</p>
           </div>
           
           {/* PURE JAVASCRIPT TAB BUTTONS */}
