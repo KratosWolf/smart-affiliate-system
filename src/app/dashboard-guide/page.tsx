@@ -121,15 +121,18 @@ export default function SystemGuidePage() {
                     {/* Discovery & Mining */}
                     <div className="border border-blue-200 rounded-lg p-3">
                       <div className="flex items-center gap-2 mb-2">
-                        <h4 className="font-semibold text-sm text-blue-700">🔍 DISCOVERY & MINING</h4>
-                        <Badge className="bg-green-100 text-green-800 text-xs">ATIVO</Badge>
+                        <h4 className="font-semibold text-sm text-blue-700">🔍 DISCOVERY & MINING - LÓGICA 5-7+ VEZES</h4>
+                        <Badge className="bg-green-100 text-green-800 text-xs">IMPLEMENTADO ✨</Badge>
                       </div>
                       <div className="text-xs text-gray-600 space-y-1">
-                        <p><strong>O que faz:</strong> Monitora YouTube, Google Trends e transparência de anúncios para encontrar produtos em alta</p>
-                        <p><strong>APIs usadas:</strong> YouTube Data API v3, Google Custom Search API</p>
-                        <p><strong>Rotina:</strong> Execução diária às 6:00 AM, analisa 100+ canais de nicho</p>
-                        <p><strong>Resultado:</strong> Lista 15-30 produtos com potencial diário</p>
-                        <p><strong>Local:</strong> /discovery - Arquivo: /src/app/api/v1/discovery/route.ts</p>
+                        <p><strong>Lógica Principal:</strong> ⚡ Produtos mencionados 5-7+ vezes no MESMO canal de review = ALTA POTENCIALIDADE</p>
+                        <p><strong>Canais Review:</strong> Monitora 7 canais de review configurados (não anúncios, mas análises orgânicas)</p>
+                        <p><strong>Cross-Channel:</strong> Identifica produtos com 5+ menções em múltiplos canais = SUPER HIGH POTENTIAL</p>
+                        <p><strong>Advertiser Spy:</strong> Detecta quem está anunciando vs páginas oficiais do produtor</p>
+                        <p><strong>APIs usadas:</strong> YouTube Data API v3, Google Custom Search API, Google Ads Transparency</p>
+                        <p><strong>Rotina:</strong> Execução diária às 6:00 AM + monitoramento contínuo de novos anunciantes</p>
+                        <p><strong>Resultado:</strong> Lista produtos com score de potencialidade e análise de competição</p>
+                        <p><strong>Local:</strong> /discovery - Arquivo: /src/lib/mining/youtube-monitor.ts</p>
                       </div>
                     </div>
 
@@ -321,8 +324,8 @@ export default function SystemGuidePage() {
                   <div className="flex gap-3">
                     <div className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">1</div>
                     <div>
-                      <div className="font-semibold text-sm">Discovery & Intelligence Mining</div>
-                      <div className="text-xs text-gray-600">Sistema automatizado que monitora YouTube, Google Trends e transparência de anúncios.</div>
+                      <div className="font-semibold text-sm">Discovery & Intelligence Mining - LÓGICA 5-7+ VEZES ⚡</div>
+                      <div className="text-xs text-gray-600">Sistema automatizado: canais review → produtos 5-7+ vezes = alta potencialidade → análise advertiser vs produtor → Google Ads spy → monitoramento contínuo.</div>
                     </div>
                   </div>
                   
