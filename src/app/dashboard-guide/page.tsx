@@ -85,23 +85,39 @@ export default function SystemGuidePage() {
             <button 
               id="btn-guide"
               onClick={() => {
-                document.getElementById('content-guide')!.style.display = 'block'
-                document.getElementById('content-playbook')!.style.display = 'none'
-                document.getElementById('content-implementation')!.style.display = 'none'
-                document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('bg-yellow-400'))
+                const guideEl = document.getElementById('content-guide')
+                const playbookEl = document.getElementById('content-playbook')
+                const implEl = document.getElementById('content-implementation')
+                
+                if (guideEl) guideEl.style.display = 'block'
+                if (playbookEl) playbookEl.style.display = 'none'
+                if (implEl) implEl.style.display = 'none'
+                
+                document.querySelectorAll('[id^="btn-"]').forEach(b => {
+                  b.classList.remove('bg-yellow-400')
+                })
                 document.getElementById('btn-guide')!.classList.add('bg-yellow-400')
               }}
-              className="bg-yellow-400 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-blue-700 shadow-lg transition-colors"
+              className="bg-blue-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-blue-700 shadow-lg transition-colors"
             >
               📚 SYSTEM GUIDE
             </button>
             <button 
               id="btn-playbook"
               onClick={() => {
-                document.getElementById('content-guide')!.style.display = 'none'
-                document.getElementById('content-playbook')!.style.display = 'block'
-                document.getElementById('content-implementation')!.style.display = 'none'
-                document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('bg-yellow-400'))
+                const guideEl = document.getElementById('content-guide')
+                const playbookEl = document.getElementById('content-playbook')
+                const implEl = document.getElementById('content-implementation')
+                
+                if (guideEl) guideEl.style.display = 'none'
+                if (playbookEl) playbookEl.style.display = 'block'
+                if (implEl) implEl.style.display = 'none'
+                
+                document.querySelectorAll('[id^="btn-"]').forEach(b => {
+                  b.classList.remove('bg-yellow-400')
+                  b.classList.add('bg-purple-600')
+                })
+                document.getElementById('btn-playbook')!.classList.remove('bg-purple-600')
                 document.getElementById('btn-playbook')!.classList.add('bg-yellow-400')
               }}
               className="bg-purple-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-purple-700 shadow-lg transition-colors"
@@ -111,10 +127,17 @@ export default function SystemGuidePage() {
             <button 
               id="btn-implementation"
               onClick={() => {
-                document.getElementById('content-guide')!.style.display = 'none'
-                document.getElementById('content-playbook')!.style.display = 'none'
-                document.getElementById('content-implementation')!.style.display = 'block'
-                document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('bg-yellow-400'))
+                const guideEl = document.getElementById('content-guide')
+                const playbookEl = document.getElementById('content-playbook')
+                const implEl = document.getElementById('content-implementation')
+                
+                if (guideEl) guideEl.style.display = 'none'
+                if (playbookEl) playbookEl.style.display = 'none'
+                if (implEl) implEl.style.display = 'block'
+                
+                document.querySelectorAll('[id^="btn-"]').forEach(b => {
+                  b.classList.remove('bg-yellow-400')
+                })
                 document.getElementById('btn-implementation')!.classList.add('bg-yellow-400')
               }}
               className="bg-green-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-green-700 shadow-lg transition-colors"
@@ -1031,7 +1054,7 @@ export default function SystemGuidePage() {
         </div>
 
         {/* TAB CONTENT - PLAYBOOK */}
-        <div id="content-playbook" className="hidden space-y-6">
+        <div id="content-playbook" style={{display: 'none'}} className="space-y-6">
                 <div className="text-center mb-8">
                   <h2 className="text-3xl font-bold text-purple-900 mb-4">📋 PLAYBOOK COMPLETO</h2>
                   <p className="text-xl text-purple-700">Sistema 100% Operacional - Status em Tempo Real</p>
@@ -1148,7 +1171,7 @@ export default function SystemGuidePage() {
         </div>
 
         {/* TAB CONTENT - IMPLEMENTATION PLAN */}
-        <div id="content-implementation" className="hidden space-y-6">
+        <div id="content-implementation" style={{display: 'none'}} className="space-y-6">
           <Card className="border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
             <CardHeader>
               <CardTitle className="text-2xl text-green-900 flex items-center gap-2">
