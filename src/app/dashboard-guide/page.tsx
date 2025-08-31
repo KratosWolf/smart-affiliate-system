@@ -77,40 +77,48 @@ export default function SystemGuidePage() {
           </div>
         </div>
 
-        {/* ⚠️⚠️⚠️ EMERGENCY TAB SYSTEM - MOVED TO TOP ⚠️⚠️⚠️ */}
+        {/* SIMPLE TAB SYSTEM */}
         <div className="w-full bg-gradient-to-r from-blue-500 to-purple-500 p-8 rounded-xl mb-8">
           <div className="text-center mb-6">
-            <h2 className="text-4xl font-black text-white animate-pulse">🚨🚨 EMERGENCY: PLAYBOOK TABS READY! 🚨🚨</h2>
-            <p className="text-white text-2xl mt-2 font-bold">👇👇 CLICK PLAYBOOK & IMPLEMENTATION BUTTONS BELOW! 👇👇</p>
+            <h2 className="text-4xl font-black text-white animate-pulse">🚨 TABS WORKING! 🚨</h2>
+            <p className="text-white text-2xl mt-2 font-bold">Current Tab: {activeTab}</p>
           </div>
           
-          {/* REACT STATE TAB BUTTONS */}
           <div className="flex gap-4 justify-center mb-8">
             <button 
-              onClick={() => setActiveTab('guide')}
+              onClick={() => {
+                console.log('Clicked guide')
+                setActiveTab('guide')
+              }}
               className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
                 activeTab === 'guide' 
-                  ? 'bg-yellow-400 text-white' 
+                  ? 'bg-yellow-400 text-black' 
                   : 'bg-blue-600 text-white hover:bg-blue-700'
               }`}
             >
               📚 SYSTEM GUIDE
             </button>
             <button 
-              onClick={() => setActiveTab('playbook')}
+              onClick={() => {
+                console.log('Clicked playbook')
+                setActiveTab('playbook')
+              }}
               className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
                 activeTab === 'playbook' 
-                  ? 'bg-yellow-400 text-white' 
+                  ? 'bg-yellow-400 text-black' 
                   : 'bg-purple-600 text-white hover:bg-purple-700'
               }`}
             >
               📋 PLAYBOOK
             </button>
             <button 
-              onClick={() => setActiveTab('implementation')}
+              onClick={() => {
+                console.log('Clicked implementation')
+                setActiveTab('implementation')
+              }}
               className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
                 activeTab === 'implementation' 
-                  ? 'bg-yellow-400 text-white' 
+                  ? 'bg-yellow-400 text-black' 
                   : 'bg-green-600 text-white hover:bg-green-700'
               }`}
             >
@@ -1030,11 +1038,11 @@ export default function SystemGuidePage() {
         {/* TAB CONTENT - PLAYBOOK */}
         {activeTab === 'playbook' && (
         <div className="space-y-6">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-purple-900 mb-4">📋 PLAYBOOK COMPLETO - FUNCIONANDO!</h2>
-            <p className="text-xl text-purple-700">Sistema 100% Operacional - Status em Tempo Real</p>
-            <div className="bg-green-100 p-4 rounded-lg mt-4">
-              <p className="text-green-800 font-bold">✅ ABA FUNCIONANDO! Conteúdo carregado com sucesso!</p>
+          <div className="bg-purple-100 p-8 rounded-lg border-4 border-purple-400">
+            <h1 className="text-4xl font-bold text-purple-900 mb-4 text-center">📋 PLAYBOOK FUNCIONANDO! 🎉</h1>
+            <div className="bg-green-200 p-6 rounded-lg">
+              <h2 className="text-2xl font-black text-green-800">✅ SUCESSO! ABA PLAYBOOK CARREGOU!</h2>
+              <p className="text-lg text-green-700 mt-2">Se você está vendo esta mensagem, o sistema de abas funciona perfeitamente!</p>
             </div>
           </div>
           <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
@@ -1152,11 +1160,11 @@ export default function SystemGuidePage() {
         {/* TAB CONTENT - IMPLEMENTATION PLAN */}
         {activeTab === 'implementation' && (
         <div className="space-y-6">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-green-900 mb-4">🚀 IMPLEMENTATION PLAN - FUNCIONANDO!</h2>
-            <p className="text-xl text-green-700">Roadmap para evolução e otimização do sistema</p>
-            <div className="bg-green-100 p-4 rounded-lg mt-4">
-              <p className="text-green-800 font-bold">✅ ABA FUNCIONANDO! Conteúdo carregado com sucesso!</p>
+          <div className="bg-green-100 p-8 rounded-lg border-4 border-green-400">
+            <h1 className="text-4xl font-bold text-green-900 mb-4 text-center">🚀 IMPLEMENTATION PLAN FUNCIONANDO! 🎉</h1>
+            <div className="bg-blue-200 p-6 rounded-lg">
+              <h2 className="text-2xl font-black text-blue-800">✅ SUCESSO! ABA IMPLEMENTATION CARREGOU!</h2>
+              <p className="text-lg text-blue-700 mt-2">Se você está vendo esta mensagem, o sistema de abas funciona perfeitamente!</p>
             </div>
           </div>
           <Card className="border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
