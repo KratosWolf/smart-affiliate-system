@@ -464,9 +464,10 @@ export default function ValidationPage() {
                     </div>
                   </div>
                 </div>
+              )}
 
-                {/* MARKET INTELLIGENCE - ANÁLISE AVANÇADA */}
-                {result.viable && (
+              {/* MARKET INTELLIGENCE - ANÁLISE AVANÇADA */}
+              {result.viable && (
                   <div className="space-y-4 mt-6">
                     <h4 className="font-bold text-lg text-indigo-800 mb-4 flex items-center gap-2">
                       🧠 Market Intelligence Analysis
@@ -632,7 +633,6 @@ export default function ValidationPage() {
                     </div>
                   </div>
                 )}
-              )}
 
 
               {/* PRÓXIMAS ETAPAS - INTEGRAÇÃO COM PRE-SELL E CAMPANHA */}
