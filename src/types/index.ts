@@ -755,3 +755,37 @@ export interface SystemConfiguration {
     encryptionEnabled: boolean;
   };
 }
+
+// ================================
+// DESIGN TOKENS
+// ================================
+
+export interface DesignTokens {
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    text: string;
+  };
+  fonts: {
+    primary: string;
+    secondary: string;
+    sizes: {
+      small: string;
+      medium: string;
+      large: string;
+    };
+  };
+  spacing: {
+    small: string;
+    medium: string;
+    large: string;
+  };
+  borderRadius: string;
+  shadows: {
+    light: string;
+    medium: string;
+    heavy: string;
+  };
+}
