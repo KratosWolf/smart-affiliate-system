@@ -57,10 +57,11 @@ export default function PresellGeneratorPage() {
     name: '',
     affiliateUrl: '',
     producerPageUrl: '', // Campo essencial para extração de dados
-    ratoEiraAdsUrl: '', // Tracking do usuário
-    clarityUrl: '', // Microsoft Clarity
+    ratoEiraAdsCode: '', // Script ID da Ratoeira Ads
+    clarityProjectId: '', // Project ID do MS Clarity
     commission: '', // Opcional - pode não ser necessário
-    domain: '' // Será sugerido automaticamente
+    domain: '', // Será sugerido automaticamente
+    domainPurchased: false // Flag para indicar se o domínio já foi comprado
   })
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedPresell, setGeneratedPresell] = useState<any>(null)
@@ -187,9 +188,11 @@ export default function PresellGeneratorPage() {
           customization: {
             colors: { primary: '#007bff' },
             tracking: {
-              ratoEiraAds: productData.ratoEiraAdsUrl,
-              microsoftClarity: productData.clarityUrl
-            }
+              ratoEiraAdsCode: productData.ratoEiraAdsCode,
+              clarityProjectId: productData.clarityProjectId
+            },
+            domain: productData.domain,
+            domainPurchased: productData.domainPurchased
           }
         })
       })
@@ -491,40 +494,122 @@ export default function PresellGeneratorPage() {
                   </p>
                 </div>
                 
-                {/* Novos campos de tracking */}
+                {/* Campos de tracking corrigidos */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>📊 Ratoeira Ads (Tracking)</Label>
+                    <Label>📊 Ratoeira Ads (Script ID)</Label>
                     <Input
-                      placeholder="https://ratoeira-ads.com/tracking-url"
-                      value={productData.ratoEiraAdsUrl}
-                      onChange={(e) => setProductData({...productData, ratoEiraAdsUrl: e.target.value})}
+                      placeholder="5783-08cdb400-b11a-40e1-8240-4f4afd24120b"
+                      value={productData.ratoEiraAdsCode}
+                      onChange={(e) => setProductData({...productData, ratoEiraAdsCode: e.target.value})}
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Apenas o ID do script para &lt;head&gt;
+                    </p>
                   </div>
                   <div>
-                    <Label>📈 Microsoft Clarity</Label>
+                    <Label>📈 Microsoft Clarity (Project ID)</Label>
                     <Input
-                      placeholder="https://clarity.microsoft.com/project-id"
-                      value={productData.clarityUrl}
-                      onChange={(e) => setProductData({...productData, clarityUrl: e.target.value})}
+                      placeholder="xxxxxxxxxx"
+                      value={productData.clarityProjectId}
+                      onChange={(e) => setProductData({...productData, clarityProjectId: e.target.value})}
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Apenas o Project ID do MS Clarity
+                    </p>
                   </div>
                 </div>
                 
-                <div>
-                  <Label>🌐 Domínio Sugerido</Label>
+                <div className="space-y-3">
+                  <Label>🌐 Domínio para Presell</Label>
+                  
+                  {/* Sugestões de domínio melhores */}
+                  <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                    <p className="text-sm font-medium text-blue-800 mb-2">💡 Sugestões de domínio para presell (extensões baratas):</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                      <button 
+                        onClick={() => setProductData({...productData, domain: `${productData.name.toLowerCase().replace(/\s+/g, '')}-funciona.site`})}
+                        className="text-left p-2 bg-white rounded border hover:bg-blue-50"
+                      >
+                        <code>{productData.name.toLowerCase().replace(/\s+/g, '')}-funciona.site</code>
+                        <span className="text-green-600 ml-1">💰 Barato</span>
+                      </button>
+                      <button 
+                        onClick={() => setProductData({...productData, domain: `${productData.name.toLowerCase().replace(/\s+/g, '')}-oficial.online`})}
+                        className="text-left p-2 bg-white rounded border hover:bg-blue-50"
+                      >
+                        <code>{productData.name.toLowerCase().replace(/\s+/g, '')}-oficial.online</code>
+                        <span className="text-green-600 ml-1">💰 Barato</span>
+                      </button>
+                      <button 
+                        onClick={() => setProductData({...productData, domain: `comprar-${productData.name.toLowerCase().replace(/\s+/g, '')}.site`})}
+                        className="text-left p-2 bg-white rounded border hover:bg-blue-50"
+                      >
+                        <code>comprar-{productData.name.toLowerCase().replace(/\s+/g, '')}.site</code>
+                        <span className="text-green-600 ml-1">💰 Barato</span>
+                      </button>
+                      <button 
+                        onClick={() => setProductData({...productData, domain: `${productData.name.toLowerCase().replace(/\s+/g, '')}-brasil.online`})}
+                        className="text-left p-2 bg-white rounded border hover:bg-blue-50"
+                      >
+                        <code>{productData.name.toLowerCase().replace(/\s+/g, '')}-brasil.online</code>
+                        <span className="text-green-600 ml-1">💰 Barato</span>
+                      </button>
+                      <button 
+                        onClick={() => setProductData({...productData, domain: `${productData.name.toLowerCase().replace(/\s+/g, '')}.top`})}
+                        className="text-left p-2 bg-white rounded border hover:bg-blue-50"
+                      >
+                        <code>{productData.name.toLowerCase().replace(/\s+/g, '')}.top</code>
+                        <span className="text-green-600 ml-1">💰 Muito barato</span>
+                      </button>
+                      <button 
+                        onClick={() => setProductData({...productData, domain: `${productData.name.toLowerCase().replace(/\s+/g, '')}-review.website`})}
+                        className="text-left p-2 bg-white rounded border hover:bg-blue-50"
+                      >
+                        <code>{productData.name.toLowerCase().replace(/\s+/g, '')}-review.website</code>
+                        <span className="text-green-600 ml-1">💰 Barato</span>
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-2">
+                      💡 <strong>Extensões mais baratas:</strong> .site, .online, .top, .website, .store, .space
+                    </p>
+                  </div>
+
                   <Input
-                    placeholder="Será sugerido automaticamente baseado no produto"
+                    placeholder="Ou digite seu próprio domínio"
                     value={productData.domain}
                     onChange={(e) => setProductData({...productData, domain: e.target.value})}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
-                    💡 <strong>Dica:</strong> O domínio é sugerido automaticamente. Você pode comprar este domínio na Hostinger e o FTP funcionará automaticamente.
-                  </p>
-                  {productData.domain && (
-                    <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm">
-                      <span className="text-blue-800">🎯 Sugestão de URL final: </span>
-                      <code className="text-blue-600">https://{productData.domain}</code>
+                  
+                  {/* Checkbox para "já comprei" */}
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="domainPurchased"
+                      checked={productData.domainPurchased || false}
+                      onChange={(e) => setProductData({...productData, domainPurchased: e.target.checked})}
+                      className="rounded border-gray-300"
+                    />
+                    <Label htmlFor="domainPurchased" className="text-sm text-green-700">
+                      ✅ Já comprei este domínio e está configurado
+                    </Label>
+                  </div>
+
+                  {productData.domain && !productData.domainPurchased && (
+                    <div className="mt-2 p-3 bg-orange-50 border border-orange-200 rounded text-sm">
+                      <p className="text-orange-800 mb-2">⚠️ <strong>Próximos passos:</strong></p>
+                      <ol className="text-orange-700 space-y-1 text-xs">
+                        <li>1. Compre o domínio <code className="bg-white px-1 rounded">{productData.domain}</code> na Hostinger</li>
+                        <li>2. Configure o FTP (será feito automaticamente)</li>
+                        <li>3. Marque a checkbox acima quando estiver pronto</li>
+                      </ol>
+                    </div>
+                  )}
+
+                  {productData.domain && productData.domainPurchased && (
+                    <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm">
+                      <span className="text-green-800">🎯 URL final da presell: </span>
+                      <code className="text-green-600">https://{productData.domain}</code>
                     </div>
                   )}
                 </div>
