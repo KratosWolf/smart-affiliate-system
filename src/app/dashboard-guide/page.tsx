@@ -85,40 +85,22 @@ export default function SystemGuidePage() {
             <button 
               id="btn-guide"
               onClick={() => {
-                const guideEl = document.getElementById('content-guide')
-                const playbookEl = document.getElementById('content-playbook')
-                const implEl = document.getElementById('content-implementation')
-                
-                if (guideEl) guideEl.style.display = 'block'
-                if (playbookEl) playbookEl.style.display = 'none'
-                if (implEl) implEl.style.display = 'none'
-                
-                document.querySelectorAll('[id^="btn-"]').forEach(b => {
-                  b.classList.remove('bg-yellow-400')
-                })
-                document.getElementById('btn-guide')!.classList.add('bg-yellow-400')
+                console.log('Clicking System Guide')
+                document.getElementById('content-guide').style.display = 'block'
+                document.getElementById('content-playbook').style.display = 'none'
+                document.getElementById('content-implementation').style.display = 'none'
               }}
-              className="bg-blue-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-blue-700 shadow-lg transition-colors"
+              className="bg-yellow-400 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-blue-700 shadow-lg transition-colors"
             >
               📚 SYSTEM GUIDE
             </button>
             <button 
               id="btn-playbook"
               onClick={() => {
-                const guideEl = document.getElementById('content-guide')
-                const playbookEl = document.getElementById('content-playbook')
-                const implEl = document.getElementById('content-implementation')
-                
-                if (guideEl) guideEl.style.display = 'none'
-                if (playbookEl) playbookEl.style.display = 'block'
-                if (implEl) implEl.style.display = 'none'
-                
-                document.querySelectorAll('[id^="btn-"]').forEach(b => {
-                  b.classList.remove('bg-yellow-400')
-                  b.classList.add('bg-purple-600')
-                })
-                document.getElementById('btn-playbook')!.classList.remove('bg-purple-600')
-                document.getElementById('btn-playbook')!.classList.add('bg-yellow-400')
+                console.log('Clicking Playbook')
+                document.getElementById('content-guide').style.display = 'none'
+                document.getElementById('content-playbook').style.display = 'block'
+                document.getElementById('content-implementation').style.display = 'none'
               }}
               className="bg-purple-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-purple-700 shadow-lg transition-colors"
             >
@@ -127,18 +109,10 @@ export default function SystemGuidePage() {
             <button 
               id="btn-implementation"
               onClick={() => {
-                const guideEl = document.getElementById('content-guide')
-                const playbookEl = document.getElementById('content-playbook')
-                const implEl = document.getElementById('content-implementation')
-                
-                if (guideEl) guideEl.style.display = 'none'
-                if (playbookEl) playbookEl.style.display = 'none'
-                if (implEl) implEl.style.display = 'block'
-                
-                document.querySelectorAll('[id^="btn-"]').forEach(b => {
-                  b.classList.remove('bg-yellow-400')
-                })
-                document.getElementById('btn-implementation')!.classList.add('bg-yellow-400')
+                console.log('Clicking Implementation Plan')
+                document.getElementById('content-guide').style.display = 'none'
+                document.getElementById('content-playbook').style.display = 'none'
+                document.getElementById('content-implementation').style.display = 'block'
               }}
               className="bg-green-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-green-700 shadow-lg transition-colors"
             >
@@ -1055,10 +1029,13 @@ export default function SystemGuidePage() {
 
         {/* TAB CONTENT - PLAYBOOK */}
         <div id="content-playbook" style={{display: 'none'}} className="space-y-6">
-                <div className="text-center mb-8">
-                  <h2 className="text-3xl font-bold text-purple-900 mb-4">📋 PLAYBOOK COMPLETO</h2>
-                  <p className="text-xl text-purple-700">Sistema 100% Operacional - Status em Tempo Real</p>
-                </div>
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-purple-900 mb-4">📋 PLAYBOOK COMPLETO - FUNCIONANDO!</h2>
+            <p className="text-xl text-purple-700">Sistema 100% Operacional - Status em Tempo Real</p>
+            <div className="bg-green-100 p-4 rounded-lg mt-4">
+              <p className="text-green-800 font-bold">✅ ABA FUNCIONANDO! Conteúdo carregado com sucesso!</p>
+            </div>
+          </div>
           <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
             <CardHeader>
               <CardTitle className="text-2xl text-purple-900 flex items-center gap-2">
@@ -1172,6 +1149,13 @@ export default function SystemGuidePage() {
 
         {/* TAB CONTENT - IMPLEMENTATION PLAN */}
         <div id="content-implementation" style={{display: 'none'}} className="space-y-6">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-green-900 mb-4">🚀 IMPLEMENTATION PLAN - FUNCIONANDO!</h2>
+            <p className="text-xl text-green-700">Roadmap para evolução e otimização do sistema</p>
+            <div className="bg-green-100 p-4 rounded-lg mt-4">
+              <p className="text-green-800 font-bold">✅ ABA FUNCIONANDO! Conteúdo carregado com sucesso!</p>
+            </div>
+          </div>
           <Card className="border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
             <CardHeader>
               <CardTitle className="text-2xl text-green-900 flex items-center gap-2">
