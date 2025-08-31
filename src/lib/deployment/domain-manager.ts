@@ -127,9 +127,9 @@ export class DomainManager {
     console.log('\n🌐 DOMÍNIOS CONFIGURADOS')
     console.log('═══════════════════════════════════════\n')
     
-    const active = []
-    const pending = []
-    const temporary = []
+    const active: string[] = []
+    const pending: string[] = []
+    const temporary: string[] = []
     
     this.domains.forEach((config, key) => {
       const entry = `• ${config.domain} (${config.product})`

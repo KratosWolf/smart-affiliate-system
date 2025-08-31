@@ -18,28 +18,39 @@ export async function POST(request: NextRequest) {
     } else if (productName && targetCountry && affiliateUrl) {
       // Create basic validation data for campaign builder
       validationData = {
+        id: crypto.randomUUID(),
         productName,
+        productUrl: affiliateUrl,
         targetCountry,
-        validationScore: 75, // Default score
+        validationScore: 75,
+        status: 'completed' as const,
         productData: {
-          name: productName,
+          title: productName,
           description: `${productName} - Produto de alta qualidade`,
-          price: 100, // Default price
-          commission: 35, // Default commission %
-          vendor: 'Vendor',
+          price: 100,
+          currency: 'USD',
+          images: [],
           category: 'Health'
         },
         marketAnalysis: {
-          avgCpc: targetCpa ? targetCpa * 0.4 : 2.5, // 40% of CPA or default
-          competition: 'medium',
           searchVolume: 10000,
-          trend: 'stable'
+          competitionLevel: 'medium' as const,
+          avgCpc: targetCpa ? targetCpa * 0.4 : 2.5,
+          trend: 'stable' as const
+        },
+        viabilityMetrics: {
+          profitability: 8,
+          competitiveness: 7,
+          demand: 8,
+          scalability: 7
         },
         recommendations: {
           suggestedBudget: dailyBudget || 50,
           estimatedRoi: 150,
           launchRecommendation: 'LAUNCH'
-        }
+        },
+        validatedAt: new Date(),
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
       } as ProductValidationResponse
     } else {
       return NextResponse.json({

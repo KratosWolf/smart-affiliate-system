@@ -274,7 +274,7 @@ export class ProductDiscoveryEngine {
     return mockClickBankProducts
       .filter(product => 
         product.gravity >= (this.config.minGravity || 20) &&
-        product.commission >= this.config.minCommission
+        product.commission >= (this.config.minCommission || 0)
       )
       .map(product => ({
         id: `cb_${product.nickname}`,
@@ -283,6 +283,7 @@ export class ProductDiscoveryEngine {
         platform: 'clickbank' as const,
         category: product.category,
         commission: product.commission,
+        paymentType: 'commission' as const,
         gravity: product.gravity,
         averagePrice: product.averagePrice,
         currency: 'USD',
@@ -366,6 +367,7 @@ export class ProductDiscoveryEngine {
           platform: 'other' as const,
           category: 'Unknown',
           commission: 50, // Estimated
+          paymentType: 'commission' as const,
           averagePrice: 97, // Estimated
           currency: 'USD',
           trending: video.viewCount > 50000,
@@ -431,6 +433,7 @@ export class ProductDiscoveryEngine {
       platform: 'other' as const,
       category,
       commission: 60,
+      paymentType: 'commission' as const,
       averagePrice: 197,
       currency: 'USD',
       trending: true,

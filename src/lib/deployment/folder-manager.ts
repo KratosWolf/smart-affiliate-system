@@ -82,7 +82,7 @@ export class FolderManager {
       
       // Upload do .htaccess
       await client.uploadFrom(
-        Buffer.from(htaccessContent),
+        Buffer.from(htaccessContent).toString(),
         `${productPath}/.htaccess`
       )
       console.log(`✅ .htaccess criado`)
@@ -96,7 +96,7 @@ Sitemap: https://bestbargains24x7.com/${productName}/sitemap.xml
       `
       
       await client.uploadFrom(
-        Buffer.from(robotsContent),
+        Buffer.from(robotsContent).toString(),
         `${productPath}/robots.txt`
       )
       console.log(`✅ robots.txt criado`)

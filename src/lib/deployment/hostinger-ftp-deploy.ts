@@ -15,6 +15,7 @@ export interface HostingerConfig {
       domain: string
       ftpUser: string
       ftpPassword: string
+      remotePath?: string
     }
   }
 }

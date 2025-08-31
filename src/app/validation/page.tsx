@@ -386,7 +386,7 @@ export default function ValidationPage() {
                       <div className="p-4 bg-purple-50 rounded-lg">
                         <h5 className="font-semibold text-purple-800 mb-2">🏷️ Common Promotions</h5>
                         <div className="flex flex-wrap gap-1">
-                          {result.competitorIntelligence.commonPromotions.slice(0, 5).map((promo, idx) => (
+                          {result.competitorIntelligence.commonPromotions.slice(0, 5).map((promo: string, idx: number) => (
                             <Badge key={idx} variant="secondary" className="text-xs">{promo}</Badge>
                           ))}
                         </div>
@@ -398,7 +398,7 @@ export default function ValidationPage() {
                   <div className="space-y-3">
                     <h5 className="font-semibold text-gray-800">🏆 Top 5 Competitors</h5>
                     <div className="space-y-2 max-h-64 overflow-y-auto">
-                      {result.competitorIntelligence.topCompetitors.slice(0, 5).map((competitor, idx) => (
+                      {result.competitorIntelligence.topCompetitors.slice(0, 5).map((competitor: any, idx: number) => (
                         <div key={idx} className="p-3 border rounded-lg bg-gray-50">
                           <div className="flex justify-between items-start mb-1">
                             <div className="text-sm font-medium text-gray-900 truncate flex-1 mr-2">
@@ -412,10 +412,10 @@ export default function ValidationPage() {
                             {competitor.description}
                           </div>
                           <div className="flex flex-wrap gap-1">
-                            {competitor.callToActions.slice(0, 2).map((cta, ctaIdx) => (
+                            {competitor.callToActions.slice(0, 2).map((cta: string, ctaIdx: number) => (
                               <Badge key={ctaIdx} variant="outline" className="text-xs">CTA: {cta}</Badge>
                             ))}
-                            {competitor.benefits.slice(0, 2).map((benefit, benefitIdx) => (
+                            {competitor.benefits.slice(0, 2).map((benefit: string, benefitIdx: number) => (
                               <Badge key={benefitIdx} variant="outline" className="text-xs">✓ {benefit}</Badge>
                             ))}
                           </div>
