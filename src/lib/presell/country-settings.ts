@@ -14,4 +14,7 @@ export const countrySettings = {
   }
 }
 
+// Named exports for template compatibility
+export const getCountrySettings = (country: string) => countrySettings[country as keyof typeof countrySettings] || countrySettings.US
+
 export default countrySettings

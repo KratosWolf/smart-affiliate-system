@@ -789,3 +789,31 @@ export interface DesignTokens {
     heavy: string;
   };
 }
+
+// ================================
+// PRODUCER ANALYSIS
+// ================================
+
+export interface ProducerAnalysis {
+  designSystem: DesignTokens;
+  content: {
+    headline: string;
+    subheadline: string;
+    productImages: string[];
+    benefits: string[];
+    testimonials: Array<{
+      name: string;
+      text: string;
+      rating: number;
+    }>;
+    price: string;
+    guarantee: string;
+    urgency: string[];
+    ctaButtons: string[];
+  };
+  layout: {
+    structure: string;
+    sections: string[];
+    ctaPlacement: string[];
+  };
+}
