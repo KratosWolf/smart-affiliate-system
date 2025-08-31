@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { campaignBuilder } from '@/lib/campaigns/campaign-builder'
 import { csvExporter } from '@/lib/campaigns/csv-exporter'
+import { luizCampaignGenerator } from '@/lib/campaigns/luiz-campaign-generator'
+import { csvGenerator } from '@/lib/campaigns/csv-generator'
 import { ProductValidationResponse } from '@/types'
 
 export async function POST(request: NextRequest) {
@@ -8,7 +10,19 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     
     // Support both full validation and basic campaign data
-    const { validation, affiliateUrl, presellUrl, exportFormat, productName, targetCountry, dailyBudget, targetCpa } = body
+    const { 
+      validation, 
+      affiliateUrl, 
+      presellUrl, 
+      exportFormat, 
+      productName, 
+      targetCountry, 
+      dailyBudget, 
+      targetCpa,
+      // METODOLOGIA LUIZ - dados específicos
+      useLuizMethod = true,
+      campaignData = {}
+    } = body
     
     let validationData: ProductValidationResponse
     
@@ -59,28 +73,80 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Gera estrutura da campanha
-    const campaign = await campaignBuilder.buildCampaign(validationData, affiliateUrl, presellUrl)
-    
-    // Valida a campanha gerada
-    const validation_result = csvExporter.validateCampaign(campaign)
-    
-    if (!validation_result.valid) {
-      return NextResponse.json({
-        success: false,
-        error: 'Campanha gerada não está válida',
-        validation_errors: validation_result.errors
-      }, { status: 400 })
+    // ESCOLHE MÉTODO DE GERAÇÃO
+    let campaign: any
+    let csvData: any = null
+    let summary: string = ''
+
+    if (useLuizMethod) {
+      console.log('🎯 Usando METODOLOGIA LUIZ para gerar campanha...')
+      
+      // Gera campanha usando metodologia oficial do Luiz
+      const luizCampaign = luizCampaignGenerator.generateCampaign(
+        validationData, 
+        affiliateUrl, 
+        campaignData
+      )
+
+      // Gera CSVs para Google Ads Editor
+      if (exportFormat === 'csv') {
+        csvData = csvGenerator.generateAllCSVs({
+          campaign: luizCampaign.campaign,
+          keywords: luizCampaign.keywords,
+          headlines: luizCampaign.ads.headlines,
+          descriptions: luizCampaign.ads.descriptions,
+          sitelinks: luizCampaign.extensions.sitelinks,
+          callouts: luizCampaign.extensions.callouts,
+          snippets: luizCampaign.extensions.snippets,
+          affiliateUrl
+        })
+      }
+
+      campaign = luizCampaign
+      summary = `# 🎯 CAMPANHA GERADA - METODOLOGIA LUIZ
+
+**Produto:** ${validationData.productName}
+**Budget:** R$ ${luizCampaign.campaign.budget}/dia
+**CPA Target:** ${luizCampaign.campaign.targetCpa}
+**Estrutura:** ${luizCampaign.campaign.structure}
+
+## Headlines (${luizCampaign.ads.headlines.length}):
+${luizCampaign.ads.headlines.map((h, i) => `${i+1}. ${h}`).join('\n')}
+
+## Descriptions (${luizCampaign.ads.descriptions.length}):
+${luizCampaign.ads.descriptions.map((d, i) => `${i+1}. ${d}`).join('\n')}
+
+## Keywords (${luizCampaign.keywords.length}):
+${luizCampaign.keywords.map(k => `- ${k.keyword} (${k.case})`).join('\n')}
+
+## Extensions:
+- **Sitelinks:** ${luizCampaign.extensions.sitelinks.length}
+- **Callouts:** ${luizCampaign.extensions.callouts.length} 
+- **Snippets:** ${luizCampaign.extensions.snippets.length}
+
+**✅ PRONTO PARA IMPORT MANUAL NO GOOGLE ADS EDITOR**`
+
+    } else {
+      console.log('🔧 Usando método tradicional...')
+      
+      // Método tradicional (backward compatibility)
+      campaign = await campaignBuilder.buildCampaign(validationData, affiliateUrl, presellUrl)
+      
+      const validation_result = csvExporter.validateCampaign(campaign)
+      if (!validation_result.valid) {
+        return NextResponse.json({
+          success: false,
+          error: 'Campanha gerada não está válida',
+          validation_errors: validation_result.errors
+        }, { status: 400 })
+      }
+      
+      if (exportFormat === 'csv') {
+        csvData = csvExporter.exportCampaign(campaign)
+      }
+      
+      summary = csvExporter.generateSummary(campaign)
     }
-    
-    // Gera CSVs se solicitado
-    let csvData = null
-    if (exportFormat === 'csv') {
-      csvData = csvExporter.exportCampaign(campaign)
-    }
-    
-    // Gera resumo
-    const summary = csvExporter.generateSummary(campaign)
     
     const response = {
       success: true,
@@ -88,16 +154,23 @@ export async function POST(request: NextRequest) {
         campaign,
         summary,
         csvData,
-        validation: validation_result,
+        methodology: useLuizMethod ? 'LUIZ_OFFICIAL' : 'TRADITIONAL',
         metadata: {
           productName: validationData.productName,
           targetCountry: validationData.targetCountry,
+          budgetStrategy: useLuizMethod ? 'FIXED_350_BRL' : 'DYNAMIC',
+          structure: useLuizMethod ? '1_CAMPAIGN_1_AD' : 'TRADITIONAL',
           estimatedPerformance: {
-            dailyClicks: Math.round(campaign.campaign.budget / (campaign.keywords[0]?.maxCpc || 2.0)),
-            estimatedConversions: Math.round((campaign.campaign.budget / (campaign.keywords[0]?.maxCpc || 2.0)) * 0.03), // 3% conversion rate
-            estimatedCpa: campaign.campaign.targetCpa,
-            estimatedRoi: validationData.recommendations.estimatedRoi
+            dailyBudget: useLuizMethod ? 350 : (campaign.campaign?.budget || 50),
+            dailyClicks: Math.round((useLuizMethod ? 350 : (campaign.campaign?.budget || 50)) / 2.5), // Assuming $2.5 CPC
+            estimatedConversions: Math.round(((useLuizMethod ? 350 : (campaign.campaign?.budget || 50)) / 2.5) * 0.03), // 3% conversion rate
+            estimatedCpa: useLuizMethod ? campaign.campaign.targetCpa : (campaign.campaign?.targetCpa || 25),
+            estimatedRoi: validationData.recommendations.estimatedRoi,
+            scalingThreshold: useLuizMethod ? 'ROI > 2.0' : 'Manual',
+            maxBudget: useLuizMethod ? 1750 : 'Unlimited'
           },
+          csvFiles: csvData ? Object.keys(csvData).length : 0,
+          readyForGoogleAds: !!csvData,
           generatedAt: new Date().toISOString()
         }
       }
