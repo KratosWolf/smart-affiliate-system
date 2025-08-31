@@ -29,7 +29,11 @@ import {
   FileText
 } from 'lucide-react'
 
+import { useState } from 'react'
+
 export default function SystemGuidePage() {
+  const [activeTab, setActiveTab] = useState<'guide' | 'playbook' | 'implementation'>('guide')
+
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -80,49 +84,44 @@ export default function SystemGuidePage() {
             <p className="text-white text-2xl mt-2 font-bold">👇👇 CLICK PLAYBOOK & IMPLEMENTATION BUTTONS BELOW! 👇👇</p>
           </div>
           
-          {/* PURE JAVASCRIPT TAB BUTTONS */}
-          <div className="flex gap-4 justify-center mb-8" id="tab-buttons">
+          {/* REACT STATE TAB BUTTONS */}
+          <div className="flex gap-4 justify-center mb-8">
             <button 
-              id="btn-guide"
-              onClick={() => {
-                console.log('Clicking System Guide')
-                document.getElementById('content-guide').style.display = 'block'
-                document.getElementById('content-playbook').style.display = 'none'
-                document.getElementById('content-implementation').style.display = 'none'
-              }}
-              className="bg-yellow-400 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-blue-700 shadow-lg transition-colors"
+              onClick={() => setActiveTab('guide')}
+              className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
+                activeTab === 'guide' 
+                  ? 'bg-yellow-400 text-white' 
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
             >
               📚 SYSTEM GUIDE
             </button>
             <button 
-              id="btn-playbook"
-              onClick={() => {
-                console.log('Clicking Playbook')
-                document.getElementById('content-guide').style.display = 'none'
-                document.getElementById('content-playbook').style.display = 'block'
-                document.getElementById('content-implementation').style.display = 'none'
-              }}
-              className="bg-purple-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-purple-700 shadow-lg transition-colors"
+              onClick={() => setActiveTab('playbook')}
+              className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
+                activeTab === 'playbook' 
+                  ? 'bg-yellow-400 text-white' 
+                  : 'bg-purple-600 text-white hover:bg-purple-700'
+              }`}
             >
               📋 PLAYBOOK
             </button>
             <button 
-              id="btn-implementation"
-              onClick={() => {
-                console.log('Clicking Implementation Plan')
-                document.getElementById('content-guide').style.display = 'none'
-                document.getElementById('content-playbook').style.display = 'none'
-                document.getElementById('content-implementation').style.display = 'block'
-              }}
-              className="bg-green-600 text-white px-8 py-4 rounded-lg text-xl font-black hover:bg-green-700 shadow-lg transition-colors"
+              onClick={() => setActiveTab('implementation')}
+              className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
+                activeTab === 'implementation' 
+                  ? 'bg-yellow-400 text-white' 
+                  : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
             >
               🚀 IMPLEMENTATION PLAN
             </button>
           </div>
         </div>
 
-        {/* TAB CONTENT - SYSTEM GUIDE */}
-        <div id="content-guide" className="block">
+        {/* TAB CONTENT - CONDITIONAL RENDERING */}
+        {activeTab === 'guide' && (
+        <div className="block">
           {/* Navigation Menu */}
           <Card className="sticky top-4 z-10 shadow-lg mb-6">
             <CardContent className="py-4">
@@ -1026,9 +1025,11 @@ export default function SystemGuidePage() {
                   </CardContent>
                 </Card>
         </div>
+        )}
 
         {/* TAB CONTENT - PLAYBOOK */}
-        <div id="content-playbook" style={{display: 'none'}} className="space-y-6">
+        {activeTab === 'playbook' && (
+        <div className="space-y-6">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-purple-900 mb-4">📋 PLAYBOOK COMPLETO - FUNCIONANDO!</h2>
             <p className="text-xl text-purple-700">Sistema 100% Operacional - Status em Tempo Real</p>
@@ -1146,9 +1147,11 @@ export default function SystemGuidePage() {
             </CardContent>
           </Card>
         </div>
+        )}
 
         {/* TAB CONTENT - IMPLEMENTATION PLAN */}
-        <div id="content-implementation" style={{display: 'none'}} className="space-y-6">
+        {activeTab === 'implementation' && (
+        <div className="space-y-6">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-green-900 mb-4">🚀 IMPLEMENTATION PLAN - FUNCIONANDO!</h2>
             <p className="text-xl text-green-700">Roadmap para evolução e otimização do sistema</p>
@@ -1301,6 +1304,7 @@ export default function SystemGuidePage() {
             </CardContent>
           </Card>
         </div>
+        )}
         </div>
       </div>
     </div>
