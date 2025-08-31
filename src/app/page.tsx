@@ -68,7 +68,7 @@ export default function Home() {
       title: '🎯 Product Validation + Intelligence',
       description: '✅ OPERATIONAL - Complete product analysis: Validation + YouTube + Ads + Competition',
       icon: <Target className="w-6 h-6 text-blue-600" />,
-      href: '/validation-intelligence',
+      href: '/validation',
       status: 'operational',
       metrics: 'Real Google API • CPA 40-50% • Competition Intelligence • Multi-source analysis'
     },
@@ -474,7 +474,7 @@ export default function Home() {
               </Button>
 
               <Button variant="outline" className="w-full h-auto p-4"
-                      onClick={() => window.open('/validation-intelligence', '_blank')}>
+                      onClick={() => window.open('/validation', '_blank')}>
                 <div className="text-center">
                   <Target className="w-6 h-6 mx-auto mb-2" />
                   <div className="font-medium">Validar Produto</div>
