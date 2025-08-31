@@ -49,9 +49,10 @@ export class AdsTransparencyMonitor {
     return this.getMockAdvertisersData()
     
     /*
-    const discoveries = []
+    // TODO: Re-enable when puppeteer is needed in production
+    const discoveries: any[] = []
+    const puppeteer = await import('puppeteer')
     const browser = await puppeteer.launch({ headless: true })
-    */
     
     try {
       for (const advertiser of this.knownGoodAdvertisers) {
@@ -67,7 +68,7 @@ export class AdsTransparencyMonitor {
           
           // Extrai informações dos anúncios
           const adsData = await page.evaluate(() => {
-            const ads = []
+            const ads: any[] = []
             
             // Busca cards de anúncios
             const adCards = document.querySelectorAll('[role="article"]')
@@ -110,7 +111,6 @@ export class AdsTransparencyMonitor {
           
         } catch (error) {
           console.warn(`⚠️ Failed to check advertiser ${advertiser.domain}`)
-          // Marca como potencialmente morto
         }
       }
     } finally {
@@ -119,6 +119,7 @@ export class AdsTransparencyMonitor {
     
     console.log(`✅ Found ${discoveries.length} products from known advertisers`)
     return discoveries
+    */
   }
   
   /**
@@ -126,8 +127,14 @@ export class AdsTransparencyMonitor {
    * Expande constantemente nossa base de anunciantes e domínios
    */
   async discoverNewAdvertisers(): Promise<any[]> {
-    console.log('🔍 Daily discovery: Finding NEW advertisers and domains...')
+    console.log('🔍 Daily discovery: Finding NEW advertisers and domains (mock mode)...')
     
+    // Temporarily disabled puppeteer for Vercel deployment - return mock data
+    return []
+    
+    
+    /*
+    // TODO: Re-enable when puppeteer is needed in production
     const testProducts = [
       'weight loss supplement',
       'teeth whitening',
@@ -137,7 +144,8 @@ export class AdsTransparencyMonitor {
       'joint pain relief'
     ]
     
-    const newAdvertisers = []
+    const newAdvertisers: any[] = []
+    const puppeteer = await import('puppeteer')
     const browser = await puppeteer.launch({ headless: true })
     
     try {
@@ -153,7 +161,7 @@ export class AdsTransparencyMonitor {
           
           // Extrai anunciantes
           const advertisers = await page.evaluate(() => {
-            const results = []
+            const results: any[] = []
             
             // Busca informações de anunciantes
             const advertiserElements = document.querySelectorAll('[data-advertiser-name]')
@@ -198,6 +206,7 @@ export class AdsTransparencyMonitor {
     
     console.log(`✅ Discovered ${newAdvertisers.length} new promising advertisers`)
     return newAdvertisers
+    */
   }
   
   /**
@@ -205,34 +214,10 @@ export class AdsTransparencyMonitor {
    * Estratégia: combinações aleatórias revelam anunciantes ocultos
    */
   async randomProductTesting(): Promise<any[]> {
-    console.log('🎲 Daily random testing: Discovering hidden advertisers and domains...')
+    console.log('🎲 Daily random testing: Discovering hidden advertisers and domains (mock mode)...')
     
-    // Gera variações de produtos para testar
-    const productVariations = [
-      'burn', 'boost', 'pure', 'pro', 'plus',
-      'max', 'ultra', 'prime', 'elite', 'advanced'
-    ]
-    
-    const bodyParts = [
-      'liver', 'kidney', 'heart', 'brain', 'gut',
-      'skin', 'hair', 'nail', 'eye', 'ear'
-    ]
-    
-    const discoveries = []
-    
-    // Gera combinações aleatórias
-    for (let i = 0; i < 5; i++) {
-      const part = bodyParts[Math.floor(Math.random() * bodyParts.length)]
-      const variation = productVariations[Math.floor(Math.random() * productVariations.length)]
-      const testQuery = `${part} ${variation}`
-      
-      console.log(`  Testing: "${testQuery}"`)
-      
-      // Busca anúncios para esta combinação
-      // ... implementação similar ao discoverNewAdvertisers
-    }
-    
-    return discoveries
+    // Temporarily disabled puppeteer for Vercel deployment - return mock data
+    return []
   }
   
   /**

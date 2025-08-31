@@ -259,7 +259,7 @@ export class ProductIntelligenceEngine {
       'bronze': 20,
       'saturated': 5
     }
-    score += opportunityPoints[competition.opportunityRating]
+    score += opportunityPoints[competition.opportunityRating as keyof typeof opportunityPoints] || 0
     
     // YouTube Promotion Analysis (0-25 points)
     if (youtubeIntel.totalPromotions >= 5) {
@@ -277,7 +277,7 @@ export class ProductIntelligenceEngine {
       'open': 10,
       'unknown': 5
     }
-    score += exclusivityPoints[competition.exclusivityStatus]
+    score += exclusivityPoints[competition.exclusivityStatus as keyof typeof exclusivityPoints] || 0
     
     // Payment Model (0-15 points)
     if (basicData.paymentType === 'cpa' && basicData.cpaValue > 50) {
@@ -303,7 +303,7 @@ export class ProductIntelligenceEngine {
       paymentType: 'commission' as const,
       averagePrice: 97,
       currency: 'USD',
-      discoverySource: 'intelligence' as const
+      discoverySource: 'competitor-intel' as const
     }
   }
   
