@@ -59,6 +59,7 @@ export default function PresellGeneratorPage() {
     producerPageUrl: '', // Campo essencial para extração de dados
     ratoEiraAdsCode: '', // Script ID da Ratoeira Ads
     clarityProjectId: '', // Project ID do MS Clarity
+    useClarityTracking: false, // Flag para usar ou não MS Clarity
     commission: '', // Opcional - pode não ser necessário
     domain: '', // Será sugerido automaticamente
     domainPurchased: false // Flag para indicar se o domínio já foi comprado
@@ -141,11 +142,24 @@ export default function PresellGeneratorPage() {
   }
 
   const generatePresell = async () => {
+    console.log('🎯 Iniciando geração de presell...', {
+      selectedTemplate,
+      productData
+    })
+
     if (!selectedTemplate || !productData.name || !productData.affiliateUrl || !productData.producerPageUrl) {
-      alert('Por favor, preencha todos os campos obrigatórios:\n- Selecione um template\n- Nome do produto\n- Link de afiliado\n- Página do produtor')
+      const missing = []
+      if (!selectedTemplate) missing.push('- Selecione um template')
+      if (!productData.name) missing.push('- Nome do produto')
+      if (!productData.affiliateUrl) missing.push('- Link de afiliado') 
+      if (!productData.producerPageUrl) missing.push('- Página do produtor')
+      
+      alert(`Por favor, preencha todos os campos obrigatórios:\n${missing.join('\n')}`)
+      console.log('❌ Campos obrigatórios faltando:', missing)
       return
     }
 
+    console.log('✅ Validação passou, iniciando geração...')
     setIsGenerating(true)
     
     try {
@@ -189,7 +203,9 @@ export default function PresellGeneratorPage() {
             colors: { primary: '#007bff' },
             tracking: {
               ratoEiraAdsCode: productData.ratoEiraAdsCode,
-              clarityProjectId: productData.clarityProjectId
+              ...(productData.useClarityTracking && productData.clarityProjectId && {
+                clarityProjectId: productData.clarityProjectId
+              })
             },
             domain: productData.domain,
             domainPurchased: productData.domainPurchased
@@ -508,15 +524,28 @@ export default function PresellGeneratorPage() {
                     </p>
                   </div>
                   <div>
-                    <Label>📈 Microsoft Clarity (Project ID)</Label>
-                    <Input
-                      placeholder="xxxxxxxxxx"
-                      value={productData.clarityProjectId}
-                      onChange={(e) => setProductData({...productData, clarityProjectId: e.target.value})}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Apenas o Project ID do MS Clarity
-                    </p>
+                    <div className="flex items-center space-x-2 mb-2">
+                      <input
+                        type="checkbox"
+                        id="useClarityTracking"
+                        checked={productData.useClarityTracking || false}
+                        onChange={(e) => setProductData({...productData, useClarityTracking: e.target.checked})}
+                        className="rounded border-gray-300"
+                      />
+                      <Label htmlFor="useClarityTracking">📈 Usar Microsoft Clarity (opcional)</Label>
+                    </div>
+                    {productData.useClarityTracking && (
+                      <>
+                        <Input
+                          placeholder="55u86t0118"
+                          value={productData.clarityProjectId}
+                          onChange={(e) => setProductData({...productData, clarityProjectId: e.target.value})}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Apenas o Project ID do MS Clarity
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
                 

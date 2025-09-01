@@ -43,27 +43,35 @@ export class DesignMatcher {
    */
   async extractDesignTokens(pageUrl: string): Promise<DesignTokens> {
     try {
-      // 1. Fetch da página original
-      const response = await fetch(pageUrl);
+      // 1. Normalizar URL (adicionar protocolo se necessário)
+      let normalizedUrl = pageUrl.trim();
+      if (!normalizedUrl.startsWith('http://') && !normalizedUrl.startsWith('https://')) {
+        normalizedUrl = 'https://' + normalizedUrl;
+      }
+      
+      console.log('Extracting design tokens from:', normalizedUrl);
+      
+      // 2. Fetch da página original
+      const response = await fetch(normalizedUrl);
       const html = await response.text();
       
-      // 2. Parse do DOM
+      // 3. Parse do DOM
       const dom = new JSDOM(html);
       const document = dom.window.document;
       
-      // 3. Extrair CSS inline e computed styles
+      // 4. Extrair CSS inline e computed styles
       const styles = this.extractStyles(document);
       
-      // 4. Analisar cores dominantes
+      // 5. Analisar cores dominantes
       const colors = this.analyzeColors(styles, document);
       
-      // 5. Extrair tipografia
+      // 6. Extrair tipografia
       const typography = this.analyzeTypography(styles, document);
       
-      // 6. Detectar layout patterns
+      // 7. Detectar layout patterns
       const layout = this.analyzeLayout(styles, document);
       
-      // 7. Determinar tema/mood
+      // 8. Determinar tema/mood
       const theme = this.analyzeTheme(colors, typography, layout);
       
       return {
