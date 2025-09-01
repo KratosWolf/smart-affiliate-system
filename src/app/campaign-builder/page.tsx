@@ -180,6 +180,40 @@ export default function CampaignBuilderPage() {
     link.click()
   }
 
+  const downloadCSVs = async () => {
+    if (!generatedCampaign) return
+    
+    try {
+      const response = await fetch('/api/v1/campaign/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(generatedCampaign)
+      })
+      
+      const result = await response.json()
+      
+      if (result.success) {
+        // Download each CSV file
+        Object.entries(result.files).forEach(([key, file]: [string, any]) => {
+          const blob = new Blob([file.content], { type: 'text/csv' })
+          const url = URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.href = url
+          link.download = file.filename
+          link.click()
+          
+          // Small delay between downloads
+          setTimeout(() => URL.revokeObjectURL(url), 100)
+        })
+        
+        alert('✅ CSVs baixados! Siga o guia de importação para Google Ads.')
+      }
+    } catch (error) {
+      console.error('Error downloading CSVs:', error)
+      alert('Erro ao gerar CSVs. Tente novamente.')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -502,7 +536,15 @@ export default function CampaignBuilderPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button 
+                      onClick={downloadCSVs} 
+                      className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+                    >
+                      <Download className="w-4 h-4" />
+                      📥 CSVs para Google Ads
+                    </Button>
+                    
                     <Button onClick={downloadCampaign} className="flex items-center gap-2">
                       <Download className="w-4 h-4" />
                       Download JSON
