@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react'
+import JSZip from 'jszip'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -163,8 +164,10 @@ export default function PresellGeneratorPage() {
     setIsGenerating(true)
     
     try {
+      console.log('📊 Preparando dados de validação...')
       // Create validation data using extracted producer data or fallback to form inputs
       const useExtractedData = extractedData && extractedData.productData
+      console.log('📊 useExtractedData:', useExtractedData)
       
       const mockValidation = {
         productName: productData.name,
@@ -173,7 +176,7 @@ export default function PresellGeneratorPage() {
         targetCountry: 'Brasil',
         productData: {
           title: productData.name,
-          price: useExtractedData ? extractedData.productData.price : (parseInt(productData.commission) || 97),
+          price: useExtractedData ? extractedData.productData.price : (parseInt(productData.commission || '97') || 97),
           currency: useExtractedData ? extractedData.productData.currency : 'BRL',
           description: useExtractedData ? extractedData.productData.description : `Produto inovador ${productData.name} com excelentes resultados comprovados`,
           benefits: useExtractedData ? extractedData.productData.benefits : [`Benefício premium do ${productData.name}`, `Resultado garantido em 30 dias`, `Aprovado por especialistas`],
@@ -187,8 +190,11 @@ export default function PresellGeneratorPage() {
           suggestedBudget: 350
         }
       }
+      
+      console.log('📦 mockValidation criado:', mockValidation)
 
       // Generate presell using real API
+      console.log('🚀 Enviando requisição para API...')
       const response = await fetch('/api/v1/presell', {
         method: 'POST',
         headers: {
@@ -218,13 +224,23 @@ export default function PresellGeneratorPage() {
       }
 
       const result = await response.json()
+      console.log('🎯 Resposta da API recebida:', result)
       
       if (result.success) {
+        console.log('✅ Resposta bem-sucedida, definindo presell gerada...')
+        console.log('Template Type do resultado:', result.data.metadata?.templateType)
+        console.log('Primeiros 1000 chars do HTML:', result.data.generated.html.substring(0, 1000))
+        
+        // Criar HTML completo com CSS e JS inline para o preview
+        const previewHTML = `${result.data.generated.html}
+<style>${result.data.generated.css}</style>
+<script>${result.data.generated.js}</script>`;
+        
         setGeneratedPresell({
           template: selectedTemplate,
           product: productData.name,
           url: `https://${productData.domain || 'bestbargains24x7.com'}/${productData.name.toLowerCase().replace(/[^a-z0-9]/g, '')}/`,
-          preview: result.data.generated.html,
+          preview: previewHTML,
           files: {
             'index.html': result.data.generated.html,
             'style.css': result.data.generated.css,
@@ -232,6 +248,7 @@ export default function PresellGeneratorPage() {
           },
           rawData: result.data
         })
+        console.log('🎉 generatedPresell definido com sucesso!')
       } else {
         throw new Error(result.error || 'Failed to generate presell')
       }
@@ -675,7 +692,7 @@ export default function PresellGeneratorPage() {
               </CardHeader>
               <CardContent>
                 {generatedPresell ? (
-                  <div className="space-y-4">
+                  <div className="space-y-4">{console.log('🖥️ Renderizando resultado da presell:', generatedPresell)}
                     <div className="bg-gray-50 rounded-lg p-4">
                       <p className="text-sm font-medium text-gray-700">URL Final:</p>
                       <p className="text-xs text-blue-600 mt-1 break-all">
@@ -684,12 +701,44 @@ export default function PresellGeneratorPage() {
                     </div>
                     
                     <div className="space-y-2">
-                      <Button className="w-full" variant="outline">
+                      <Button 
+                        className="w-full" 
+                        variant="outline"
+                        onClick={() => {
+                          const newWindow = window.open('', '_blank');
+                          if (newWindow) {
+                            newWindow.document.write(generatedPresell.preview);
+                            newWindow.document.close();
+                          }
+                        }}
+                      >
                         <Eye className="w-4 h-4 mr-2" />
                         Preview no Browser
                       </Button>
                       
-                      <Button className="w-full" variant="outline">
+                      <Button 
+                        className="w-full" 
+                        variant="outline"
+                        onClick={() => {
+                          const files = generatedPresell.files;
+                          const zip = new JSZip();
+                          
+                          Object.entries(files).forEach(([filename, content]) => {
+                            zip.file(filename, content);
+                          });
+                          
+                          zip.generateAsync({type: 'blob'}).then((blob) => {
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `${generatedPresell.product.toLowerCase().replace(/\s+/g, '-')}-presell.zip`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                          });
+                        }}
+                      >
                         <Download className="w-4 h-4 mr-2" />
                         Download ZIP
                       </Button>
@@ -774,7 +823,7 @@ export default function PresellGeneratorPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-gray-500">{console.log('⚪ generatedPresell está null/vazio:', generatedPresell)}
                     <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                     <p>Selecione um template e preencha os dados</p>
                     <p className="text-xs mt-2">

@@ -9,6 +9,9 @@ export async function POST(request: NextRequest) {
     
     const { validation, affiliateUrl, customization, originalPageUrl, templateType } = body
     
+    console.log('🎯 API /presell received request with templateType:', templateType);
+    console.log('Full body:', body);
+    
     if (!validation || !affiliateUrl) {
       return NextResponse.json({
         success: false,

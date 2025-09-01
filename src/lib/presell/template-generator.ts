@@ -56,15 +56,34 @@ export class PresellTemplateGenerator {
     countrySettings: any;
     templateType?: string;
   } {
+    console.log('🎯 generateFromValidation called with options:', options);
+    console.log('Template type received:', options?.templateType);
+    
     const config = this.extractConfigFromValidation(validation, affiliateUrl, options);
     
     // Detecta configurações do país automaticamente
     const countrySettings = countryDetector.detectByCountry(validation.targetCountry);
     
-    // Use template específico se solicitado (templates not implemented yet)
+    // Use template específico se solicitado
     if (options?.templateType === 'cookie') {
-      console.log('Cookie template requested but not implemented yet');
-      // Fall back to default template
+      console.log('🍪 Cookie template being generated!');
+      console.log('Config:', config);
+      console.log('Options:', options);
+      
+      const cookieResult = {
+        html: this.generateCookieHTML(config, countrySettings, options?.designTokens, options),
+        css: this.generateCookieCSS(config, options?.designTokens),
+        js: this.generateCookieJS(config, countrySettings),
+        assets: this.generateAssets(config),
+        countrySettings,
+        templateType: 'cookie'
+      };
+      
+      console.log('🍪 Cookie template generated successfully!');
+      console.log('HTML length:', cookieResult.html.length);
+      console.log('First 500 chars of HTML:', cookieResult.html.substring(0, 500));
+      
+      return cookieResult;
     }
 
     if (options?.templateType === 'quiz') {
@@ -1151,9 +1170,809 @@ window.addEventListener('load', function() {
 
     return trackingCode;
   }
+
+  /**
+   * Generate Cookie Template HTML - Real Screenshot Background with Centered Cookie
+   */
+  private generateCookieHTML(config: PresellConfig, countrySettings?: any, designTokens?: any, options?: any): string {
+    // Detect language from original page URL
+    const originalPageUrl = options?.customization?.originalPageUrl || 'https://nervecalm.com/';
+    
+    // Enhanced language detection
+    const isEnglish = originalPageUrl.includes('.com') || 
+                     originalPageUrl.includes('nervecalm') || 
+                     originalPageUrl.toLowerCase().includes('english') ||
+                     originalPageUrl.includes('.us') ||
+                     originalPageUrl.includes('.uk');
+    
+    const isFrench = originalPageUrl.includes('.fr');
+    const isSpanish = originalPageUrl.includes('.es') || originalPageUrl.includes('spain');
+    
+    // Cookie messages - exact user specifications
+    const cookieMessages = {
+      en: {
+        title: "Cookie Consent",
+        message: "This website uses cookies to enhance your browsing experience and deliver personalized content.",
+        message2: "By clicking \"Accept\", you may unlock even greater discounts.",
+        accept: "Accept", 
+        decline: "Decline"
+      },
+      pt: {
+        title: "Consentimento de Cookie",
+        message: "Este site utiliza cookies para melhorar sua experiência de navegação e fornecer conteúdo personalizado.",
+        message2: "Ao clicar em \"Aceitar\", você pode desbloquear descontos ainda maiores.",
+        accept: "Aceitar",
+        decline: "Recusar"
+      },
+      es: {
+        title: "Consentimiento de Cookies",
+        message: "Este sitio web utiliza cookies para mejorar su experiencia de navegación y ofrecer contenido personalizado.",
+        message2: "Al hacer clic en \"Aceptar\", puede desbloquear descuentos aún mayores.",
+        accept: "Aceptar",
+        decline: "Rechazar"
+      },
+      fr: {
+        title: "Consentement aux Cookies",
+        message: "Ce site utilise des cookies pour améliorer votre expérience de navigation et fournir un contenu personnalisé.",
+        message2: "En cliquant sur \"Accepter\", vous pouvez débloquer des réductions encore plus importantes.",
+        accept: "Accepter",
+        decline: "Refuser"
+      }
+    };
+
+    let lang = 'pt'; // Default
+    if (isEnglish) lang = 'en';
+    else if (isFrench) lang = 'fr';
+    else if (isSpanish) lang = 'es';
+    
+    const messages = cookieMessages[lang];
+    
+    // Generate filename from URL for local screenshots
+    let urlDomain = originalPageUrl.replace('https://', '').replace('http://', '');
+    // Remove trailing slash and convert to filename format
+    urlDomain = urlDomain.replace(/\/$/, '').replace(/[^a-zA-Z0-9]/g, '_');
+    
+    console.log('🔍 Generated filename base:', urlDomain);
+    
+    // Try local screenshots first, then fallback to services  
+    const localDesktopScreenshot = `/screenshots/${urlDomain}_desktop.png`;
+    const localMobileScreenshot = `/screenshots/${urlDomain}_mobile.png`;
+    
+    console.log('📁 Looking for desktop:', localDesktopScreenshot);
+    console.log('📁 Looking for mobile:', localMobileScreenshot);
+    
+    const desktopScreenshot = `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${originalPageUrl}`;
+    const mobileScreenshot1 = `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${originalPageUrl}`;
+    const fallbackScreenshot = desktopScreenshot;
+
+    return `<!DOCTYPE html>
+<html lang="${lang === 'en' ? 'en' : lang === 'fr' ? 'fr' : lang === 'es' ? 'es' : 'pt-BR'}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>${config.productName}</title>
+    
+    <!-- Tracking Scripts -->
+    ${options?.customization?.tracking ? this.generateCustomTrackingCode(options.customization.tracking) : ''}
+</head>
+<body>
+    <!-- Real Screenshot Background -->
+    <div class="page-screenshot" onclick="redirectToAffiliate()">
+        <img id="screenshot-img" 
+             src="${localDesktopScreenshot}"
+             alt="Page Preview" 
+             onerror="console.log('Local screenshot failed:', this.src); this.src='${desktopScreenshot}';"
+             onload="console.log('Screenshot loaded successfully:', this.src);"
+             style="display: block; opacity: 1;">
+    </div>
+
+    <!-- Centered Cookie Popup -->
+    <div class="cookie-overlay">
+        <div class="cookie-popup">
+            <div class="cookie-header">
+                <div class="cookie-icon">🍪</div>
+                <h3>${messages.title}</h3>
+            </div>
+            
+            <div class="cookie-body">
+                <p>${messages.message}</p>
+                <p style="margin-top: 12px;">${messages.message2}</p>
+            </div>
+            
+            <div class="cookie-actions">
+                <button class="accept-btn" onclick="acceptCookies()">${messages.accept}</button>
+                <button class="decline-btn" onclick="redirectToAffiliate()">${messages.decline}</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🍪 Cookie Template Loaded');
+        
+        // Simple mobile detection based on screen width
+        function isMobile() {
+            const width = window.innerWidth;
+            const isMobileWidth = width <= 500; // More restrictive for mobile
+            
+            console.log('📱 Simple Mobile Detection:', {
+                width: width,
+                isMobileWidth: isMobileWidth,
+                threshold: 500
+            });
+            
+            return isMobileWidth;
+        }
+        
+        const localDesktopScreenshot = '${localDesktopScreenshot}';
+        const localMobileScreenshot = '${localMobileScreenshot}';
+        const desktopScreenshot = '${desktopScreenshot}';
+        const mobileScreenshot1 = '${mobileScreenshot1}';
+        const fallbackScreenshot = '${fallbackScreenshot}';
+        
+        function redirectToAffiliate() {
+            console.log('Redirecting to: ${config.productUrl}');
+            window.location.href = '${config.productUrl}';
+        }
+        
+        function acceptCookies() {
+            document.cookie = 'cookies_accepted=true; path=/; max-age=31536000';
+            redirectToAffiliate();
+        }
+        
+        // Any click on background redirects
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.cookie-popup')) {
+                redirectToAffiliate();
+            }
+        });
+        
+        // Auto-focus and keyboard handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load appropriate screenshot based on device
+            const img = document.getElementById('screenshot-img');
+            const isMobileDevice = isMobile();
+            
+            console.log('🔍 Device check - isMobile:', isMobileDevice);
+            console.log('🔍 Window width:', window.innerWidth);
+            
+            if (isMobileDevice) {
+                console.log('📱 Mobile detected - switching to mobile screenshot');
+                console.log('📱 Mobile image URL:', localMobileScreenshot);
+                img.src = localMobileScreenshot;
+                
+                img.onerror = function() {
+                    console.log('❌ Mobile screenshot failed, using fallback');
+                    this.src = desktopScreenshot;
+                };
+                
+                img.onload = function() {
+                    console.log('✅ Mobile screenshot loaded successfully!');
+                    console.log('📐 Image dimensions:', this.naturalWidth + 'x' + this.naturalHeight);
+                };
+            } else {
+                // Desktop - image src already set in HTML
+                console.log('🖥️ Desktop device detected, keeping desktop image');
+            }
+            
+            const acceptBtn = document.querySelector('.accept-btn');
+            if (acceptBtn) {
+                acceptBtn.focus();
+            }
+            
+            // Enter key accepts, Escape key declines
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    acceptCookies();
+                } else if (e.key === 'Escape') {
+                    redirectToAffiliate();
+                }
+            });
+            
+            console.log('✅ Cookie template ready!');
+        });
+    </script>
+</body>
+</html>`;
+  }
+
+  /**
+   * Generate Cookie Template CSS - Real Page Clone Styling
+   */
+  private generateCookieCSS(config: PresellConfig, designTokens?: any): string {
+    return `/* Cookie Template - Screenshot Background with Centered Popup */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Screenshot Background */
+.page-screenshot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+    z-index: 1;
+}
+
+.page-screenshot img {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    object-position: top center;
+    display: block !important;
+    opacity: 1 !important;
+    filter: blur(1px) brightness(0.7);
+    z-index: 10;
+    position: relative;
+}
+
+/* Mobile image responsiveness */
+@media (max-width: 768px) {
+    .page-screenshot {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 20px 10px;
+        z-index: 1;
+    }
+    
+    .page-screenshot img {
+        object-fit: contain;
+        object-position: top center;
+        max-width: 100%;
+        max-height: 90vh;
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        z-index: 2;
+    }
+}
+
+/* Fallback background when screenshot fails */
+.page-screenshot.fallback-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-screenshot.fallback-bg::after {
+    content: "⚡ Loading page preview...";
+    color: white;
+    font-size: 1.2rem;
+    opacity: 0.9;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.page-header {
+    background: linear-gradient(135deg, #003300 0%, #004d00 100%);
+    color: white;
+    padding: 20px 0;
+    position: relative;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.nav-breadcrumb {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 15px;
+}
+
+.nav-breadcrumb span {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.nav-breadcrumb span:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.special-offer-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #ff6b35;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    animation: pulse 2s infinite;
+}
+
+/* Main Content */
+.main-content {
+    padding: 40px 0;
+}
+
+.hero-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    color: #003300;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.price-section {
+    margin: 30px 0;
+}
+
+.old-price {
+    font-size: 1.1rem;
+    color: #999;
+    text-decoration: line-through;
+    margin-bottom: 10px;
+}
+
+.new-price {
+    font-size: 2.2rem;
+    color: #ff6b35;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.benefits-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    max-width: 800px;
+    margin: 30px auto;
+    text-align: left;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.benefit-item:before {
+    content: '✓';
+    color: #28a745;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.product-image-placeholder {
+    margin: 40px 0;
+}
+
+.product-image-placeholder img {
+    max-width: 400px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.cta-section {
+    margin: 40px 0;
+}
+
+.main-cta-btn {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: 0 5px 20px rgba(40, 167, 69, 0.3);
+    margin-bottom: 20px;
+}
+
+.main-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+}
+
+.guarantee-text {
+    background: #e8f5e8;
+    color: #155724;
+    padding: 15px;
+    border-radius: 10px;
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+/* Sections */
+.how-it-works, .testimonials {
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 15px;
+    margin: 40px 0;
+    text-align: center;
+}
+
+.how-it-works h3, .testimonials h3 {
+    font-size: 2rem;
+    color: #003300;
+    margin-bottom: 30px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.step {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    font-weight: 500;
+}
+
+blockquote {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #666;
+    border-left: 4px solid #28a745;
+    padding-left: 20px;
+    margin: 20px 0;
+}
+
+cite {
+    font-size: 0.9rem;
+    color: #999;
+    font-style: normal;
+}
+
+/* Cookie Overlay - Centered and Effective */
+.cookie-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+    pointer-events: none;
+}
+
+.cookie-overlay .cookie-popup {
+    pointer-events: all;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.cookie-popup {
+    max-width: 500px;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    text-align: center;
+    animation: popIn 0.3s ease-out;
+    width: 90%;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .cookie-popup {
+        max-width: 350px;
+        padding: 20px;
+        margin: 15px;
+        width: calc(100vw - 30px);
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+}
+
+@keyframes popIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.8) translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+    }
+}
+
+.cookie-header {
+    margin-bottom: 20px;
+}
+
+.cookie-header .cookie-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.cookie-header h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+    font-weight: 700;
+}
+
+.cookie-body {
+    margin-bottom: 25px;
+}
+
+.cookie-body p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Mobile text adjustments */
+@media (max-width: 768px) {
+    .cookie-header .cookie-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .cookie-header h3 {
+        font-size: 1.3rem;
+    }
+    
+    .cookie-body {
+        margin-bottom: 20px;
+    }
+    
+    .cookie-body p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+}
+
+.cookie-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.accept-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    flex: 1;
+}
+
+.accept-btn:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+}
+
+.decline-btn {
+    background: transparent;
+    color: #999;
+    border: 1px solid #ddd;
+    padding: 14px 30px;
+    border-radius: 25px;
+    flex: 1;
+}
+
+/* Mobile buttons */
+@media (max-width: 768px) {
+    .cookie-actions {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+    
+    .accept-btn, .decline-btn {
+        min-width: unset;
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        flex: none;
+    }
+}
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.decline-btn:hover {
+    background: #f8f9fa;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .nav-breadcrumb {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .special-offer-badge {
+        position: static;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .cookie-actions {
+        width: 100%;
+    }
+    
+    .accept-btn, .decline-btn {
+        flex: 1;
+    }
+    
+    .benefits-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .steps {
+        grid-template-columns: 1fr;
+    }
+`;
+  }
+
+  /**
+   * Generate Cookie Template JavaScript
+   */
+  private generateCookieJS(config: PresellConfig, countrySettings?: any): string {
+    return `// Cookie Template JavaScript - Overlay Redirect System
+console.log('Cookie Template - JavaScript loaded');
+
+// Enhanced tracking function
+function trackConversion(event) {
+    console.log('Cookie Template - Conversion tracked:', event);
+    
+    // Track with various systems
+    try {
+        // Google Analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'conversion', {
+                'event_category': 'Cookie_Template',
+                'event_label': event,
+                'value': ${config.price || 0}
+            });
+        }
+        
+        // Facebook Pixel
+        if (typeof fbq !== 'undefined') {
+            fbq('track', 'Lead', {
+                content_name: '${config.productName}',
+                content_category: 'Cookie_Template',
+                value: ${config.price || 0},
+                currency: '${config.currency || 'BRL'}'
+            });
+        }
+    } catch (error) {
+        console.error('Tracking error:', error);
+    }
+}
+
+// Auto-focus functionality for better UX
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Cookie Template - DOM loaded, initializing...');
+    
+    // Focus on accept button for better accessibility
+    const acceptButton = document.getElementById('acceptCookies');
+    if (acceptButton) {
+        acceptButton.focus();
+        
+        // Add keyboard shortcut (Enter key)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+                acceptButton.click();
+            }
+        });
+    }
+    
+    console.log('Cookie Template - Initialization complete');
+});
+
+// Performance tracking
+window.addEventListener('load', function() {
+    const loadTime = performance.now();
+    console.log('Cookie Template - Page loaded in', Math.round(loadTime), 'ms');
+    
+    trackConversion('page_loaded');
+});`;
+  }
 }
 
 /**
  * Default instance
  */
 export const presellGenerator = new PresellTemplateGenerator();
+
