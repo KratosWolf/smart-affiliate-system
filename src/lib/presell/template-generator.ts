@@ -1175,8 +1175,11 @@ window.addEventListener('load', function() {
    * Generate Cookie Template HTML - Real Screenshot Background with Centered Cookie
    */
   private generateCookieHTML(config: PresellConfig, countrySettings?: any, designTokens?: any, options?: any): string {
-    // Detect language from original page URL - use actual product URL
-    const originalPageUrl = options?.customization?.originalPageUrl || config.productData?.producerPageUrl || 'https://example.com/';
+    // Always use the actual product URL from config - never hardcoded values
+    const originalPageUrl = config.productData?.producerPageUrl || options?.customization?.originalPageUrl || 'https://example.com/';
+    
+    console.log('🔍 Cookie template using URL:', originalPageUrl);
+    console.log('🔍 Product name:', config.productName);
     
     // Enhanced language detection based on actual product URL
     const isEnglish = originalPageUrl.includes('.com') || 
@@ -1226,23 +1229,24 @@ window.addEventListener('load', function() {
     
     const messages = cookieMessages[lang];
     
-    // Use product name for screenshot paths - not URL to avoid conflicts
+    // FORCE use product name for screenshots - NEVER use URL-based naming
     const productName = config.productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'product';
     
-    console.log('🔍 Using product name for screenshots:', productName);
+    console.log('🔍 FORCED product name for screenshots:', productName);
+    console.log('🔍 Original URL being used:', originalPageUrl);
     
-    // Try local screenshots first, then fallback to services  
+    // ALWAYS try local screenshots first with product name
     const localDesktopScreenshot = `/screenshots/${productName}/desktop-hero.jpg`;
     const localMobileScreenshot = `/screenshots/${productName}/mobile-hero.jpg`;
     
-    console.log('📁 Looking for desktop:', localDesktopScreenshot);
-    console.log('📁 Looking for mobile:', localMobileScreenshot);
+    console.log('📁 FORCED desktop path:', localDesktopScreenshot);
+    console.log('📁 FORCED mobile path:', localMobileScreenshot);
     
-    // Use product URL for screenshots - not the hardcoded originalPageUrl 
+    // Use ACTUAL product URL for external screenshots - not any cached value
     const productUrl = config.productData?.producerPageUrl || originalPageUrl;
     const desktopScreenshot = `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${productUrl}`;
     const mobileScreenshot1 = `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${productUrl}`;
-    const fallbackScreenshot = desktopScreenshot;
+    const fallbackScreenshot = localDesktopScreenshot; // Use local as fallback, not external
 
     return `<!DOCTYPE html>
 <html lang="${lang === 'en' ? 'en' : lang === 'fr' ? 'fr' : lang === 'es' ? 'es' : 'pt-BR'}">
