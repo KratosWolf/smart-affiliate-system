@@ -1175,12 +1175,11 @@ window.addEventListener('load', function() {
    * Generate Cookie Template HTML - Real Screenshot Background with Centered Cookie
    */
   private generateCookieHTML(config: PresellConfig, countrySettings?: any, designTokens?: any, options?: any): string {
-    // Detect language from original page URL
-    const originalPageUrl = options?.customization?.originalPageUrl || 'https://nervecalm.com/';
+    // Detect language from original page URL - use actual product URL
+    const originalPageUrl = options?.customization?.originalPageUrl || config.productData?.producerPageUrl || 'https://example.com/';
     
-    // Enhanced language detection
+    // Enhanced language detection based on actual product URL
     const isEnglish = originalPageUrl.includes('.com') || 
-                     originalPageUrl.includes('nervecalm') || 
                      originalPageUrl.toLowerCase().includes('english') ||
                      originalPageUrl.includes('.us') ||
                      originalPageUrl.includes('.uk');
@@ -1227,16 +1226,14 @@ window.addEventListener('load', function() {
     
     const messages = cookieMessages[lang];
     
-    // Generate filename from URL for local screenshots
-    let urlDomain = originalPageUrl.replace('https://', '').replace('http://', '');
-    // Remove trailing slash and convert to filename format
-    urlDomain = urlDomain.replace(/\/$/, '').replace(/[^a-zA-Z0-9]/g, '_');
+    // Use product name for screenshot paths - not URL to avoid conflicts
+    const productName = config.productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'product';
     
-    console.log('🔍 Generated filename base:', urlDomain);
+    console.log('🔍 Using product name for screenshots:', productName);
     
     // Try local screenshots first, then fallback to services  
-    const localDesktopScreenshot = `/screenshots/${urlDomain}_desktop.png`;
-    const localMobileScreenshot = `/screenshots/${urlDomain}_mobile.png`;
+    const localDesktopScreenshot = `/screenshots/${productName}/desktop-hero.jpg`;
+    const localMobileScreenshot = `/screenshots/${productName}/mobile-hero.jpg`;
     
     console.log('📁 Looking for desktop:', localDesktopScreenshot);
     console.log('📁 Looking for mobile:', localMobileScreenshot);
