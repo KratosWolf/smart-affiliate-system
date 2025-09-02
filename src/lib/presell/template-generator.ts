@@ -1238,8 +1238,10 @@ window.addEventListener('load', function() {
     console.log('📁 Looking for desktop:', localDesktopScreenshot);
     console.log('📁 Looking for mobile:', localMobileScreenshot);
     
-    const desktopScreenshot = `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${originalPageUrl}`;
-    const mobileScreenshot1 = `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${originalPageUrl}`;
+    // Use product URL for screenshots - not the hardcoded originalPageUrl 
+    const productUrl = config.productData?.producerPageUrl || originalPageUrl;
+    const desktopScreenshot = `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${productUrl}`;
+    const mobileScreenshot1 = `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${productUrl}`;
     const fallbackScreenshot = desktopScreenshot;
 
     return `<!DOCTYPE html>
@@ -1257,9 +1259,9 @@ window.addEventListener('load', function() {
     <div class="page-screenshot" onclick="redirectToAffiliate()">
         <img id="screenshot-img" 
              src="${localDesktopScreenshot}"
-             alt="Page Preview" 
-             onerror="console.log('Local screenshot failed:', this.src); this.src='${desktopScreenshot}';"
-             onload="console.log('Screenshot loaded successfully:', this.src);"
+             alt="${config.productName || 'Product'} Preview" 
+             onerror="console.log('❌ Screenshot failed for ${config.productName}:', this.src); this.src='${desktopScreenshot}';"
+             onload="console.log('✅ Screenshot loaded for ${config.productName}:', this.src);"
              style="display: block; opacity: 1;">
     </div>
 
