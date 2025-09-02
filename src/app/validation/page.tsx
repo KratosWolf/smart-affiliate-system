@@ -78,7 +78,7 @@ export default function ValidationPage() {
     setResult(null)
     
     try {
-      console.log('🔍 Validating product via API:', formData.productName)
+      console.log('🔍 Validating product via API:', formData)
       
       const response = await fetch('/api/v1/validation', {
         method: 'POST',
@@ -97,6 +97,7 @@ export default function ValidationPage() {
       })
       
       const data = await response.json()
+      console.log('📊 API Response:', data)
       
       if (!response.ok) {
         throw new Error(data.error || 'Validation failed')
@@ -119,7 +120,8 @@ export default function ValidationPage() {
       
     } catch (error) {
       console.error('Validation failed:', error)
-      setError('Failed to validate product. Please try again.')
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setError(`Validation failed: ${errorMessage}. Please try again.`)
     } finally {
       setIsValidating(false)
     }
