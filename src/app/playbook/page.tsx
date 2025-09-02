@@ -63,10 +63,10 @@ export default function PlaybookPage() {
               <div className="bg-white p-4 rounded-lg border">
                 <h3 className="font-bold text-purple-700 mb-3">✅ Módulos Operacionais (8/8)</h3>
                 <ul className="text-sm space-y-1">
-                  <li>• 🔍 <strong>Discovery + Mining:</strong> 15-30 produtos/dia</li>
-                  <li>• 🎯 <strong>Validation + Intelligence:</strong> Google API real</li>
-                  <li>• 💰 <strong>Presell Generator:</strong> 6 templates (8-18% CVR)</li>
-                  <li>• 📈 <strong>Campaign Builder:</strong> Google Ads CSV completo</li>
+                  <li>• 🔍 <strong>Discovery Mining:</strong> YouTube + Ads Transparency (6:00 AM)</li>
+                  <li>• 🎯 <strong>Validation Engine:</strong> Producer Page URL + Google API</li>
+                  <li>• 💰 <strong>Presell Generator:</strong> Cookie Template + Auto FTP Deploy</li>
+                  <li>• 📈 <strong>Campaign Builder:</strong> Metodologia Luiz v2 + Edis Tracking</li>
                   <li>• 📊 <strong>ROI Tracking:</strong> 3-day rolling + auto-scaling</li>
                 </ul>
               </div>
@@ -83,7 +83,7 @@ export default function PlaybookPage() {
                 <div>
                   <p className="text-sm"><strong>Features Live:</strong> Todos 8 módulos</p>
                   <p className="text-sm"><strong>Navigation:</strong> New tabs + back buttons</p>
-                  <p className="text-sm"><strong>Mining:</strong> Diário às 6:00 AM ativo</p>
+                  <p className="text-sm"><strong>Mining:</strong> Cron Job 6:00 AM configurado</p>
                 </div>
               </div>
             </div>
@@ -151,9 +151,9 @@ export default function PlaybookPage() {
                 <div>
                   <h4 className="font-semibold mb-3 text-orange-700">🔄 Workflow Diário:</h4>
                   <ol className="text-sm space-y-2">
-                    <li><strong>1. Manhã (6:00):</strong> Sistema roda mining automático</li>
-                    <li><strong>2. 9:00-11:00:</strong> Review dos produtos descobertos</li>
-                    <li><strong>3. 11:00-13:00:</strong> Validação dos top 5 produtos</li>
+                    <li><strong>1. Manhã (6:00):</strong> Discovery Mining automático (YouTube + Ads)</li>
+                    <li><strong>2. 9:00-11:00:</strong> Review produtos descobertos → "Validar Produto"</li>
+                    <li><strong>3. 11:00-13:00:</strong> Validation com Producer Page URL</li>
                     <li><strong>4. 14:00-16:00:</strong> Criação de presells para aprovados</li>
                     <li><strong>5. 16:00-18:00:</strong> Setup de campanhas Google Ads</li>
                     <li><strong>6. 18:00:</strong> Launch de campanhas + monitoramento</li>

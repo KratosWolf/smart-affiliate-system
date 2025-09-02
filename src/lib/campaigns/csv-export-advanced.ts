@@ -91,7 +91,7 @@ export class AdvancedCampaignExporter {
       'Google search;Search partners',
       data.campaign.languages.join(';'),
       data.campaign.locations.join(';'),
-      data.campaign.biddingStrategy === 'Target CPA' ? 'Target CPA' : 'Maximize Conversions',
+      'Target CPA', // METODOLOGIA LUIZ: Target CPA confirmado
       data.campaign.targetCpa || '',
       'Enabled'
     ]

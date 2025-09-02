@@ -3,5 +3,11 @@
   "devCommand": "npm run dev",
   "outputDirectory": ".next",
   "regions": ["iad1"],
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "crons": [
+    {
+      "path": "/api/cron/discovery-mining",
+      "schedule": "0 6 * * *"
+    }
+  ]
 }

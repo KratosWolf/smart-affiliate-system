@@ -57,10 +57,18 @@ export default function Home() {
 
   const modules = [
     {
+      title: '🔍 Discovery Mining',
+      description: '✅ OPERATIONAL - YouTube + Ads Transparency + Pattern Detection (5-7 aparições)',
+      icon: <Search className="w-6 h-6 text-green-600" />,
+      href: '/discovery-mining',
+      status: 'operational',
+      metrics: '15-30 produtos/dia • 6:00 AM automático • Multi-Geo'
+    },
+    {
       title: '🎯 Validation Engine',
       description: '✅ ENTRY POINT - Valida produtos com Google API real e análise de concorrência',
       icon: <Target className="w-6 h-6 text-blue-600" />,
-      href: '/discovery',
+      href: '/validation',
       status: 'operational',
       metrics: 'Score 0-100 • CPA Calculator • Producer Page Analysis'
     },
@@ -254,7 +262,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span>Discovery + Mining - 15-30 products/day</span>
+                    <span>Discovery Mining - YouTube + Ads Transparency</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <CheckCircle className="w-4 h-4 text-green-600" />
@@ -508,7 +516,7 @@ export default function Home() {
               <div className="bg-white p-3 rounded-lg border">
                 <h3 className="font-bold text-purple-700 mb-2">✅ Módulos Operacionais (8/8)</h3>
                 <ul className="text-sm space-y-1">
-                  <li>• 🔍 <strong>Discovery + Mining:</strong> 15-30 produtos/dia</li>
+                  <li>• 🔍 <strong>Discovery Mining:</strong> YouTube + Ads Transparency</li>
                   <li>• 🎯 <strong>Validation + Intelligence:</strong> Google API real</li>
                   <li>• 💰 <strong>Presell Generator:</strong> 6 templates (8-18% CVR)</li>
                   <li>• 📈 <strong>Campaign Builder:</strong> Google Ads CSV completo</li>
@@ -848,22 +856,21 @@ export default function Home() {
               </div>
               
               <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-xl font-bold text-blue-600">$500</div>
-                    <div className="text-xs text-gray-600">Budget Inicial Ads</div>
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-green-600">10h</div>
-                    <div className="text-xs text-gray-600">Setup Semanal</div>
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-purple-600">3</div>
-                    <div className="text-xs text-gray-600">APIs Necessárias</div>
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-orange-600">1</div>
-                    <div className="text-xs text-gray-600">Domínio Principal</div>
-                  </div>
+                <div>
+                  <div className="text-xl font-bold text-blue-600">$500</div>
+                  <div className="text-xs text-gray-600">Budget Inicial Ads</div>
+                </div>
+                <div>
+                  <div className="text-xl font-bold text-green-600">10h</div>
+                  <div className="text-xs text-gray-600">Setup Semanal</div>
+                </div>
+                <div>
+                  <div className="text-xl font-bold text-purple-600">3</div>
+                  <div className="text-xs text-gray-600">APIs Necessarias</div>
+                </div>
+                <div>
+                  <div className="text-xl font-bold text-orange-600">1</div>
+                  <div className="text-xs text-gray-600">Dominio Principal</div>
                 </div>
               </div>
             </CardContent>

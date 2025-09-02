@@ -25,9 +25,15 @@ interface CampaignData {
   productName: string
   affiliateUrl: string
   presellUrl?: string
+  producerPageUrl?: string // NOVO: URL da página do produtor
   targetCountry: string
   dailyBudget: number
   targetCpa: number
+  platform?: 'CLICKBANK' | 'MONETIZZE' | 'HOTMART' | 'EDUZZ' | 'OUTROS'
+  commissionValue?: number
+  currency?: 'BRL' | 'USD'
+  useEdisTracking?: boolean
+  edisBaseUrl?: string
 }
 
 interface GeneratedCampaign {
@@ -70,9 +76,15 @@ export default function CampaignBuilderPage() {
     productName: '',
     affiliateUrl: '',
     presellUrl: '',
+    producerPageUrl: '',
     targetCountry: 'Brasil',
-    dailyBudget: 50,
-    targetCpa: 25
+    dailyBudget: 350,
+    targetCpa: 25,
+    platform: 'CLICKBANK',
+    commissionValue: 100,
+    currency: 'BRL',
+    useEdisTracking: true,
+    edisBaseUrl: 'www.test.com'
   })
   
   const [generatedCampaign, setGeneratedCampaign] = useState<GeneratedCampaign | null>(null)
@@ -89,14 +101,20 @@ export default function CampaignBuilderPage() {
         const validation = JSON.parse(validatedProduct)
         const campaign = JSON.parse(savedCampaignData)
         
-        // Preenche o formulário automaticamente
+        // Preenche o formulário automaticamente com TODOS os dados necessários
         setCampaignData({
           productName: validation.productName || campaign.productName,
-          affiliateUrl: validation.affiliateLink || validation.productUrl || '',
+          affiliateUrl: validation.affiliateLink || '',
           presellUrl: '', // Pre-sell será separada
-          targetCountry: validation.targetCountry || validation.country,
+          producerPageUrl: validation.productUrl || '', // URL da página do produtor
+          targetCountry: validation.targetCountry || validation.country || 'Brasil',
           dailyBudget: 350, // Metodologia Luiz - fixo R$ 350
-          targetCpa: validation.cpaTargets?.target || campaign.unitPrice * 0.3 * 1.1 || 25
+          targetCpa: validation.cpaTargets?.target || campaign.unitPrice * 0.3 * 1.1 || 25,
+          platform: validation.platform || 'CLICKBANK',
+          commissionValue: validation.expectedCommission || 100,
+          currency: 'BRL',
+          useEdisTracking: true,
+          edisBaseUrl: 'www.test.com'
         })
         
         // Limpa dados após usar (evita conflito)
@@ -123,10 +141,23 @@ export default function CampaignBuilderPage() {
   ]
 
   const handleInputChange = (field: keyof CampaignData, value: string | number) => {
-    setCampaignData(prev => ({
-      ...prev,
-      [field]: value
-    }))
+    setCampaignData(prev => {
+      const updated = { ...prev, [field]: value }
+      
+      // Recalcula valores automaticamente
+      if (field === 'commissionValue' || field === 'currency') {
+        // CPA Alvo = 45% da comissão
+        updated.targetCpa = (updated.commissionValue || 100) * 0.45
+        
+        // Orçamento mínimo baseado na moeda
+        const minBudget = updated.currency === 'BRL' ? 350 : 70
+        if (!updated.dailyBudget || updated.dailyBudget < minBudget) {
+          updated.dailyBudget = minBudget
+        }
+      }
+      
+      return updated
+    })
   }
 
   const generateCampaign = async () => {
@@ -261,6 +292,49 @@ export default function CampaignBuilderPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Plataforma de Afiliado *
+                    </label>
+                    <select 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      value={campaignData.platform}
+                      onChange={(e) => handleInputChange('platform', e.target.value)}
+                    >
+                      <option value="CLICKBANK">ClickBank</option>
+                      <option value="MONETIZZE">Monetizze</option>
+                      <option value="HOTMART">Hotmart</option>
+                      <option value="EDUZZ">Eduzz</option>
+                      <option value="OUTROS">Outros</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Valor da Comissão *
+                    </label>
+                    <Input
+                      type="number"
+                      placeholder="100"
+                      value={campaignData.commissionValue}
+                      onChange={(e) => handleInputChange('commissionValue', parseFloat(e.target.value))}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Moeda da Conta Google Ads
+                    </label>
+                    <select 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      value={campaignData.currency}
+                      onChange={(e) => handleInputChange('currency', e.target.value)}
+                    >
+                      <option value="BRL">🇧🇷 Real (BRL)</option>
+                      <option value="USD">🇺🇸 Dólar (USD)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       País de Targeting
                     </label>
                     <select 
@@ -289,6 +363,20 @@ export default function CampaignBuilderPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                      URL da Página do Produtor *
+                    </label>
+                    <Input
+                      placeholder="https://nervecalm.com (para análise inteligente)"
+                      value={campaignData.producerPageUrl}
+                      onChange={(e) => handleInputChange('producerPageUrl', e.target.value)}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Usada para analisar ofertas, garantias e adaptar headlines automaticamente
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       URL da Presell (Opcional)
                     </label>
                     <Input
@@ -300,39 +388,87 @@ export default function CampaignBuilderPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Orçamento Diário ($)
+                      Orçamento Diário (Mínimo: R$ 350/dia ou $70/dia)
                     </label>
                     <Input
                       type="number"
-                      placeholder="50"
+                      placeholder={campaignData.currency === 'BRL' ? '350' : '70'}
+                      min={campaignData.currency === 'BRL' ? 350 : 70}
                       value={campaignData.dailyBudget}
                       onChange={(e) => handleInputChange('dailyBudget', parseFloat(e.target.value))}
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Será calculado automaticamente: {campaignData.currency === 'BRL' ? 'R$' : '$'}{campaignData.currency === 'BRL' ? 350 : 70} mínimo
+                    </p>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      CPA Alvo ($)
+                      CPA Alvo (40-50% da comissão)
                     </label>
                     <Input
                       type="number"
-                      placeholder="25"
+                      placeholder={(campaignData.commissionValue ? campaignData.commissionValue * 0.45 : 45).toString()}
                       value={campaignData.targetCpa}
                       onChange={(e) => handleInputChange('targetCpa', parseFloat(e.target.value))}
+                      disabled
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Calculado automaticamente: 45% de {campaignData.currency === 'BRL' ? 'R$' : '$'}{campaignData.commissionValue || 100} = {campaignData.currency === 'BRL' ? 'R$' : '$'}{((campaignData.commissionValue || 100) * 0.45).toFixed(0)}
+                    </p>
                   </div>
+                </div>
+
+                {/* EDIS Tracking Section */}
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <h4 className="font-semibold text-green-800">📊 Tracking Edis</h4>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={campaignData.useEdisTracking}
+                        onChange={(e) => handleInputChange('useEdisTracking', e.target.checked)}
+                        className="rounded border-green-300 text-green-600 focus:ring-green-500"
+                      />
+                      <span className="text-sm text-green-700">Ativar tracking</span>
+                    </label>
+                  </div>
+                  
+                  {campaignData.useEdisTracking && (
+                    <div>
+                      <label className="block text-sm font-medium text-green-700 mb-2">
+                        URL Base do Edis
+                      </label>
+                      <Input
+                        placeholder="www.test.com"
+                        value={campaignData.edisBaseUrl}
+                        onChange={(e) => handleInputChange('edisBaseUrl', e.target.value)}
+                        className="border-green-300 focus:border-green-500 focus:ring-green-500"
+                      />
+                      <p className="text-xs text-green-600 mt-1">
+                        URLs finais terão: {campaignData.edisBaseUrl}?campaignid={'{campaignid}'}&keyword={'{keyword}'}&network={'{network}'}&extensionid={'{extensionid}'}&matchtype={'{matchtype}'}&adgroupid={'{adgroupid}'}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
                     <div>
-                      <h4 className="font-semibold text-blue-900">💡 Dicas para Melhores Resultados</h4>
+                      <h4 className="font-semibold text-blue-900">🎯 Metodologia Luiz - Especificações</h4>
                       <ul className="text-sm text-blue-800 mt-2 space-y-1">
-                        <li>• Use presells para aumentar conversões e reduzir CPA</li>
-                        <li>• CPA alvo deve ser máximo 60% da comissão do produto</li>
-                        <li>• Orçamento mínimo recomendado: $30/dia para teste inicial</li>
-                        <li>• Para produtos internacionais, teste países com menor concorrência</li>
+                        <li>• <strong>Nome:</strong> [Produto] - [País] - [Data] - [Plataforma] - [Comissão]</li>
+                        <li>• <strong>Orçamento:</strong> Mínimo R$ 350/dia (ou $70 para contas USD)</li>
+                        <li>• <strong>CPA Alvo:</strong> 40-50% da comissão (45% padrão)</li>
+                        <li>• <strong>Estratégia:</strong> Target CPA (confirmado)</li>
+                        <li>• <strong>Rede:</strong> Google Search (SEM Parceiros, SEM Display)</li>
+                        <li>• <strong>Público:</strong> Não restrito a novos clientes</li>
+                        <li>• <strong>Primeira Headline:</strong> {'{KeyWord:[PRODUTO] Online Store}'}</li>
+                        <li>• <strong>Exclusões:</strong> Brasil, Índia, Vietnã, Indonésia, China, Nigéria, Rússia, Venezuela, Colômbia</li>
+                        <li>• <strong>Keywords:</strong> Nome do produto em MAIÚSCULA e minúscula (Broad Match)</li>
+                        <li>• <strong>Headlines:</strong> Checadas com página do produtor</li>
+                        <li>• <strong>Extensões:</strong> Selecionadas com inteligência baseada no produto</li>
                       </ul>
                     </div>
                   </div>

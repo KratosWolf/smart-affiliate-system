@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,10 +12,35 @@ export default function ValidationPage() {
   const [formData, setFormData] = useState({
     productName: '',
     country: 'Brasil',
-    affiliateLink: '',
+    producerPageUrl: '',
     commissionValue: '',
     commissionType: 'CPA'
   })
+
+  // Check for data from Discovery Mining on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const validationData = localStorage.getItem('validationData')
+      if (validationData) {
+        try {
+          const data = JSON.parse(validationData)
+          if (data.source === 'discovery_mining') {
+            setFormData({
+              productName: data.productName || '',
+              country: data.discoveryData?.countries?.[0] || 'Brasil',
+              producerPageUrl: data.productUrl || '',
+              commissionValue: data.commission?.toString() || '',
+              commissionType: 'CPA'
+            })
+            // Clear the data after using it
+            localStorage.removeItem('validationData')
+          }
+        } catch (error) {
+          console.error('Error loading discovery data:', error)
+        }
+      }
+    }
+  }, [])
   
   const [isValidating, setIsValidating] = useState(false)
   const [result, setResult] = useState<any>(null)
@@ -55,16 +80,18 @@ export default function ValidationPage() {
     try {
       console.log('🔍 Validating product via API:', formData.productName)
       
-      const response = await fetch('/api/validate-product', {
+      const response = await fetch('/api/v1/validation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           productName: formData.productName,
-          country: formData.country,
+          productUrl: formData.producerPageUrl || formData.productName, // Use producerPageUrl or fallback to productName
+          targetCountry: formData.country,
           commissionValue: formData.commissionValue,
-          commissionType: formData.commissionType
+          commissionType: formData.commissionType,
+          budget: 1000 // Default budget
         })
       })
       
@@ -78,7 +105,16 @@ export default function ValidationPage() {
         throw new Error(data.error || 'Validation was not successful')
       }
       
-      setResult(data.data)
+      // Map the API response to the expected format
+      const mappedResult = {
+        ...data.data,
+        // Add missing fields if needed
+        competitorAnalysis: data.data.competitorAnalysis || {
+          commonHeadlines: data.data.competitorAnalysis?.commonHeadlines || [],
+          topCTAs: data.data.competitorAnalysis?.topCTAs || []
+        }
+      }
+      setResult(mappedResult)
       
     } catch (error) {
       console.error('Validation failed:', error)
@@ -163,12 +199,13 @@ export default function ValidationPage() {
               </div>
               
               <div>
-                <label className="text-sm font-medium block mb-2">Affiliate Link (optional)</label>
+                <label className="text-sm font-medium block mb-2">Producer Page URL (required)</label>
                 <Input
                   type="url"
-                  placeholder="https://your-affiliate-link.com"
-                  value={formData.affiliateLink}
-                  onChange={(e) => setFormData({...formData, affiliateLink: e.target.value})}
+                  placeholder="https://producer-page.com"
+                  value={formData.producerPageUrl}
+                  onChange={(e) => setFormData({...formData, producerPageUrl: e.target.value})}
+                  required
                 />
               </div>
               
@@ -582,15 +619,23 @@ export default function ValidationPage() {
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-2 text-sm">
+                            {result.competitorAnalysis?.commonHeadlines ? (
+                              <div className="flex flex-wrap gap-1">
+                                {result.competitorAnalysis.commonHeadlines.map((headline, index) => (
+                                  <Badge key={index} variant="outline" className="text-xs">"{headline}"</Badge>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="flex flex-wrap gap-1">
+                                <Badge variant="outline" className="text-xs">"{formData.productName} Official"</Badge>
+                                <Badge variant="outline" className="text-xs">"Buy {formData.productName}"</Badge>
+                                <Badge variant="outline" className="text-xs">"{formData.productName} Works"</Badge>
+                              </div>
+                            )}
                             <div className="flex flex-wrap gap-1">
-                              <Badge variant="outline" className="text-xs">"Venovixil Oficial"</Badge>
-                              <Badge variant="outline" className="text-xs">"Comprar Venovixil"</Badge>
-                              <Badge variant="outline" className="text-xs">"Venovixil Funciona"</Badge>
-                            </div>
-                            <div className="flex flex-wrap gap-1">
-                              <Badge variant="outline" className="text-xs">"Desconto Hoje"</Badge>
-                              <Badge variant="outline" className="text-xs">"Frete Grátis"</Badge>
-                              <Badge variant="outline" className="text-xs">"Garantia 60 Dias"</Badge>
+                              <Badge variant="outline" className="text-xs">"Discount Today"</Badge>
+                              <Badge variant="outline" className="text-xs">"Free Shipping"</Badge>
+                              <Badge variant="outline" className="text-xs">"60 Day Guarantee"</Badge>
                             </div>
                           </div>
                         </CardContent>
@@ -605,15 +650,25 @@ export default function ValidationPage() {
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-2 text-sm">
-                            <div className="flex flex-wrap gap-1">
-                              <Badge variant="outline" className="text-xs">"Compre Agora"</Badge>
-                              <Badge variant="outline" className="text-xs">"Peça Hoje"</Badge>
-                              <Badge variant="outline" className="text-xs">"Aproveite"</Badge>
-                            </div>
-                            <div className="flex flex-wrap gap-1">
-                              <Badge variant="outline" className="text-xs">"Últimas Unidades"</Badge>
-                              <Badge variant="outline" className="text-xs">"Oferta Limitada"</Badge>
-                            </div>
+                            {result.competitorAnalysis?.topCTAs ? (
+                              <div className="flex flex-wrap gap-1">
+                                {result.competitorAnalysis.topCTAs.slice(0, 5).map((cta, index) => (
+                                  <Badge key={index} variant="outline" className="text-xs">"{cta}"</Badge>
+                                ))}
+                              </div>
+                            ) : (
+                              <>
+                                <div className="flex flex-wrap gap-1">
+                                  <Badge variant="outline" className="text-xs">"Buy Now"</Badge>
+                                  <Badge variant="outline" className="text-xs">"Order Today"</Badge>
+                                  <Badge variant="outline" className="text-xs">"Try Now"</Badge>
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                  <Badge variant="outline" className="text-xs">"Limited Stock"</Badge>
+                                  <Badge variant="outline" className="text-xs">"Limited Offer"</Badge>
+                                </div>
+                              </>
+                            )}
                           </div>
                         </CardContent>
                       </Card>
@@ -621,7 +676,7 @@ export default function ValidationPage() {
 
                     {/* Intelligence Summary */}
                     <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
-                      <h5 className="font-semibold text-indigo-800 mb-2">🎯 Intelligence Insights for Venovixil:</h5>
+                      <h5 className="font-semibold text-indigo-800 mb-2">🎯 Intelligence Insights for {result.productName}:</h5>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                         <div>
                           <strong>Market Opportunity:</strong> Produto com presença moderada no mercado e competição equilibrada.

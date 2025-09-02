@@ -403,74 +403,64 @@ export class GoogleAdsAnalyzer {
    * Gera dados mock realistas para teste
    */
   private generateMockAds(productName: string, country: string, context: SearchContext): CompetitorAd[] {
-    // Dados baseados em padrões reais do Google Ads
+    // Generate realistic mock ads for the specific product
+    const cleanProductName = productName.replace(/[^a-zA-Z0-9\s]/g, '').trim();
     
-    if (productName.toLowerCase() === 'skinatrin' && country === 'Polônia') {
-      return [
-        {
-          advertiser: 'Skinatrin Official',
-          domain: 'skinatrin-official.pl',
-          headline1: 'Skinatrin® Oficjalna Strona',
-          headline2: '-50% Tylko Dziś',
-          headline3: 'Oryginał z Gwarancją',
-          description1: 'Naturalny żel przeciwgrzybiczy. Klinicznie przetestowany.',
-          description2: 'Szybka dostawa. 90 dni gwarancji zwrotu pieniędzy.',
-          displayUrl: 'skinatrin-official.pl',
-          extensions: [
-            { type: 'sitelink', content: 'Opinie Klientów' },
-            { type: 'sitelink', content: 'Jak Stosować' },
-            { type: 'callout', content: '✓ Darmowa Dostawa' },
-            { type: 'callout', content: '✓ 100% Naturalny' }
-          ],
-          position: 1,
-          frequency: 3
-        },
-        {
-          advertiser: 'Health Store PL',
-          domain: 'zdrowie-sklep.pl',
-          headline1: 'Skinatrin Najtaniej',
-          headline2: 'Sprawdź Promocję',
-          headline3: 'Dostawa 24h',
-          description1: 'Najlepsza cena na rynku. Tylko oryginalne produkty.',
-          description2: 'Zaufało nam już 10,000+ klientów.',
-          displayUrl: 'zdrowie-sklep.pl/skinatrin',
-          extensions: [
-            { type: 'price', content: '39 PLN' },
-            { type: 'promotion', content: 'KOD: ZDROWIE20' }
-          ],
-          position: 2,
-          frequency: 2
-        },
-        {
-          advertiser: 'Pharma Direct',
-          domain: 'pharma-direct.eu',
-          headline1: 'Skuteczny Na Grzybicę',
-          headline2: 'Skinatrin - Wypróbuj',
-          description1: 'Potwierdzona skuteczność. Bezpieczny dla skóry.',
-          displayUrl: 'pharma-direct.eu',
-          extensions: [
-            { type: 'callout', content: 'Certyfikat CE' }
-          ],
-          position: 3,
-          frequency: 1
-        }
-      ];
-    }
-    
-    // Default mock data
-    return [
+    // Common ad patterns for health/supplement products
+    const adTemplates = [
       {
-        advertiser: 'Generic Store',
-        domain: 'example.com',
-        headline1: productName,
-        headline2: 'Best Price',
-        description1: 'High quality product with guarantee',
-        displayUrl: 'example.com',
-        extensions: [],
+        advertiser: `${cleanProductName} Official`,
+        domain: `${cleanProductName.toLowerCase().replace(/\s+/g, '')}-official.com`,
+        headline1: `${cleanProductName}® Official Site`,
+        headline2: '50% Off Today Only',
+        headline3: 'Original with Guarantee',
+        description1: `Premium ${cleanProductName} formula. Clinically tested for results.`,
+        description2: 'Fast shipping. 90-day money back guarantee.',
+        extensions: [
+          { type: 'sitelink', content: 'Customer Reviews' },
+          { type: 'sitelink', content: 'How to Use' },
+          { type: 'callout', content: '✓ Free Shipping' },
+          { type: 'callout', content: '✓ 100% Natural' }
+        ],
         position: 1,
+        frequency: 3
+      },
+      {
+        advertiser: 'Health Store Pro',
+        domain: 'healthstore-pro.com',
+        headline1: `${cleanProductName} Lowest Price`,
+        headline2: 'Check Our Deal',
+        headline3: '24h Delivery',
+        description1: 'Best market price. Only genuine products available.',
+        description2: 'Trusted by 10,000+ customers worldwide.',
+        extensions: [
+          { type: 'price', content: '$60' },
+          { type: 'promotion', content: 'CODE: SAVE20' }
+        ],
+        position: 2,
+        frequency: 2
+      },
+      {
+        advertiser: 'Premium Health',
+        domain: 'premium-health.net',
+        headline1: `Try ${cleanProductName} Now`,
+        headline2: 'Proven Results',
+        headline3: 'Money Back Guarantee',
+        description1: 'Verified effectiveness. Safe and natural formula.',
+        description2: 'Join thousands of satisfied customers.',
+        extensions: [
+          { type: 'callout', content: 'FDA Approved Facility' },
+          { type: 'sitelink', content: 'Success Stories' }
+        ],
+        position: 3,
         frequency: 1
       }
     ];
+    
+    return adTemplates.map(template => ({
+      ...template,
+      displayUrl: template.domain
+    }));
   }
 }
 
