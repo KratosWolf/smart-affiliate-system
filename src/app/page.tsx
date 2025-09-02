@@ -57,44 +57,28 @@ export default function Home() {
 
   const modules = [
     {
-      title: '🔍 Discovery + Mining',
-      description: '✅ OPERATIONAL - High-volume discovery (15-30 products/day)',
-      icon: <Search className="w-6 h-6 text-green-600" />,
-      href: '/discovery-mining',
-      status: 'operational', 
-      metrics: 'Daily 6:00 AM • Multi-Geo (9 countries) • Quality-first'
-    },
-    {
-      title: '🎯 Product Validation + Intelligence',
-      description: '✅ OPERATIONAL - Complete product analysis: Validation + YouTube + Ads + Competition',
+      title: '🎯 Validation Engine',
+      description: '✅ ENTRY POINT - Valida produtos com Google API real e análise de concorrência',
       icon: <Target className="w-6 h-6 text-blue-600" />,
-      href: '/validation',
+      href: '/discovery',
       status: 'operational',
-      metrics: 'Real Google API • CPA 40-50% • Competition Intelligence • Multi-source analysis'
+      metrics: 'Score 0-100 • CPA Calculator • Producer Page Analysis'
     },
     {
       title: '📄 Presell Generator',
-      description: '✅ OPERATIONAL - Templates otimizados baseados em critérios PLAYBOOK',
+      description: '✅ OPERATIONAL - 6 templates incluindo Cookie com screenshots locais',
       icon: <TrendingUp className="w-6 h-6 text-purple-600" />,
       href: '/presell-generator',
       status: 'operational',
-      metrics: '5 templates • CPA 40-45% • Multi-geo support'
+      metrics: 'Cookie Template • Local Screenshots • Multi-language • Auto Deploy'
     },
     {
-      title: '📊 ROI Tracking',
-      description: '✅ OPERATIONAL - ROI tracking com scaling automático',
-      icon: <Activity className="w-6 h-6 text-orange-600" />,
-      href: '/tracking',
-      status: 'operational',
-      metrics: 'Rolling 3-day window • Auto-scaling >60%'
-    },
-    {
-      title: '📊 Campaign Builder',
-      description: '✅ OPERATIONAL - Google Ads campaigns automáticas com targeting inteligente',
+      title: '🎯 Campaign Builder',
+      description: '✅ OPERATIONAL - Metodologia Luiz com CSV export para Google Ads',
       icon: <BarChart3 className="w-6 h-6 text-orange-600" />,
       href: '/campaign-builder',
       status: 'operational',
-      metrics: 'Google Ads API • CPA targeting • Multi-geo • Campaign automation'
+      metrics: 'Target CPA • R$350 Budget • 7 CSV Files • Edis Tracking'
     },
     {
       title: 'Domain Generator',
@@ -215,7 +199,7 @@ export default function Home() {
               </Button>
             </Link>
             <Button variant="outline" className="text-green-600 border-green-600">
-              ✅ Sistema Operacional v1.1
+              ✅ Sistema Operacional v1.2
             </Button>
           </div>
         </div>
@@ -832,85 +816,38 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          {/* IMPLEMENTATION CARD */}
-          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+          {/* QUICK START CARD - Simplified */}
+          <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-green-800 flex items-center gap-2">
-                🚀 IMPLEMENTATION PLAN
-                <Badge className="bg-green-600 text-white">READY</Badge>
+              <CardTitle className="text-2xl font-bold text-blue-800 flex items-center gap-2">
+                🚀 FLUXO DE TRABALHO v1.2
+                <Badge className="bg-blue-600 text-white">100% OPERACIONAL</Badge>
               </CardTitle>
-              <CardDescription className="text-green-700">
-                Cronograma detalhado e próximos passos para implementação
+              <CardDescription className="text-blue-700">
+                Sistema completo pronto para uso imediato
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               
-              {/* Cronograma */}
-              <div className="bg-white/60 p-4 rounded-lg border border-green-200">
-                <h3 className="text-lg font-bold mb-3 text-green-800">📅 CRONOGRAMA DE IMPLEMENTAÇÃO</h3>
-                <div className="space-y-4">
-                  <div className="border-l-4 border-green-400 pl-3">
-                    <h4 className="font-semibold text-sm text-green-700">SEMANA 1-2: Setup & Configuração</h4>
-                    <ul className="text-xs mt-1 space-y-0.5 text-gray-600">
-                      <li>• Configurar APIs (Google, YouTube, Pexels)</li>
-                      <li>• Setup inicial de domínios e hosting</li>
-                      <li>• Configurar tracking e analytics</li>
-                      <li>• Primeiro teste com 2-3 produtos</li>
-                    </ul>
+              <div className="bg-white/60 p-4 rounded-lg border border-blue-200">
+                <h3 className="text-lg font-bold mb-3 text-blue-800">⚡ WORKFLOW SIMPLIFICADO</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                    <span className="text-sm"><strong>Validation:</strong> Cole URL do produto → Análise automática</span>
                   </div>
-                  
-                  <div className="border-l-4 border-yellow-400 pl-3">
-                    <h4 className="font-semibold text-sm text-yellow-700">SEMANA 3-4: Automação</h4>
-                    <ul className="text-xs mt-1 space-y-0.5 text-gray-600">
-                      <li>• Ativar mining automático diário</li>
-                      <li>• Configurar campanhas do Google Ads</li>
-                      <li>• Setup de presell pages automáticas</li>
-                      <li>• Implementar sistema de tracking</li>
-                    </ul>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                    <span className="text-sm"><strong>Presell:</strong> Cookie Template → Screenshots locais</span>
                   </div>
-                  
-                  <div className="border-l-4 border-purple-400 pl-3">
-                    <h4 className="font-semibold text-sm text-purple-700">SEMANA 5+: Scaling</h4>
-                    <ul className="text-xs mt-1 space-y-0.5 text-gray-600">
-                      <li>• Scaling de campanhas com ROI &gt; 2:1</li>
-                      <li>• Expansão para novos nichos</li>
-                      <li>• Otimização contínua baseada em dados</li>
-                      <li>• Automação completa do pipeline</li>
-                    </ul>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                    <span className="text-sm"><strong>Campaign:</strong> Metodologia Luiz → 7 CSVs para Google Ads</span>
                   </div>
                 </div>
               </div>
-
-              {/* Próximos Passos */}
-              <div className="bg-white/60 p-4 rounded-lg border border-green-200">
-                <h3 className="text-lg font-bold mb-3 text-green-800">🔧 PRÓXIMOS PASSOS IMEDIATOS</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-semibold text-sm mb-2 text-red-700">🚨 URGENTE (Esta Semana)</h4>
-                    <ul className="text-xs space-y-1">
-                      <li>• Configurar Google Ads API</li>
-                      <li>• Setup do primeiro domínio</li>
-                      <li>• Testar 1 produto manualmente</li>
-                      <li>• Validar fluxo completo</li>
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-sm mb-2 text-orange-700">⏳ PRÓXIMA SEMANA</h4>
-                    <ul className="text-xs space-y-1">
-                      <li>• Ativar mining automático</li>
-                      <li>• Configurar 3-5 produtos</li>
-                      <li>• Setup de analytics avançado</li>
-                      <li>• Primeiro ciclo de otimização</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recursos Necessários */}
-              <div className="bg-white/60 p-4 rounded-lg border border-green-200">
-                <h3 className="text-lg font-bold mb-3 text-green-800">💼 RECURSOS NECESSÁRIOS</h3>
-                <div className="grid grid-cols-2 gap-4">
+              
+              <div className="grid grid-cols-2 gap-4">
                   <div>
                     <div className="text-xl font-bold text-blue-600">$500</div>
                     <div className="text-xs text-gray-600">Budget Inicial Ads</div>
