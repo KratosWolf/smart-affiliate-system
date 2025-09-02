@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import BackToDashboard from '@/components/BackToDashboard'
 import { Cookie, Star, UserCheck, HelpCircle, CreditCard, FileText, ArrowRight, Eye, Download, Upload } from 'lucide-react'
+import { COUNTRIES } from '@/lib/constants/countries'
 
 const templates = [
   {
@@ -841,17 +842,13 @@ export default function PresellGeneratorPage() {
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <div>
-                  <p className="font-semibold text-gray-700 mb-2">9 Países Target:</p>
-                  <div className="grid grid-cols-3 gap-2 text-xs">
-                    <span className="bg-blue-50 px-2 py-1 rounded">🇺🇸 US</span>
-                    <span className="bg-blue-50 px-2 py-1 rounded">🇫🇷 FR</span>
-                    <span className="bg-blue-50 px-2 py-1 rounded">🇩🇪 DE</span>
-                    <span className="bg-blue-50 px-2 py-1 rounded">🇬🇧 GB</span>
-                    <span className="bg-blue-50 px-2 py-1 rounded">🇨🇦 CA</span>
-                    <span className="bg-blue-50 px-2 py-1 rounded">🇩🇰 DK</span>
-                    <span className="bg-blue-50 px-2 py-1 rounded">🇸🇪 SE</span>
-                    <span className="bg-blue-50 px-2 py-1 rounded">🇵🇱 PL</span>
-                    <span className="bg-blue-50 px-2 py-1 rounded">🇷🇴 RO</span>
+                  <p className="font-semibold text-gray-700 mb-2">{COUNTRIES.length} Países Target:</p>
+                  <div className="grid grid-cols-4 gap-2 text-xs">
+                    {COUNTRIES.map(country => (
+                      <span key={country.code} className="bg-blue-50 px-2 py-1 rounded">
+                        {country.flag} {country.code}
+                      </span>
+                    ))}
                   </div>
                 </div>
                 

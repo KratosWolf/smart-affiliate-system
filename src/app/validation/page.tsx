@@ -7,11 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import BackToDashboard from '@/components/BackToDashboard'
 import { Target, Search, TrendingUp, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { COUNTRY_OPTIONS } from '@/lib/constants/countries'
 
 export default function ValidationPage() {
   const [formData, setFormData] = useState({
     productName: '',
-    country: 'Brasil',
+    country: 'US',
     producerPageUrl: '',
     commissionValue: '',
     commissionType: 'CPA'
@@ -27,7 +28,7 @@ export default function ValidationPage() {
           if (data.source === 'discovery_mining') {
             setFormData({
               productName: data.productName || '',
-              country: data.discoveryData?.countries?.[0] || 'Brasil',
+              country: data.discoveryData?.countries?.[0] || 'US',
               producerPageUrl: data.productUrl || '',
               commissionValue: data.commission?.toString() || '',
               commissionType: 'CPA'
@@ -139,22 +140,6 @@ export default function ValidationPage() {
     }
   }
 
-  const countries = [
-    { code: 'Brasil', flag: '🇧🇷' },
-    { code: 'Estados Unidos', flag: '🇺🇸' },
-    { code: 'Canadá', flag: '🇨🇦' },
-    { code: 'Reino Unido', flag: '🇬🇧' },
-    { code: 'Austrália', flag: '🇦🇺' },
-    { code: 'Alemanha', flag: '🇩🇪' },
-    { code: 'França', flag: '🇫🇷' },
-    { code: 'Espanha', flag: '🇪🇸' },
-    { code: 'Portugal', flag: '🇵🇹' },
-    { code: 'Itália', flag: '🇮🇹' },
-    { code: 'Holanda', flag: '🇳🇱' },
-    { code: 'Argentina', flag: '🇦🇷' },
-    { code: 'Chile', flag: '🇨🇱' },
-    { code: 'México', flag: '🇲🇽' }
-  ]
 
   return (
     <div className="min-h-screen bg-gray-50/30 p-6">
@@ -205,9 +190,9 @@ export default function ValidationPage() {
                   value={formData.country}
                   onChange={(e) => setFormData({...formData, country: e.target.value})}
                 >
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.code}>
-                      {country.flag} {country.code}
+                  {COUNTRY_OPTIONS.map((country) => (
+                    <option key={country.value} value={country.value}>
+                      {country.label}
                     </option>
                   ))}
                 </select>

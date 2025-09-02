@@ -20,6 +20,7 @@ import {
   TrendingUp,
   AlertCircle
 } from 'lucide-react'
+import { COUNTRY_OPTIONS } from '@/lib/constants/countries'
 
 interface CampaignData {
   productName: string
@@ -77,7 +78,7 @@ export default function CampaignBuilderPage() {
     affiliateUrl: '',
     presellUrl: '',
     producerPageUrl: '',
-    targetCountry: 'Brasil',
+    targetCountry: 'US',
     dailyBudget: 350,
     targetCpa: 25,
     platform: 'CLICKBANK',
@@ -130,15 +131,6 @@ export default function CampaignBuilderPage() {
     }
   }, [])
 
-  const countries = [
-    { code: 'Brasil', flag: '🇧🇷' },
-    { code: 'Estados Unidos', flag: '🇺🇸' },
-    { code: 'Alemanha', flag: '🇩🇪' },
-    { code: 'França', flag: '🇫🇷' },
-    { code: 'Espanha', flag: '🇪🇸' },
-    { code: 'Portugal', flag: '🇵🇹' },
-    { code: 'Polônia', flag: '🇵🇱' }
-  ]
 
   const handleInputChange = (field: keyof CampaignData, value: string | number) => {
     setCampaignData(prev => {
@@ -342,9 +334,9 @@ export default function CampaignBuilderPage() {
                       value={campaignData.targetCountry}
                       onChange={(e) => handleInputChange('targetCountry', e.target.value)}
                     >
-                      {countries.map(country => (
-                        <option key={country.code} value={country.code}>
-                          {country.flag} {country.code}
+                      {COUNTRY_OPTIONS.map(country => (
+                        <option key={country.value} value={country.value}>
+                          {country.label}
                         </option>
                       ))}
                     </select>
@@ -717,7 +709,7 @@ export default function CampaignBuilderPage() {
                           productName: '',
                           affiliateUrl: '',
                           presellUrl: '',
-                          targetCountry: 'Brasil',
+                          targetCountry: 'US',
                           dailyBudget: 50,
                           targetCpa: 25
                         })

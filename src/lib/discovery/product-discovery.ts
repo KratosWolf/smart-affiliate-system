@@ -3,6 +3,8 @@
  * Automated product research for international affiliate platforms
  */
 
+import { SUPPORTED_COUNTRIES } from '@/lib/constants/countries'
+
 export interface ProductOpportunity {
   id: string
   productName: string
@@ -575,7 +577,7 @@ export const defaultDiscoveryConfig: DiscoveryConfig = {
   minCPA: 25,
   minGravity: 20, // ClickBank specific
   languages: ['en', 'pt', 'es'],
-  countries: ['US', 'CA', 'GB', 'AU', 'BR', 'DE', 'FR'],
+  countries: SUPPORTED_COUNTRIES,
   excludeKeywords: ['scam', 'fake', 'illegal', 'adult'],
   includeKeywords: ['course', 'system', 'method', 'software', 'program', 'product']
 }
