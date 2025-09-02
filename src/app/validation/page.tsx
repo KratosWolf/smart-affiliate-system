@@ -110,6 +110,18 @@ export default function ValidationPage() {
       // Map the API response to the expected format
       const mappedResult = {
         ...data.data,
+        // Map fields for UI compatibility
+        score: data.data.validationScore,
+        totalResults: data.data.marketAnalysis?.searchVolume || 0,
+        specificResults: 0, // Will be calculated from search results
+        viable: data.data.recommendations?.shouldProceed || false,
+        competitionData: {
+          competitionLevel: data.data.marketAnalysis?.competition === 'low' ? 'Low' :
+                           data.data.marketAnalysis?.competition === 'medium' ? 'Medium' : 'High',
+          highAuthorityDomains: data.data.competitorAnalysis?.totalAdvertisers || 0,
+          estimatedCPC: `$${data.data.marketAnalysis?.avgCpc || 0.50}`,
+          adResults: data.data.competitorAnalysis?.totalAdvertisers || 0
+        },
         // Add missing fields if needed
         competitorAnalysis: data.data.competitorAnalysis || {
           commonHeadlines: data.data.competitorAnalysis?.commonHeadlines || [],
