@@ -200,13 +200,12 @@ export default function ValidationPage() {
               </div>
               
               <div>
-                <label className="text-sm font-medium block mb-2">Producer Page URL (required)</label>
+                <label className="text-sm font-medium block mb-2">Producer Page URL (optional)</label>
                 <Input
                   type="url"
-                  placeholder="https://producer-page.com"
+                  placeholder="https://producer-page.com (deixe vazio se não souber)"
                   value={formData.producerPageUrl}
                   onChange={(e) => setFormData({...formData, producerPageUrl: e.target.value})}
-                  required
                 />
               </div>
               
