@@ -64,7 +64,8 @@ export default function PresellGeneratorPage() {
     useClarityTracking: false, // Flag para usar ou não MS Clarity
     commission: '', // Opcional - pode não ser necessário
     domain: '', // Será sugerido automaticamente
-    domainPurchased: false // Flag para indicar se o domínio já foi comprado
+    domainPurchased: false, // Flag para indicar se o domínio já foi comprado
+    screenshots: null as any // Screenshots capturados automaticamente
   })
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedPresell, setGeneratedPresell] = useState<any>(null)
@@ -115,7 +116,35 @@ export default function PresellGeneratorPage() {
           }))
         }
         
-        alert('✅ Dados extraídos com sucesso da página do produtor!')
+        // Capturar screenshots automaticamente
+        console.log('📸 Capturando screenshots da página...')
+        try {
+          const screenshotResponse = await fetch('/api/v1/screenshots', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              productUrl: productData.producerPageUrl,
+              productName: productData.name
+            })
+          })
+          
+          if (screenshotResponse.ok) {
+            const screenshotResult = await screenshotResponse.json()
+            console.log('✅ Screenshots capturados:', screenshotResult.screenshots)
+            
+            // Salvar caminhos dos screenshots para usar na presell
+            setProductData(prev => ({
+              ...prev,
+              screenshots: screenshotResult.screenshots
+            }))
+          }
+        } catch (screenshotError) {
+          console.warn('⚠️ Erro ao capturar screenshots (continuando sem eles):', screenshotError)
+        }
+        
+        alert('✅ Dados extraídos e screenshots capturados com sucesso!')
       } else {
         throw new Error(result.error || 'Failed to extract data')
       }

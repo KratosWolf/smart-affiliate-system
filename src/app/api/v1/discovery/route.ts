@@ -104,11 +104,11 @@ export async function POST(request: NextRequest) {
       totalFound: opportunities.length,
       returned: topOpportunities.length,
       platforms: {
-        clickbank: opportunities.filter(o => o.platform === 'clickbank').length,
-        smartadv: opportunities.filter(o => o.platform === 'smartadv').length,
-        drcash: opportunities.filter(o => o.platform === 'drcash').length,
-        warriorplus: opportunities.filter(o => o.platform === 'warriorplus').length,
-        other: opportunities.filter(o => o.platform === 'other').length
+        clickbank: opportunities.filter(o => o.platform === 'CLICKBANK').length,
+        smartadv: opportunities.filter(o => o.platform === 'SMARTADV').length,
+        drcash: opportunities.filter(o => o.platform === 'DRCASH').length,
+        buygoods: opportunities.filter(o => o.platform === 'BUYGOODS').length,
+        other: opportunities.filter(o => o.platform === 'OTHER').length
       },
       sources: {
         youtube: opportunities.filter(o => o.discoverySource === 'youtube').length,
