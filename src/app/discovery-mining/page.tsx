@@ -57,12 +57,12 @@ export default function DiscoveryMiningPage() {
   const [loading, setLoading] = useState(false)
   const [selectedTier, setSelectedTier] = useState<'all' | 1 | 2 | 3>('all')
   
-  // Mock data with advanced mining logic results
+  // Mock data with advanced mining logic results - consistent with actual products shown
   const mockResults: MiningResults = {
-    totalFound: 24,
-    highConfidence: 8,
-    channels: 12,
-    avgAdsPerProduct: 6.2,
+    totalFound: 3, // Match the actual number of products in mockProducts
+    highConfidence: 3, // All 3 products shown have high confidence (Tier 1-2)
+    channels: 9, // Total unique channels across all 3 products
+    avgAdsPerProduct: 9.0, // Average of 8, 12, 7 ads per product
     topCategories: ['Health & Fitness', 'Beauty', 'Weight Loss', 'Supplements'],
     processingTime: '4m 23s',
     lastRun: '6:00 AM - Hoje'
