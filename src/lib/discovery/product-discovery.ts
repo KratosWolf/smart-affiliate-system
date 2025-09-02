@@ -4,12 +4,13 @@
  */
 
 import { SUPPORTED_COUNTRIES } from '@/lib/constants/countries'
+import { SUPPORTED_PLATFORMS } from '@/lib/constants/platforms'
 
 export interface ProductOpportunity {
   id: string
   productName: string
   vendor: string
-  platform: 'clickbank' | 'smartadv' | 'drcash' | 'warriorplus' | 'jvzoo' | 'digistore24' | 'other'
+  platform: 'CLICKBANK' | 'BUYGOODS' | 'MAXWEB' | 'GURUMIDIA' | 'SMARTADV' | 'DIGISTORE24' | 'ADCOMBO' | 'DRCASH' | 'MIDIA_SCALERS' | 'SMASH_LOUD' | 'OTHER'
   category: string
   commission: number
   paymentType: 'cpa' | 'commission' | 'hybrid'
@@ -560,7 +561,7 @@ export class ProductDiscoveryEngine {
  * Default discovery configuration
  */
 export const defaultDiscoveryConfig: DiscoveryConfig = {
-  platforms: ['clickbank', 'smartadv', 'drcash', 'warriorplus', 'jvzoo'],
+  platforms: ['CLICKBANK', 'SMARTADV', 'DRCASH', 'BUYGOODS', 'DIGISTORE24'],
   paymentModel: 'both',
   searchMode: 'general',
   categories: [

@@ -21,6 +21,7 @@ import {
   AlertCircle
 } from 'lucide-react'
 import { COUNTRY_OPTIONS } from '@/lib/constants/countries'
+import { PLATFORM_OPTIONS } from '@/lib/constants/platforms'
 
 interface CampaignData {
   productName: string
@@ -30,7 +31,7 @@ interface CampaignData {
   targetCountry: string
   dailyBudget: number
   targetCpa: number
-  platform?: 'CLICKBANK' | 'MONETIZZE' | 'HOTMART' | 'EDUZZ' | 'OUTROS'
+  platform?: 'CLICKBANK' | 'BUYGOODS' | 'MAXWEB' | 'GURUMIDIA' | 'SMARTADV' | 'DIGISTORE24' | 'ADCOMBO' | 'DRCASH' | 'MIDIA_SCALERS' | 'SMASH_LOUD'
   commissionValue?: number
   currency?: 'BRL' | 'USD'
   useEdisTracking?: boolean
@@ -291,11 +292,11 @@ export default function CampaignBuilderPage() {
                       value={campaignData.platform}
                       onChange={(e) => handleInputChange('platform', e.target.value)}
                     >
-                      <option value="CLICKBANK">ClickBank</option>
-                      <option value="MONETIZZE">Monetizze</option>
-                      <option value="HOTMART">Hotmart</option>
-                      <option value="EDUZZ">Eduzz</option>
-                      <option value="OUTROS">Outros</option>
+                      {PLATFORM_OPTIONS.map(platform => (
+                        <option key={platform.value} value={platform.value}>
+                          {platform.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
