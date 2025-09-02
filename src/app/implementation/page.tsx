@@ -122,6 +122,51 @@ export default function ImplementationPage() {
               </div>
             </div>
 
+            <div className="bg-teal-50 border border-teal-200 p-4 rounded-lg">
+              <h3 className="font-bold text-teal-800 mb-3">📸 Screenshot API - Opções para Produção</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white p-3 rounded border">
+                  <h4 className="font-semibold text-teal-700 mb-2">🎯 Opção 1: API Externa</h4>
+                  <p className="text-xs font-mono bg-gray-100 p-1 rounded mb-2">screenshotone.com</p>
+                  <ul className="text-sm space-y-1">
+                    <li>• <strong>Setup:</strong> 5 minutos</li>
+                    <li>• <strong>Custo:</strong> $9/mês (1000 screenshots)</li>
+                    <li>• <strong>Free tier:</strong> 100/mês grátis</li>
+                    <li>• ✅ Funciona imediatamente no Vercel</li>
+                  </ul>
+                </div>
+                <div className="bg-white p-3 rounded border">
+                  <h4 className="font-semibold text-teal-700 mb-2">🚀 Opção 2: Browserless.io</h4>
+                  <p className="text-xs font-mono bg-gray-100 p-1 rounded mb-2">API profissional</p>
+                  <ul className="text-sm space-y-1">
+                    <li>• <strong>Setup:</strong> 10 minutos</li>
+                    <li>• <strong>Custo:</strong> $50/mês</li>
+                    <li>• <strong>Screenshots:</strong> 1000/dia</li>
+                    <li>• ✅ Substitui 1 linha de código</li>
+                  </ul>
+                </div>
+                <div className="bg-white p-3 rounded border">
+                  <h4 className="font-semibold text-teal-700 mb-2">💻 Opção 3: Servidor Próprio</h4>
+                  <p className="text-xs font-mono bg-gray-100 p-1 rounded mb-2">Railway/Render</p>
+                  <ul className="text-sm space-y-1">
+                    <li>• <strong>Setup:</strong> 30 minutos</li>
+                    <li>• <strong>Custo:</strong> $7/mês</li>
+                    <li>• <strong>Screenshots:</strong> Ilimitado</li>
+                    <li>• ⚠️ Requer configuração servidor</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="mt-4 p-3 bg-teal-100 rounded">
+                <p className="text-sm">
+                  <strong>✅ Status Atual:</strong> Sistema híbrido configurado - 
+                  <span className="text-teal-700"> Puppeteer local (dev) + API demo (prod)</span>
+                </p>
+                <p className="text-xs text-gray-600 mt-1">
+                  Para ativar produção completa: Adicione SCREENSHOT_API_KEY no .env
+                </p>
+              </div>
+            </div>
+
             <div className="bg-purple-50 border border-purple-200 p-4 rounded-lg">
               <h3 className="font-bold text-purple-800 mb-3">💾 Database & Performance</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

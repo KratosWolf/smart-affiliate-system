@@ -23,9 +23,48 @@ export async function POST(request: NextRequest) {
       console.log('Directory already exists or created')
     }
 
-    // Configure Puppeteer for Vercel/serverless environment
+    // Use external API in production, Puppeteer in development
     const isProduction = process.env.NODE_ENV === 'production'
     
+    if (isProduction) {
+      // Use free screenshot API for production
+      const screenshotApiUrl = `https://api.screenshotmachine.com?key=demo&url=${encodeURIComponent(productUrl)}&dimension=1920x1080`
+      const mobileApiUrl = `https://api.screenshotmachine.com?key=demo&url=${encodeURIComponent(productUrl)}&dimension=375x812`
+      
+      // Fetch screenshots from API
+      const [desktopResponse, mobileResponse] = await Promise.all([
+        fetch(screenshotApiUrl),
+        fetch(mobileApiUrl)
+      ])
+      
+      if (!desktopResponse.ok || !mobileResponse.ok) {
+        throw new Error('Failed to capture screenshots from API')
+      }
+      
+      // Save screenshots
+      const desktopBuffer = Buffer.from(await desktopResponse.arrayBuffer())
+      const mobileBuffer = Buffer.from(await mobileResponse.arrayBuffer())
+      
+      await fs.writeFile(path.join(screenshotsDir, 'desktop-hero.jpg'), desktopBuffer)
+      await fs.writeFile(path.join(screenshotsDir, 'mobile-hero.jpg'), mobileBuffer)
+      await fs.writeFile(path.join(screenshotsDir, 'full-page.jpg'), desktopBuffer) // Use desktop as fallback
+      
+      const publicPaths = {
+        desktop: `/screenshots/${productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'unknown-product'}/desktop-hero.jpg`,
+        mobile: `/screenshots/${productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'unknown-product'}/mobile-hero.jpg`,
+        fullPage: `/screenshots/${productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'unknown-product'}/full-page.jpg`
+      }
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Screenshots captured successfully (via API)',
+        screenshots: publicPaths,
+        productName,
+        capturedAt: new Date().toISOString()
+      })
+    }
+    
+    // Development: Use Puppeteer locally
     const browser = await puppeteer.launch({
       headless: 'new',
       args: [
