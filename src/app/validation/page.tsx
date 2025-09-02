@@ -87,7 +87,8 @@ export default function ValidationPage() {
         },
         body: JSON.stringify({
           productName: formData.productName,
-          productUrl: formData.producerPageUrl || formData.productName, // Use producerPageUrl or fallback to productName
+          productUrl: formData.productName, // Use product name for validation, not the URL
+          producerPageUrl: formData.producerPageUrl, // Keep producer URL separate
           targetCountry: formData.country,
           commissionValue: formData.commissionValue,
           commissionType: formData.commissionType,
