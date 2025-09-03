@@ -695,7 +695,7 @@ export default function Home() {
         {/* System Info */}
         <Card className="border-blue-200 bg-blue-50">
           <CardHeader>
-            <CardTitle className="text-blue-900">Smart Affiliate System v1.2</CardTitle>
+            <CardTitle className="text-blue-900">Smart Affiliate System v1.4.1 - Cookie Fixed</CardTitle>
             <CardDescription className="text-blue-700">
               Sistema completo de marketing de afiliados com automação de ROI e scaling horizontal
             </CardDescription>
