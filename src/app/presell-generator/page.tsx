@@ -249,7 +249,9 @@ export default function PresellGeneratorPage() {
 
       // Generate presell using real API
       console.log('🚀 Enviando requisição para API...')
-      const response = await fetch('/api/v1/presell', {
+      // Add timestamp to avoid cache
+      const timestamp = Date.now()
+      const response = await fetch(`/api/v1/presell?t=${timestamp}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1187,8 +1187,11 @@ window.addEventListener('load', function() {
     // Always use the actual product URL from config - never hardcoded values
     const originalPageUrl = config.producerPageUrl || options?.customization?.originalPageUrl || 'https://example.com/';
     
-    console.log('🔍 Cookie template using URL:', originalPageUrl);
+    console.log('🍪 COOKIE TEMPLATE DEBUG:');
     console.log('🔍 Product name:', config.productName);
+    console.log('🔍 Producer URL:', originalPageUrl);
+    console.log('🔍 Config object keys:', Object.keys(config));
+    console.log('🔍 Options object:', options);
     
     // Enhanced language detection based on actual product URL
     const isEnglish = originalPageUrl.includes('.com') || 
