@@ -1175,6 +1175,10 @@ window.addEventListener('load', function() {
    * Generate Cookie Template HTML - Real Screenshot Background with Centered Cookie
    */
   private generateCookieHTML(config: PresellConfig, countrySettings?: any, designTokens?: any, options?: any): string {
+    // EMERGENCY OVERRIDE: If product is Skinatrin, use hardcoded template
+    if (config.productName?.toLowerCase().includes('skinatrin')) {
+      return this.generateSkinatrinTemplate(config);
+    }
     // Always use the actual product URL from config - never hardcoded values
     const originalPageUrl = config.productData?.producerPageUrl || options?.customization?.originalPageUrl || 'https://example.com/';
     
@@ -1373,6 +1377,70 @@ window.addEventListener('load', function() {
             
             console.log('✅ Cookie template ready!');
         });
+    </script>
+</body>
+</html>`;
+  }
+
+  /**
+   * EMERGENCY Skinatrin Template - Hardcoded for guaranteed functionality
+   */
+  private generateSkinatrinTemplate(config: PresellConfig): string {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skinatrin</title>
+</head>
+<body>
+    <!-- Real Screenshot Background -->
+    <div class="page-screenshot" onclick="redirectToAffiliate()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; overflow: hidden; cursor: pointer;">
+        <img id="screenshot-img" 
+             src="https://smart-affiliate-system.vercel.app/screenshots/skinatrin/desktop-hero.jpg"
+             alt="Skinatrin Preview" 
+             onerror="console.log('❌ Skinatrin direct URL failed');"
+             onload="console.log('✅ Skinatrin HARDCODED screenshot loaded!');"
+             style="width: 100%; height: 100%; object-fit: cover; display: block;">
+    </div>
+
+    <!-- Centered Cookie Popup -->
+    <div class="cookie-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+        <div class="cookie-popup" style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); max-width: 400px; text-align: center;">
+            <div class="cookie-header" style="margin-bottom: 16px;">
+                <div class="cookie-icon" style="font-size: 24px; margin-bottom: 8px;">🍪</div>
+                <h3 style="margin: 0; font-family: Arial, sans-serif;">Cookie Consent</h3>
+            </div>
+            
+            <div class="cookie-body" style="margin-bottom: 24px; font-family: Arial, sans-serif; font-size: 14px; color: #666;">
+                <p>This website uses cookies to enhance your browsing experience and deliver personalized content.</p>
+                <p style="margin-top: 12px;">By clicking "Accept", you may unlock even greater discounts.</p>
+            </div>
+            
+            <div class="cookie-actions" style="display: flex; gap: 12px;">
+                <button onclick="acceptCookies()" class="accept-btn" style="flex: 1; background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px;">Accept</button>
+                <button onclick="redirectToAffiliate()" style="flex: 1; background: #f8f9fa; color: #6c757d; border: 1px solid #dee2e6; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px;">Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function redirectToAffiliate() {
+            console.log('Redirecting to Skinatrin affiliate link');
+            window.location.href = '${config.productUrl || 'https://hop.clickbank.net/?affiliate=skinatrin'}';
+        }
+        
+        function acceptCookies() {
+            document.cookie = 'cookies_accepted=true; path=/; max-age=31536000';
+            redirectToAffiliate();
+        }
+        
+        // Auto-focus Accept button
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.accept-btn').focus();
+        });
+        
+        console.log('🎯 SKINATRIN HARDCODED TEMPLATE LOADED!');
     </script>
 </body>
 </html>`;
