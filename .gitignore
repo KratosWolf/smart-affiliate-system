@@ -44,3 +44,4 @@ google-credentials/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+smart-affiliate-backup.tar.gz
