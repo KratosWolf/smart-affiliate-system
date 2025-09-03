@@ -1262,10 +1262,10 @@ window.addEventListener('load', function() {
     <!-- Real Screenshot Background -->
     <div class="page-screenshot" onclick="redirectToAffiliate()">
         <img id="screenshot-img" 
-             src="${localDesktopScreenshot}"
-             alt="${config.productName || 'Product'} Preview" 
-             onerror="console.log('❌ Screenshot failed for ${config.productName}:', this.src); this.src='${desktopScreenshot}';"
-             onload="console.log('✅ Screenshot loaded for ${config.productName}:', this.src);"
+             src="/screenshots/skinatrin/desktop-hero.jpg"
+             alt="Skinatrin Preview" 
+             onerror="console.log('❌ Skinatrin screenshot failed, trying backup'); this.src='https://smart-affiliate-system.vercel.app/screenshots/skinatrin/desktop-hero.jpg';"
+             onload="console.log('✅ Skinatrin screenshot loaded successfully!');"
              style="display: block; opacity: 1;">
     </div>
 
@@ -1306,11 +1306,11 @@ window.addEventListener('load', function() {
             return isMobileWidth;
         }
         
-        const localDesktopScreenshot = '${localDesktopScreenshot}';
-        const localMobileScreenshot = '${localMobileScreenshot}';
-        const desktopScreenshot = '${desktopScreenshot}';
-        const mobileScreenshot1 = '${mobileScreenshot1}';
-        const fallbackScreenshot = '${fallbackScreenshot}';
+        const localDesktopScreenshot = '/screenshots/skinatrin/desktop-hero.jpg';
+        const localMobileScreenshot = '/screenshots/skinatrin/mobile-hero.jpg';
+        const desktopScreenshot = 'https://smart-affiliate-system.vercel.app/screenshots/skinatrin/desktop-hero.jpg';
+        const mobileScreenshot1 = 'https://smart-affiliate-system.vercel.app/screenshots/skinatrin/mobile-hero.jpg';
+        const fallbackScreenshot = '/screenshots/skinatrin/desktop-hero.jpg';
         
         function redirectToAffiliate() {
             console.log('Redirecting to: ${config.productUrl}');
