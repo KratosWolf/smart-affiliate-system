@@ -33,6 +33,10 @@ export interface PresellConfig {
   primaryColor: string;
   secondaryColor: string;
   fontFamily: string;
+  
+  // Additional data for templates
+  productData?: any;
+  producerPageUrl?: string;
 }
 
 /**
@@ -137,6 +141,10 @@ export class PresellTemplateGenerator {
       originalDescription: productData.description,
       guaranteeDays: 90,
       discountPercentage: 60,
+      
+      // Add product data for screenshot generation
+      productData: validation.productData,
+      producerPageUrl: options?.customization?.originalPageUrl || '',
       
       // Generate optimized copy
       headline: this.generateOptimizedHeadline(productData.title, productData.price, productData.currency),
@@ -1175,12 +1183,9 @@ window.addEventListener('load', function() {
    * Generate Cookie Template HTML - Real Screenshot Background with Centered Cookie
    */
   private generateCookieHTML(config: PresellConfig, countrySettings?: any, designTokens?: any, options?: any): string {
-    // EMERGENCY OVERRIDE: If product is Skinatrin, use hardcoded template
-    if (config.productName?.toLowerCase().includes('skinatrin')) {
-      return this.generateSkinatrinTemplate(config);
-    }
+    // Remove emergency override - use dynamic template for all products
     // Always use the actual product URL from config - never hardcoded values
-    const originalPageUrl = config.productData?.producerPageUrl || options?.customization?.originalPageUrl || 'https://example.com/';
+    const originalPageUrl = config.producerPageUrl || options?.customization?.originalPageUrl || 'https://example.com/';
     
     console.log('🔍 Cookie template using URL:', originalPageUrl);
     console.log('🔍 Product name:', config.productName);
@@ -1266,10 +1271,10 @@ window.addEventListener('load', function() {
     <!-- Real Screenshot Background -->
     <div class="page-screenshot" onclick="redirectToAffiliate()">
         <img id="screenshot-img" 
-             src="/screenshots/skinatrin/desktop-hero.jpg"
-             alt="Skinatrin Preview" 
-             onerror="console.log('❌ Skinatrin screenshot failed, trying backup'); this.src='https://smart-affiliate-system.vercel.app/screenshots/skinatrin/desktop-hero.jpg';"
-             onload="console.log('✅ Skinatrin screenshot loaded successfully!');"
+             src="${localDesktopScreenshot}"
+             alt="${config.productName} Preview" 
+             onerror="console.log('❌ Local screenshot failed, trying external API'); this.src='${desktopScreenshot}';"
+             onload="console.log('✅ Screenshot loaded successfully!');"
              style="display: block; opacity: 1;">
     </div>
 
@@ -1310,11 +1315,11 @@ window.addEventListener('load', function() {
             return isMobileWidth;
         }
         
-        const localDesktopScreenshot = '/screenshots/skinatrin/desktop-hero.jpg';
-        const localMobileScreenshot = '/screenshots/skinatrin/mobile-hero.jpg';
-        const desktopScreenshot = 'https://smart-affiliate-system.vercel.app/screenshots/skinatrin/desktop-hero.jpg';
-        const mobileScreenshot1 = 'https://smart-affiliate-system.vercel.app/screenshots/skinatrin/mobile-hero.jpg';
-        const fallbackScreenshot = '/screenshots/skinatrin/desktop-hero.jpg';
+        const localDesktopScreenshot = '${localDesktopScreenshot}';
+        const localMobileScreenshot = '${localMobileScreenshot}';
+        const desktopScreenshot = '${desktopScreenshot}';
+        const mobileScreenshot1 = '${mobileScreenshot1}';
+        const fallbackScreenshot = '${fallbackScreenshot}';
         
         function redirectToAffiliate() {
             console.log('Redirecting to: ${config.productUrl}');
@@ -1393,15 +1398,15 @@ window.addEventListener('load', function() {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skinatrin</title>
 </head>
-<body>
-    <!-- Real Screenshot Background -->
-    <div class="page-screenshot" onclick="redirectToAffiliate()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; overflow: hidden; cursor: pointer;">
+<body style="margin:0;padding:0;font-family:Arial;">
+    <!-- WORKING Skinatrin Screenshot Background -->
+    <div style="position:fixed;top:0;left:0;width:100%;height:100vh;cursor:pointer;" onclick="redirectToAffiliate()">
         <img id="screenshot-img" 
-             src="https://smart-affiliate-system.vercel.app/screenshots/skinatrin/desktop-hero.jpg?v=${Date.now()}"
+             src="/screenshots/skinatrin/desktop-hero.jpg"
              alt="Skinatrin Preview" 
-             onerror="console.log('❌ Skinatrin screenshot failed, using backup'); this.src='https://picsum.photos/1920/1080?random=skinatrin';"
-             onload="console.log('✅ Skinatrin screenshot loaded successfully!');"
-             style="width: 100%; height: 100%; object-fit: cover; display: block;">
+             style="width:100%;height:100%;object-fit:cover;display:block;"
+             onload="console.log('✅ SKINATRIN TEMPLATE WORKING!');"
+             onerror="console.log('❌ Skinatrin failed');">
     </div>
 
     <!-- Centered Cookie Popup -->

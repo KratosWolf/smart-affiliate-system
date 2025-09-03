@@ -193,6 +193,30 @@ export default function PresellGeneratorPage() {
     console.log('✅ Validação passou, iniciando geração...')
     setIsGenerating(true)
     
+    // Capture screenshots for cookie template if needed
+    if (selectedTemplate === 'cookie' && productData.producerPageUrl) {
+      console.log('📸 Capturing screenshots for cookie template...')
+      try {
+        const screenshotResponse = await fetch('/api/capture-screenshot', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            url: productData.producerPageUrl,
+            productName: productData.name
+          })
+        })
+        
+        const screenshotResult = await screenshotResponse.json()
+        if (screenshotResult.success) {
+          console.log('✅ Screenshots captured:', screenshotResult.paths)
+        } else {
+          console.warn('⚠️ Screenshot capture failed, will use external API fallback')
+        }
+      } catch (error) {
+        console.error('❌ Error capturing screenshots:', error)
+      }
+    }
+    
     try {
       console.log('📊 Preparando dados de validação...')
       // Create validation data using extracted producer data or fallback to form inputs
@@ -244,7 +268,8 @@ export default function PresellGeneratorPage() {
               })
             },
             domain: productData.domain,
-            domainPurchased: productData.domainPurchased
+            domainPurchased: productData.domainPurchased,
+            originalPageUrl: productData.producerPageUrl // Passar URL do produtor
           }
         })
       })
