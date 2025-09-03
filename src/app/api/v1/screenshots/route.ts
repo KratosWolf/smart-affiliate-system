@@ -23,11 +23,35 @@ export async function POST(request: NextRequest) {
       console.log('Directory already exists or created')
     }
 
-    // Use external API in production, Puppeteer in development
+    // Check if running on Vercel (read-only filesystem)
+    const isVercel = process.env.VERCEL === '1'
     const isProduction = process.env.NODE_ENV === 'production'
     
+    if (isVercel) {
+      console.log('🔧 Running on Vercel - using external screenshot URLs only')
+      
+      // Use external screenshot service (no file saving)
+      const desktopUrl = `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${productUrl}`
+      const mobileUrl = `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${productUrl}`
+      
+      const publicPaths = {
+        desktop: desktopUrl,
+        mobile: mobileUrl,
+        fullPage: desktopUrl
+      }
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Screenshots URLs generated (Vercel mode)',
+        screenshots: publicPaths,
+        productName,
+        capturedAt: new Date().toISOString(),
+        mode: 'external-urls'
+      })
+    }
+    
     if (isProduction) {
-      // Use free screenshot API for production
+      // Use free screenshot API for production (non-Vercel)
       const screenshotApiUrl = `https://api.screenshotmachine.com?key=demo&url=${encodeURIComponent(productUrl)}&dimension=1920x1080`
       const mobileApiUrl = `https://api.screenshotmachine.com?key=demo&url=${encodeURIComponent(productUrl)}&dimension=375x812`
       

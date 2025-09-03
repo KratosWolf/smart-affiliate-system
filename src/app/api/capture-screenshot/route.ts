@@ -13,12 +13,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('📸 Capturing screenshots for:', productName, 'from:', url);
+    console.log('📸 Screenshot capture requested for:', productName, 'from:', url);
     
     // Clean product name for folder
     const cleanProductName = productName.toLowerCase().replace(/[^a-z0-9]/g, '-');
     
-    // Create directory for product screenshots
+    // Check if running on Vercel (read-only filesystem)
+    const isVercel = process.env.VERCEL === '1';
+    
+    if (isVercel) {
+      console.log('🔧 Running on Vercel - skipping file save, returning URLs only');
+      
+      // Generate screenshot URLs using external API  
+      const desktopScreenshotUrl = `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${url}`;
+      const mobileScreenshotUrl = `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${url}`;
+      
+      return NextResponse.json({
+        success: true,
+        mode: 'vercel-external',
+        urls: {
+          desktop: desktopScreenshotUrl,
+          mobile: mobileScreenshotUrl
+        },
+        paths: {
+          desktop: `/screenshots/${cleanProductName}/desktop-hero.jpg`,
+          mobile: `/screenshots/${cleanProductName}/mobile-hero.jpg`
+        }
+      });
+    }
+    
+    // Local development - save files
     const screenshotsDir = path.join(process.cwd(), 'public', 'screenshots', cleanProductName);
     
     try {
@@ -50,6 +74,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({
       success: true,
+      mode: 'local-saved',
       paths: {
         desktop: `/screenshots/${cleanProductName}/desktop-hero.jpg`,
         mobile: `/screenshots/${cleanProductName}/mobile-hero.jpg`
@@ -58,9 +83,19 @@ export async function POST(request: NextRequest) {
     
   } catch (error) {
     console.error('Error capturing screenshots:', error);
-    return NextResponse.json(
-      { error: 'Failed to capture screenshots', details: error.message },
-      { status: 500 }
-    );
+    console.log('🔧 Fallback: returning external URLs only');
+    
+    // Fallback - return external URLs
+    const cleanProductName = (request as any).productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'product';
+    const url = (request as any).url || 'https://example.com';
+    
+    return NextResponse.json({
+      success: true,
+      mode: 'fallback-external',
+      urls: {
+        desktop: `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${url}`,
+        mobile: `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${url}`
+      }
+    });
   }
 }

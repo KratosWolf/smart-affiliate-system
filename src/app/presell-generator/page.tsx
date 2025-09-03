@@ -345,7 +345,24 @@ export default function PresellGeneratorPage() {
       
       if (result.success) {
         setDeploymentResult(result.data)
-        alert(`✅ Deploy realizado com sucesso!\n\nAcesse: ${result.data.deployedUrl}`)
+        
+        // If ZIP data is available, trigger download
+        if (result.data.zipData) {
+          const zipBlob = new Blob(
+            [Uint8Array.from(atob(result.data.zipData), c => c.charCodeAt(0))],
+            { type: 'application/zip' }
+          )
+          const url = URL.createObjectURL(zipBlob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `${result.data.productName}-presell.zip`
+          a.click()
+          URL.revokeObjectURL(url)
+          
+          alert(`✅ ZIP criado com sucesso!\n\n1. Faça o download do arquivo ZIP\n2. Acesse o Hostinger File Manager\n3. Faça upload para public_html/${result.data.deploymentKey}/\n4. Extraia o arquivo\n5. Acesse: ${result.data.deployedUrl}`)
+        } else {
+          alert(`✅ Deploy realizado com sucesso!\n\nAcesse: ${result.data.deployedUrl}`)
+        }
       } else {
         throw new Error(result.error || 'Deploy failed')
       }

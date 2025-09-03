@@ -23,20 +23,50 @@ export async function POST(request: NextRequest) {
     let designTokens = null
     if (originalPageUrl) {
       try {
+        console.log('Extracting design tokens from:', originalPageUrl)
         designTokens = await designMatcher.extractDesignTokens(originalPageUrl)
         console.log('Design tokens extracted:', designTokens)
       } catch (error) {
         console.warn('Failed to extract design tokens:', error)
-        // Continua sem design matching em caso de erro
+        // Use default design tokens in case of error
+        designTokens = {
+          colors: {
+            primary: '#007bff',
+            secondary: '#6c757d',
+            accent: '#28a745',
+            background: '#ffffff',
+            text: '#333333',
+            button: '#007bff'
+          },
+          typography: {
+            primaryFont: 'Arial, sans-serif',
+            secondaryFont: 'Arial, sans-serif',
+            headingFont: 'Georgia, serif'
+          }
+        }
       }
     }
 
-    const generator = new PresellTemplateGenerator()
-    const presellData = generator.generateFromValidation(validation, affiliateUrl, { 
-      designTokens, 
-      customization,
-      templateType: templateType || 'default'
-    })
+    let presellData
+    try {
+      const generator = new PresellTemplateGenerator()
+      console.log('🎯 generateFromValidation called with options:', { 
+        designTokens, 
+        customization,
+        templateType: templateType || 'default'
+      });
+      
+      presellData = generator.generateFromValidation(validation, affiliateUrl, { 
+        designTokens, 
+        customization,
+        templateType: templateType || 'default'
+      })
+      
+      console.log('✅ Presell generated successfully')
+    } catch (genError) {
+      console.error('❌ Error during presell generation:', genError)
+      throw genError
+    }
     
     const response = {
       success: true,
@@ -77,10 +107,14 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Presell generation error:', error)
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('Error message:', error instanceof Error ? error.message : error)
     
     return NextResponse.json({
       success: false,
-      error: 'Erro interno na geração da presell'
+      error: 'Erro interno na geração da presell',
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     }, { status: 500 })
   }
 }

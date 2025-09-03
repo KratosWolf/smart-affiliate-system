@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { hostingerDeploy } from '@/lib/deployment/hostinger-ftp-deploy'
 import fs from 'fs/promises'
 import path from 'path'
+import JSZip from 'jszip'
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,74 +20,59 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    console.log(`🚀 Starting FTP deployment for ${productName} to Hostinger...`)
+    console.log(`🚀 Preparing deployment for ${productName}...`)
 
-    // Create temporary directory for the presell files
-    const tempDir = path.join(process.cwd(), 'temp-deployments', productName)
+    // Map product name to deployment key
+    const deploymentKey = productName.toLowerCase().replace(/[^a-z0-9]/g, '')
     
-    try {
-      await fs.mkdir(tempDir, { recursive: true })
-      
-      // Write presell files to temp directory
-      for (const [filename, content] of Object.entries(presellFiles as Record<string, string>)) {
-        const filePath = path.join(tempDir, filename)
-        await fs.writeFile(filePath, content, 'utf-8')
-        console.log(`📝 Created file: ${filename}`)
-      }
-
-      // Map product name to deployment key
-      const deploymentKey = productName.toLowerCase().replace(/[^a-z0-9]/g, '')
-      
-      // Deploy to Hostinger via FTP
-      let deployResult = false
-      let deployMethod = 'ftp-hostinger'
-      
-      try {
-        deployResult = await hostingerDeploy.deployPresell(
-          deploymentKey,
-          tempDir
-        )
-      } catch (ftpError) {
-        console.warn('⚠️ FTP deployment failed, using demo mode:', ftpError)
-        deployResult = true // Simulate success for demo
-        deployMethod = 'demo-mode'
-      }
-
-      if (!deployResult) {
-        throw new Error('FTP deployment failed')
-      }
-
-      // Get the deployed URL
-      const domains = (hostingerDeploy as any).config.domains
-      const domainConfig = domains[deploymentKey]
-      const deployedUrl = domainConfig 
-        ? `https://${domainConfig.domain}` 
-        : `https://bestbargains24x7.com/${deploymentKey}`
-
-      console.log(`✅ FTP deployment completed successfully`)
-
-      return NextResponse.json({
-        success: true,
-        data: {
-          productName,
-          deploymentKey,
-          deployedUrl,
-          method: deployMethod,
-          deployedAt: new Date().toISOString(),
-          files: Object.keys(presellFiles),
-          ftpStatus: deployMethod === 'demo-mode' ? 'demo-deployed' : 'deployed'
-        }
-      })
-
-    } finally {
-      // Clean up temp directory
-      try {
-        await fs.rm(tempDir, { recursive: true, force: true })
-        console.log(`🧹 Cleaned up temp directory: ${tempDir}`)
-      } catch (error) {
-        console.warn(`⚠️ Failed to clean temp directory: ${tempDir}`)
-      }
+    // Create ZIP file with all presell files
+    const zip = new JSZip()
+    
+    // Add all presell files to ZIP
+    for (const [filename, content] of Object.entries(presellFiles as Record<string, string>)) {
+      zip.file(filename, content)
+      console.log(`📝 Added to ZIP: ${filename}`)
     }
+    
+    // Generate ZIP buffer
+    const zipBuffer = await zip.generateAsync({
+      type: 'nodebuffer',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 9 }
+    })
+    
+    // Convert to base64 for transport
+    const zipBase64 = zipBuffer.toString('base64')
+    
+    // Get the deployment URL
+    const deployedUrl = `https://bestbargains24x7.com/${deploymentKey}`
+    
+    console.log(`✅ ZIP package created successfully for ${productName}`)
+    
+    // Instructions for manual deployment
+    const deployInstructions = {
+      step1: "Download the ZIP file using the 'Download ZIP' button",
+      step2: "Access Hostinger File Manager at https://hpanel.hostinger.com",
+      step3: `Navigate to public_html/${deploymentKey}/`,
+      step4: "Upload and extract the ZIP file",
+      step5: `Your presell will be live at ${deployedUrl}`
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        productName,
+        deploymentKey,
+        deployedUrl,
+        method: 'zip-download',
+        deployedAt: new Date().toISOString(),
+        files: Object.keys(presellFiles),
+        zipData: zipBase64,
+        zipSize: Math.round(zipBuffer.length / 1024) + ' KB',
+        deployInstructions,
+        message: 'ZIP file created successfully. Download and upload to Hostinger manually.'
+      }
+    })
 
   } catch (error) {
     console.error('❌ FTP deployment API error:', error)

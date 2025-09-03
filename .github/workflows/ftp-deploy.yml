@@ -1,0 +1,48 @@
+name: FTP Deploy to Hostinger
+
+on:
+  workflow_dispatch:
+    inputs:
+      product_name:
+        description: 'Product name to deploy'
+        required: true
+        type: string
+      presell_files:
+        description: 'JSON string of presell files'
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Create presell files
+      run: |
+        echo '${{ github.event.inputs.presell_files }}' > presell-files.json
+        
+        # Parse JSON and create files
+        mkdir -p presell-output
+        
+        # Extract and create each file from JSON
+        node -e "
+        const files = JSON.parse(require('fs').readFileSync('presell-files.json', 'utf8'));
+        Object.entries(files).forEach(([filename, content]) => {
+          require('fs').writeFileSync('presell-output/' + filename, content);
+        });
+        "
+    
+    - name: Deploy to Hostinger via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: mediumblue-monkey-640112.hostingersite.com
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./presell-output/
+        server-dir: /public_html/${{ github.event.inputs.product_name }}/
+        
+    - name: Cleanup
+      run: rm -rf presell-output presell-files.json

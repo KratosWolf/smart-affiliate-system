@@ -1247,18 +1247,20 @@ window.addEventListener('load', function() {
     console.log('🔍 FORCED product name for screenshots:', productName);
     console.log('🔍 Original URL being used:', originalPageUrl);
     
-    // ALWAYS try local screenshots first with product name
-    const localDesktopScreenshot = `/screenshots/${productName}/desktop-hero.jpg`;
-    const localMobileScreenshot = `/screenshots/${productName}/mobile-hero.jpg`;
+    // Use producer page screenshots, not product images
+    const productUrl = config.productData?.producerPageUrl || originalPageUrl || config.productUrl;
     
-    console.log('📁 FORCED desktop path:', localDesktopScreenshot);
-    console.log('📁 FORCED mobile path:', localMobileScreenshot);
-    
-    // Use ACTUAL product URL for external screenshots - not any cached value
-    const productUrl = config.productData?.producerPageUrl || originalPageUrl;
+    // Primary: Use external screenshot service for real page screenshots
     const desktopScreenshot = `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${productUrl}`;
     const mobileScreenshot1 = `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${productUrl}`;
-    const fallbackScreenshot = localDesktopScreenshot; // Use local as fallback, not external
+    
+    // Fallback: Local screenshots (but these might be product images, not page screenshots)
+    const localDesktopScreenshot = `/screenshots/${productName}/desktop-full.jpg`;
+    const localMobileScreenshot = `/screenshots/${productName}/mobile-full.jpg`;
+    
+    console.log('📁 Using external screenshot service for:', productUrl);
+    console.log('📁 Desktop screenshot:', desktopScreenshot);
+    console.log('📁 Mobile screenshot:', mobileScreenshot1);
 
     return `<!DOCTYPE html>
 <html lang="${lang === 'en' ? 'en' : lang === 'fr' ? 'fr' : lang === 'es' ? 'es' : 'pt-BR'}">
@@ -1274,9 +1276,9 @@ window.addEventListener('load', function() {
     <!-- Real Screenshot Background -->
     <div class="page-screenshot" onclick="redirectToAffiliate()">
         <img id="screenshot-img" 
-             src="${localDesktopScreenshot}"
+             src="${desktopScreenshot}"
              alt="${config.productName} Preview" 
-             onerror="console.log('❌ Local screenshot failed, trying external API'); this.src='${desktopScreenshot}';"
+             onerror="console.log('❌ External screenshot failed, trying local'); this.src='${localDesktopScreenshot}';"
              onload="console.log('✅ Screenshot loaded successfully!');"
              style="display: block; opacity: 1;">
     </div>
@@ -1423,13 +1425,14 @@ body {
 .page-screenshot img {
     width: 100%;
     height: 100vh;
-    object-fit: cover;
-    object-position: top center;
+    object-fit: contain;
+    object-position: center;
     display: block !important;
     opacity: 1 !important;
-    filter: blur(1px) brightness(0.7);
+    filter: blur(2px) brightness(0.6);
     z-index: 10;
     position: relative;
+    background: #f0f0f0;
 }
 
 /* Mobile image responsiveness */
@@ -1696,20 +1699,21 @@ cite {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(2px);
-    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s ease-out;
-    pointer-events: none;
 }
 
 .cookie-overlay .cookie-popup {
     pointer-events: all;
+    position: relative;
+    z-index: 10000;
 }
 
 @keyframes fadeIn {

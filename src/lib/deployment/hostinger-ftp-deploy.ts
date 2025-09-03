@@ -53,9 +53,26 @@ export class HostingerFTPDeploy {
           ftpUser: process.env.FTP_USER || 'u973230760.bestbargains24x7.com',
           ftpPassword: process.env.FTP_PASSWORD || '',
           remotePath: '/public_html/gutdrops'
+        },
+        'skinatrin': {
+          domain: 'bestbargains24x7.com/skinatrin',
+          ftpUser: process.env.FTP_USER || 'u973230760.bestbargains24x7.com',
+          ftpPassword: process.env.FTP_PASSWORD || '',
+          remotePath: '/public_html/skinatrin'
         }
       }
     }
+  }
+
+  // Método dinâmico que aceita qualquer produto
+  private createDomainConfig(productName: string) {
+    const slug = productName.toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+    return {
+      domain: `bestbargains24x7.com/${slug}`,
+      ftpUser: process.env.FTP_USER || 'u973230760.bestbargains24x7.com',
+      ftpPassword: process.env.FTP_PASSWORD || '',
+      remotePath: `/public_html/${slug}`
+    };
   }
   
   /**
@@ -67,13 +84,8 @@ export class HostingerFTPDeploy {
     remotePath: string = '/public_html'
   ): Promise<boolean> {
     
-    const domainConfig = this.config.domains[productKey]
-    
-    if (!domainConfig) {
-      console.error(`❌ Domínio não configurado para produto: ${productKey}`)
-      console.log('Domínios disponíveis:', Object.keys(this.config.domains))
-      return false
-    }
+    // Usar configuração dinâmica que aceita qualquer produto
+    const domainConfig = this.createDomainConfig(productKey)
     
     console.log(`🚀 Deploying to Hostinger Addon Domain: ${domainConfig.domain}`)
     console.log(`📁 Local: ${localPath} → Remote: ${remotePath}`)
@@ -82,13 +94,16 @@ export class HostingerFTPDeploy {
     client.ftp.verbose = true
     
     try {
-      // Conectar ao FTP
+      // Conectar ao FTP com modo passivo e timeout maior
       await client.access({
         host: this.config.host,
         user: domainConfig.ftpUser,
         password: domainConfig.ftpPassword,
-        secure: false, // Use 'implicit' se Hostinger suportar FTPS
-        port: 21
+        secure: false,
+        port: 21,
+        connTimeout: 60000, // 60 segundos timeout
+        pasvTimeout: 60000, // 60 segundos timeout passivo  
+        keepalive: 10000    // Keep-alive 10 segundos
       })
       
       console.log('✅ Conectado ao FTP da Hostinger')
@@ -197,12 +212,8 @@ export class HostingerFTPDeploy {
    * Teste de conexão FTP
    */
   async testConnection(productKey: string): Promise<boolean> {
-    const domainConfig = this.config.domains[productKey]
-    
-    if (!domainConfig) {
-      console.error(`❌ Domínio não encontrado: ${productKey}`)
-      return false
-    }
+    // Usar configuração dinâmica que aceita qualquer produto
+    const domainConfig = this.createDomainConfig(productKey)
     
     const client = new ftp.Client()
     
@@ -214,7 +225,10 @@ export class HostingerFTPDeploy {
         user: domainConfig.ftpUser,
         password: domainConfig.ftpPassword,
         secure: false,
-        port: 21
+        port: 21,
+        connTimeout: 60000, // 60 segundos timeout
+        pasvTimeout: 60000, // 60 segundos timeout passivo  
+        keepalive: 10000    // Keep-alive 10 segundos
       })
       
       console.log('✅ Conexão FTP funcionando!')
