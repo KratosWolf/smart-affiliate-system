@@ -1397,10 +1397,10 @@ window.addEventListener('load', function() {
     <!-- Real Screenshot Background -->
     <div class="page-screenshot" onclick="redirectToAffiliate()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; overflow: hidden; cursor: pointer;">
         <img id="screenshot-img" 
-             src="https://smart-affiliate-system.vercel.app/screenshots/skinatrin/desktop-hero.jpg"
+             src="https://smart-affiliate-system.vercel.app/screenshots/skinatrin/desktop-hero.jpg?v=${Date.now()}"
              alt="Skinatrin Preview" 
-             onerror="console.log('❌ Skinatrin direct URL failed');"
-             onload="console.log('✅ Skinatrin HARDCODED screenshot loaded!');"
+             onerror="console.log('❌ Skinatrin screenshot failed, using backup'); this.src='https://picsum.photos/1920/1080?random=skinatrin';"
+             onload="console.log('✅ Skinatrin screenshot loaded successfully!');"
              style="width: 100%; height: 100%; object-fit: cover; display: block;">
     </div>
 
