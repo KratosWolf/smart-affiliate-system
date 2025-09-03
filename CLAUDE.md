@@ -122,6 +122,13 @@ npx vercel --prod     # Deploy para produção Vercel
 2. Testar conexão com `hostingerDeploy.testConnection()`
 3. Verificar `hostinger-ftp-deploy.ts`
 
+### **❌ Template Cookie mostrando produto errado**:
+✅ **RESOLVIDO** - Sistema agora dinâmico:
+1. Captura screenshots automaticamente da URL do produtor
+2. Salva em `/public/screenshots/[produto]/`
+3. Template usa produto correto (não mais hardcoded)
+4. API `/api/capture-screenshot` funcional
+
 ---
 
 ## 📊 **STATUS ATUAL DO SISTEMA**
@@ -178,8 +185,8 @@ npx vercel --prod     # Deploy para produção Vercel
 
 ---
 
-**📅 Última atualização**: 31 Agosto 2025  
-**🔖 Versão atual**: v1.4.0 - Discovery/Mining 5-7+ Vezes Implementado  
-**📍 Status**: ✅ Sistema operacional com lógica completa
+**📅 Última atualização**: 03 Setembro 2025  
+**🔖 Versão atual**: v1.4.1 - Template Cookie Dinâmico + Screenshot API  
+**📍 Status**: ✅ Sistema 100% operacional - Cookie Template corrigido
 
 *Este arquivo garante que o Claude entenda completamente o contexto e não perca informações críticas.*

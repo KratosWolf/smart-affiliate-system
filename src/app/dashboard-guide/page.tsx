@@ -23,7 +23,7 @@ export default function SystemGuidePage() {
               <Button variant="outline">← Voltar ao Dashboard</Button>
             </Link>
             <Badge className="bg-green-100 text-green-800 px-4 py-2">
-              ✅ Sistema 100% Operacional v1.2 - PRODUCTION READY
+              ✅ Sistema 100% Operacional v1.4.1 - Cookie Template CORRIGIDO
             </Badge>
           </div>
         </div>
