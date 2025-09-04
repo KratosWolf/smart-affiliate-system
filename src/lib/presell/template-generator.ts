@@ -1252,7 +1252,7 @@ window.addEventListener('load', function() {
     
     // Primary: Use external screenshot service for real page screenshots
     const desktopScreenshot = `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${productUrl}`;
-    const mobileScreenshot1 = `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${productUrl}`;
+    const mobileScreenshot1 = `https://mini.s-shot.ru/430x932/JPEG/430/Z100/?${productUrl}`;
     
     // Fallback: Local screenshots (but these might be product images, not page screenshots)
     const localDesktopScreenshot = `/screenshots/${productName}/desktop-full.jpg`;
@@ -1275,30 +1275,63 @@ window.addEventListener('load', function() {
 <body>
     <!-- Real Screenshot Background -->
     <div class="page-screenshot" onclick="redirectToAffiliate()">
-        <img id="screenshot-img" 
+        <!-- Desktop Screenshot -->
+        <img id="desktop-screenshot" 
              src="${desktopScreenshot}"
              alt="${config.productName} Preview" 
              onerror="console.log('❌ External screenshot failed, trying local'); this.src='${localDesktopScreenshot}';"
-             onload="console.log('✅ Screenshot loaded successfully!');"
-             style="display: block; opacity: 1;">
+             onload="console.log('✅ Desktop screenshot loaded successfully!');"
+             style="display: block; opacity: 1; width: 100%; height: 100vh; object-fit: cover; object-position: center;"
+             class="desktop-only">
+             
+        <!-- Mobile Screenshot (cropped/optimized for mobile) -->
+        <img id="mobile-screenshot" 
+             src="${mobileScreenshot1}"
+             alt="${config.productName} Preview" 
+             onerror="console.log('❌ Mobile screenshot failed, using desktop'); this.src='${desktopScreenshot}';"
+             onload="console.log('✅ Mobile screenshot loaded successfully!');"
+             style="display: none; width: 100%; height: 100vh; object-fit: cover; object-position: center;"
+             class="mobile-only">
     </div>
 
     <!-- Centered Cookie Popup -->
-    <div class="cookie-overlay">
-        <div class="cookie-popup">
-            <div class="cookie-header">
-                <div class="cookie-icon">🍪</div>
-                <h3>${messages.title}</h3>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .cookie-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .cookie-accept:hover { background: #059669 !important; }
+        .cookie-decline:hover { background: #4B5563 !important; }
+        /* Responsive Screenshot Display */
+        .desktop-only { display: block !important; }
+        .mobile-only { display: none !important; }
+        
+        @media (max-width: 768px) {
+            .desktop-only { display: none !important; }
+            .mobile-only { display: block !important; }
+            
+            .cookie-popup-mobile { max-width: 95% !important; margin: 10px !important; }
+            .cookie-icon-mobile { font-size: 2.5rem !important; margin-bottom: 10px !important; }
+            .cookie-title-mobile { font-size: 1.3rem !important; }
+            .cookie-buttons-mobile { flex-direction: column !important; }
+        }
+    </style>
+    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 99999; display: flex; align-items: center; justify-content: center; margin: 0; padding: 0; backdrop-filter: blur(3px); animation: fadeIn 0.3s ease-out;">
+        <div class="cookie-popup-mobile" style="pointer-events: all; position: relative; z-index: 100000; background: white; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); max-width: 500px; width: 90%; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #333; line-height: 1.5; margin: 20px;">
+            <div style="padding: 25px; text-align: center; margin-bottom: 20px;">
+                <div class="cookie-icon-mobile" style="font-size: 3rem; margin-bottom: 15px;">🍪</div>
+                <h3 class="cookie-title-mobile" style="font-size: 1.5rem; color: #333; margin: 0; font-weight: 600;">${messages.title}</h3>
             </div>
             
-            <div class="cookie-body">
-                <p>${messages.message}</p>
-                <p style="margin-top: 12px;">${messages.message2}</p>
+            <div style="padding: 0 25px; text-align: center; margin-bottom: 25px;">
+                <p style="color: #666; font-size: 1rem; margin: 0 0 12px 0; line-height: 1.5;">${messages.message}</p>
+                <p style="margin-top: 12px; color: #666; font-size: 1rem; margin: 12px 0 0 0; line-height: 1.5;">${messages.message2}</p>
             </div>
             
-            <div class="cookie-actions">
-                <button class="accept-btn" onclick="acceptCookies()">${messages.accept}</button>
-                <button class="decline-btn" onclick="redirectToAffiliate()">${messages.decline}</button>
+            <div class="cookie-buttons-mobile" style="padding: 0 25px 25px; display: flex; gap: 12px; justify-content: center;">
+                <button onclick="acceptCookies()" class="cookie-btn cookie-accept" style="background: #10B981; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.2s; min-width: 120px;">${messages.accept}</button>
+                <button onclick="redirectToAffiliate()" class="cookie-btn cookie-decline" style="background: #6B7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.2s; min-width: 120px;">${messages.decline}</button>
             </div>
         </div>
     </div>
@@ -1324,7 +1357,6 @@ window.addEventListener('load', function() {
         const localMobileScreenshot = '${localMobileScreenshot}';
         const desktopScreenshot = '${desktopScreenshot}';
         const mobileScreenshot1 = '${mobileScreenshot1}';
-        const fallbackScreenshot = '${fallbackScreenshot}';
         
         function redirectToAffiliate() {
             console.log('Redirecting to: ${config.productUrl}');
@@ -1694,20 +1726,26 @@ cite {
     font-style: normal;
 }
 
-/* Cookie Overlay - Centered and Effective */
+/* Cookie Overlay - ULTRA FORCED CENTERING */
 .cookie-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.5) !important;
     backdrop-filter: blur(3px);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    z-index: 99999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     animation: fadeIn 0.3s ease-out;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
 }
 
 .cookie-overlay .cookie-popup {
@@ -1723,7 +1761,7 @@ cite {
 
 .cookie-popup {
     max-width: 500px;
-    background: white;
+    background: white !important;
     border-radius: 12px;
     padding: 30px;
     margin: 20px;
@@ -1731,17 +1769,45 @@ cite {
     text-align: center;
     animation: popIn 0.3s ease-out;
     width: 90%;
+    position: relative !important;
+    z-index: 10000 !important;
+    box-sizing: border-box !important;
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .cookie-popup {
-        max-width: 350px;
-        padding: 20px;
-        margin: 15px;
-        width: calc(100vw - 30px);
+        max-width: 350px !important;
+        padding: 20px !important;
+        margin: 15px !important;
+        width: calc(100vw - 30px) !important;
         max-height: 70vh;
         overflow-y: auto;
+    }
+    
+    .main-content {
+        padding: 20px 15px !important;
+    }
+    
+    .page-screenshot {
+        padding: 0 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .cookie-popup {
+        max-width: 320px !important;
+        padding: 15px !important;
+        margin: 10px !important;
+        width: calc(100vw - 20px) !important;
+    }
+    
+    .cookie-popup h3 {
+        font-size: 1.2rem !important;
+    }
+    
+    .cookie-popup p {
+        font-size: 0.9rem !important;
     }
 }
 

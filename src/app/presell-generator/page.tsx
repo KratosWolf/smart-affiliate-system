@@ -374,6 +374,74 @@ export default function PresellGeneratorPage() {
     }
   }
 
+  const deployToVPS = async () => {
+    if (!generatedPresell || !generatedPresell.files) {
+      alert('Por favor, gere a presell primeiro antes de fazer o deploy')
+      return
+    }
+
+    const domain = productData.domain || 'smartaffiliatesystem.site'
+    // Usar o nome do produto como slug automaticamente
+    const slug = productData.name.toLowerCase()
+      .trim() // Remove espaços das bordas
+      .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais, mantém espaços e hífens
+      .replace(/\s+/g, '-') // Substitui espaços por hífens
+      .replace(/-+/g, '-') // Remove hífens duplicados
+      .replace(/^-|-$/g, '') // Remove hífens do início e fim
+      .substring(0, 50) // Limita o tamanho
+    
+    console.log(`🌐 Deploy automático: ${domain}/${slug}`)
+
+    setIsDeploying(true)
+    setDeploymentResult(null)
+    
+    try {
+      console.log('🚀 Starting VPS deployment...')
+      
+      // Create temporary files for deployment
+      const formData = new FormData()
+      Object.entries(generatedPresell.files).forEach(([filename, content]) => {
+        const blob = new Blob([content], { type: 'text/html' })
+        formData.append('files', blob, filename)
+      })
+
+      // Deploy via flexible-deploy API
+      const response = await fetch('/api/flexible-deploy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'deploy',
+          productName: productData.name,
+          type: 'domain-with-slug',
+          domain: domain,
+          slug: slug,
+          presellFiles: generatedPresell.files
+        })
+      })
+
+      const result = await response.json()
+      
+      if (result.success) {
+        setDeploymentResult({
+          deployedUrl: result.url,
+          productName: productData.name,
+          deploymentKey: slug,
+          type: 'vps'
+        })
+        alert(`✅ Deploy VPS realizado com sucesso!\n\nAcesse: ${result.url}`)
+      } else {
+        throw new Error(result.error || 'VPS Deploy failed')
+      }
+    } catch (error) {
+      console.error('❌ Erro no deploy VPS:', error)
+      alert('Erro no deploy VPS: ' + (error instanceof Error ? error.message : 'Erro desconhecido'))
+    } finally {
+      setIsDeploying(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 p-6">
       <div className="max-w-7xl mx-auto">
@@ -817,23 +885,43 @@ export default function PresellGeneratorPage() {
                         Download ZIP
                       </Button>
                       
-                      <Button 
-                        onClick={deployToHostinger}
-                        disabled={isDeploying}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-400"
-                      >
-                        {isDeploying ? (
-                          <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                            Fazendo Deploy...
-                          </>
-                        ) : (
-                          <>
-                            <Upload className="w-4 h-4 mr-2" />
-                            Deploy para Hostinger
-                          </>
-                        )}
-                      </Button>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <Button 
+                          onClick={deployToHostinger}
+                          disabled={isDeploying}
+                          className="bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-400"
+                        >
+                          {isDeploying ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                              Deploy...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-4 h-4 mr-2" />
+                              Deploy Hostinger
+                            </>
+                          )}
+                        </Button>
+
+                        <Button 
+                          onClick={deployToVPS}
+                          disabled={isDeploying || !productData.name}
+                          className="bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-400"
+                        >
+                          {isDeploying ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                              Deploy...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-4 h-4 mr-2" />
+                              Deploy VPS (/{productData.name ? productData.name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').substring(0, 20) + '...' : 'produto'})
+                            </>
+                          )}
+                        </Button>
+                      </div>
 
                       {deploymentResult && (
                         <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
