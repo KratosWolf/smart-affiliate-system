@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,11 @@ import Link from 'next/link'
 
 export default function SystemGuidePage() {
   const [activeTab, setActiveTab] = useState<'guide' | 'playbook' | 'implementation'>('guide')
+
+  useEffect(() => {
+    console.log('✅ REACT HYDRATED! Component is running on client side')
+    console.log('Current activeTab:', activeTab)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">

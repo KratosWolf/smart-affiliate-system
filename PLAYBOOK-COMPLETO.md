@@ -157,6 +157,55 @@
 - Links de afiliado integrados
 - Mobile-first responsive design
 
+#### 🌐 ARQUITETURA MULTI-DOMÍNIO 
+**Status**: ✅ OPERACIONAL - Sistema Híbrido Implementado
+
+O Smart Affiliate System utiliza uma **arquitetura híbrida centralizada** que permite gerenciar múltiplos domínios de um painel único:
+
+##### **🏗️ Estrutura do Sistema:**
+
+**smartaffiliatesystem.site** → **Painel Central/Dashboard**
+- ✅ Presell Generator (todas as ferramentas)
+- ✅ Discovery Mining & Validation  
+- ✅ Campaign Builder & Analytics
+- ✅ Gerenciamento de todos os projetos
+
+**Domínios Específicos** → **Deploy Automático dos Presells**
+- ✅ airbolt.shop/usa (exemplo ativo)
+- ✅ qualquer-dominio.com/slug (flexível)
+- ✅ produto-especifico.site (dedicado)
+
+##### **📋 Como Usar Qualquer Novo Domínio:**
+
+**Opção 1: Deploy VPS Automático (Recomendado)**
+1. **Compre o domínio** → nervecalm-reviews.com
+2. **Configure DNS** → A record para `161.97.145.169`  
+3. **Use o sistema** → Gere presell + clique "Deploy VPS"
+4. **Resultado** → nervecalm-reviews.com/usa ✅ automático!
+
+**Opção 2: Deploy Manual**
+1. **Gere presell** no smartaffiliatesystem.site
+2. **Download HTML** completo
+3. **Upload manual** para qualquer hospedagem
+
+##### **🎯 Vantagens da Arquitetura:**
+- **Painel centralizado** gerencia infinitos domínios
+- **URLs limpas** sem subdomínios (dominio.com/slug)  
+- **Deploy automático** via VPS com SSL
+- **Escalabilidade total** para qualquer nicho
+- **SEO otimizado** com domains dedicados por produto
+
+##### **⚡ Exemplos Práticos:**
+```
+Painel: smartaffiliatesystem.site/presell-generator
+↓ (gera + deploy)
+Presells: nervecalm-reviews.com/usa
+         airbolt-tracker.shop/brasil  
+         best-reviews-2025.site/france
+```
+
+**💡 Resultado**: Um sistema = infinitos domínios otimizados!
+
 ---
 
 ### 📈 6. CAMPAIGN BUILDER
