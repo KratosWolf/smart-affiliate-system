@@ -25,12 +25,10 @@ import { PLATFORM_OPTIONS } from '@/lib/constants/platforms'
 
 interface CampaignData {
   productName: string
-  affiliateUrl: string
-  presellUrl?: string
-  producerPageUrl?: string // NOVO: URL da página do produtor
+  finalUrl: string // URL única - presell OU página do produtor
   targetCountry: string
-  dailyBudget: number
-  targetCpa: number
+  dailyBudget: number // calculado automaticamente
+  targetCpa: number // calculado automaticamente
   platform?: 'CLICKBANK' | 'BUYGOODS' | 'MAXWEB' | 'GURUMIDIA' | 'SMARTADV' | 'DIGISTORE24' | 'ADCOMBO' | 'DRCASH' | 'MIDIA_SCALERS' | 'SMASH_LOUD'
   commissionValue?: number
   currency?: 'BRL' | 'USD'
@@ -76,15 +74,13 @@ interface GeneratedCampaign {
 export default function CampaignBuilderPage() {
   const [campaignData, setCampaignData] = useState<CampaignData>({
     productName: '',
-    affiliateUrl: '',
-    presellUrl: '',
-    producerPageUrl: '',
+    finalUrl: '',
     targetCountry: 'US',
-    dailyBudget: 350,
-    targetCpa: 25,
-    platform: 'CLICKBANK',
+    dailyBudget: 350, // será calculado automaticamente
+    targetCpa: 45, // será calculado automaticamente  
+    platform: 'SMARTADV',
     commissionValue: 100,
-    currency: 'BRL',
+    currency: 'USD',
     useEdisTracking: true,
     edisBaseUrl: 'www.test.com'
   })
@@ -92,6 +88,18 @@ export default function CampaignBuilderPage() {
   const [generatedCampaign, setGeneratedCampaign] = useState<GeneratedCampaign | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [activeTab, setActiveTab] = useState('setup')
+
+  // Cálculo automático do orçamento e CPA
+  const calculateBudgetAndCpa = (commissionValue: number, currency: string) => {
+    // Orçamento mínimo baseado na moeda
+    const minBudget = currency === 'BRL' ? 350 : 70
+    const suggestedBudget = Math.max(minBudget, commissionValue * 3.5) // 3.5x da comissão
+    
+    // CPA alvo: 45% da comissão
+    const targetCpa = Math.round(commissionValue * 0.45)
+    
+    return { suggestedBudget: Math.round(suggestedBudget), targetCpa }
+  }
 
   // Carrega dados da validação quando a página carrega
   useEffect(() => {
@@ -343,72 +351,62 @@ export default function CampaignBuilderPage() {
                     </select>
                   </div>
 
-                  <div>
+                  <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      URL de Afiliado *
+                      URL Final da Campanha * 
+                      <span className="text-blue-600 text-xs ml-2">(Para onde vai o tráfego do Google Ads)</span>
                     </label>
                     <Input
-                      placeholder="https://hop.clickbank.net/your-link"
-                      value={campaignData.affiliateUrl}
-                      onChange={(e) => handleInputChange('affiliateUrl', e.target.value)}
+                      placeholder="https://sua-presell.com OU https://hop.clickbank.net/your-link"
+                      value={campaignData.finalUrl}
+                      onChange={(e) => handleInputChange('finalUrl', e.target.value)}
+                      className="text-lg"
                     />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 text-xs text-gray-500">
+                      <div className="bg-green-50 p-2 rounded border">
+                        <span className="font-medium text-green-700">✅ Se tem presell:</span>
+                        <br />Use a URL da sua presell (mais conversão)
+                      </div>
+                      <div className="bg-blue-50 p-2 rounded border">  
+                        <span className="font-medium text-blue-700">📄 Se não tem presell:</span>
+                        <br />Use o link de afiliado direto
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      URL da Página do Produtor *
-                    </label>
-                    <Input
-                      placeholder="https://nervecalm.com (para análise inteligente)"
-                      value={campaignData.producerPageUrl}
-                      onChange={(e) => handleInputChange('producerPageUrl', e.target.value)}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Usada para analisar ofertas, garantias e adaptar headlines automaticamente
-                    </p>
-                  </div>
+                  <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                    <h4 className="font-semibold text-yellow-800 mb-3">💰 Cálculos Automáticos (Regras do Sistema)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-yellow-700 mb-2">
+                          Orçamento Diário Calculado
+                        </label>
+                        <Input
+                          type="number"
+                          value={campaignData.dailyBudget}
+                          disabled
+                          className="bg-yellow-100 text-yellow-800 font-semibold"
+                        />
+                        <p className="text-xs text-yellow-600 mt-1">
+                          📊 Fórmula: Máximo entre {campaignData.currency === 'BRL' ? 'R$350' : '$70'} (mínimo) ou 3.5x da comissão
+                        </p>
+                      </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      URL da Presell (Opcional)
-                    </label>
-                    <Input
-                      placeholder="https://sua-presell.com"
-                      value={campaignData.presellUrl}
-                      onChange={(e) => handleInputChange('presellUrl', e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Orçamento Diário (Mínimo: R$ 350/dia ou $70/dia)
-                    </label>
-                    <Input
-                      type="number"
-                      placeholder={campaignData.currency === 'BRL' ? '350' : '70'}
-                      min={campaignData.currency === 'BRL' ? 350 : 70}
-                      value={campaignData.dailyBudget}
-                      onChange={(e) => handleInputChange('dailyBudget', parseFloat(e.target.value))}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Será calculado automaticamente: {campaignData.currency === 'BRL' ? 'R$' : '$'}{campaignData.currency === 'BRL' ? 350 : 70} mínimo
-                    </p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      CPA Alvo (40-50% da comissão)
-                    </label>
-                    <Input
-                      type="number"
-                      placeholder={(campaignData.commissionValue ? campaignData.commissionValue * 0.45 : 45).toString()}
-                      value={campaignData.targetCpa}
-                      onChange={(e) => handleInputChange('targetCpa', parseFloat(e.target.value))}
-                      disabled
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Calculado automaticamente: 45% de {campaignData.currency === 'BRL' ? 'R$' : '$'}{campaignData.commissionValue || 100} = {campaignData.currency === 'BRL' ? 'R$' : '$'}{((campaignData.commissionValue || 100) * 0.45).toFixed(0)}
-                    </p>
+                      <div>
+                        <label className="block text-sm font-medium text-yellow-700 mb-2">
+                          CPA Alvo Calculado (45% da comissão)
+                        </label>
+                        <Input
+                          type="number"
+                          value={campaignData.targetCpa}
+                          disabled
+                          className="bg-yellow-100 text-yellow-800 font-semibold"
+                        />
+                        <p className="text-xs text-yellow-600 mt-1">
+                          🎯 45% de {campaignData.currency === 'BRL' ? 'R$' : '$'}{campaignData.commissionValue || 100} = {campaignData.currency === 'BRL' ? 'R$' : '$'}{campaignData.targetCpa}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

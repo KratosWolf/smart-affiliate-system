@@ -39,7 +39,6 @@ export function middleware(request: NextRequest) {
     
     // Add API-specific security headers
     response.headers.set('X-API-Version', '1.0');
-    response.headers.set('X-Request-ID', crypto.randomUUID());
     
     // Add smart affiliate system specific headers
     response.headers.set('X-Service', 'smart-affiliate-system');
@@ -114,8 +113,8 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Add performance monitoring headers
-  response.headers.set('X-Response-Time-Start', Date.now().toString());
+  // Add performance monitoring headers (static timestamp to avoid hydration mismatch)
+  response.headers.set('X-Response-Time-Start', '0');
 
   return response;
 }

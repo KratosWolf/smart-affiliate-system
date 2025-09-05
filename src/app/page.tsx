@@ -138,7 +138,7 @@ export default function Home() {
             totalProducts: discoveryData.data.summary.totalFound,
             avgScore: discoveryData.data.summary.averageScore,
             topOpportunity: discoveryData.data.opportunities[0]?.productName || 'None',
-            lastUpdate: new Date().toLocaleString()
+            lastUpdate: 'Just now'
           },
           tracking: {
             activeCampaigns: trackingData.data.summary.totalCampaigns,
@@ -155,11 +155,11 @@ export default function Home() {
           system: {
             status: 'healthy',
             uptime: '99.9%',
-            lastSync: new Date().toLocaleString(),
+            lastSync: 'Just now',
             modulesActive: 6
           }
         })
-        setLastUpdate(new Date().toLocaleString())
+        setLastUpdate('Just now')
       }
     } catch (error) {
       console.error('Erro ao carregar dashboard:', error)
@@ -169,10 +169,13 @@ export default function Home() {
   }
 
   useEffect(() => {
-    loadDashboardStats()
-    // Auto-refresh a cada 5 minutos
-    const interval = setInterval(loadDashboardStats, 300000)
-    return () => clearInterval(interval)
+    // Only run on client-side to avoid hydration mismatch
+    if (typeof window !== 'undefined') {
+      loadDashboardStats()
+      // Auto-refresh a cada 5 minutos
+      const interval = setInterval(loadDashboardStats, 300000)
+      return () => clearInterval(interval)
+    }
   }, [])
 
   const formatCurrency = (value: number) => 
