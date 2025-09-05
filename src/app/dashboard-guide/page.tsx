@@ -347,12 +347,14 @@ export default function SystemGuidePage() {
                   <div className="flex gap-3">
                     <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">3</div>
                     <div>
-                      <div className="font-semibold text-sm text-purple-700">📄 PRESELL GENERATOR</div>
+                      <div className="font-semibold text-sm text-purple-700">📄 PRESELL GENERATOR - 5 TEMPLATES OTIMIZADOS</div>
                       <div className="text-xs text-gray-600 space-y-1">
-                        <p><strong>Input:</strong> Dados da validation + template escolhido + URL de afiliado</p>
-                        <p><strong>Process:</strong> Geração HTML + CSS + imagens + screenshots locais (Cookie template)</p>
-                        <p><strong>Output:</strong> Presell completo + URL de deploy + botão FTP deploy</p>
-                        <p><strong>Auto-populate:</strong> URL do presell vai automaticamente para Campaign Builder</p>
+                        <p><strong>Templates:</strong> Cookie (3-5%), Review (2-4%), Expert (4-6%), Quiz (3-5%), COD (2-3%)</p>
+                        <p><strong>Input:</strong> Nome produto + URL afiliado + Producer Page URL + país + template</p>
+                        <p><strong>Process:</strong> Screenshots dinâmicos API + HTML responsivo + CSS otimizado + tracking</p>
+                        <p><strong>Features:</strong> Desktop + Mobile + Multi-geo (23 países) + FTP deploy automático</p>
+                        <p><strong>Output:</strong> Presell completo hospedado + URL final + analytics integrado</p>
+                        <p><strong>Deploy:</strong> FTP Hostinger automático em 30s + domínios customizáveis</p>
                       </div>
                     </div>
                   </div>
@@ -389,26 +391,79 @@ export default function SystemGuidePage() {
               {/* Campos Obrigatórios por Módulo */}
               <div className="bg-white/60 p-4 rounded-lg border border-purple-200">
                 <h3 className="text-lg font-bold mb-3 text-purple-800">📝 CAMPOS OBRIGATÓRIOS E AUTO-POPULAÇÃO</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <h4 className="font-semibold text-sm mb-2 text-green-700">✅ VALIDATION (Entrada principal)</h4>
+                    <h4 className="font-semibold text-sm mb-2 text-green-700">✅ VALIDATION (Entrada)</h4>
                     <ul className="text-xs space-y-1">
                       <li>• <strong>Nome do produto:</strong> obrigatório</li>
                       <li>• <strong>País alvo:</strong> obrigatório</li>
                       <li>• <strong>URL do produto:</strong> obrigatório</li>
-                      <li>• <strong>Producer Page URL:</strong> obrigatório (novo campo)</li>
+                      <li>• <strong>Producer Page URL:</strong> obrigatório</li>
                     </ul>
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold text-sm mb-2 text-blue-700">🔄 CAMPAIGN BUILDER</h4>
+                    <h4 className="font-semibold text-sm mb-2 text-purple-700">📄 PRESELL GENERATOR</h4>
                     <ul className="text-xs space-y-1">
-                      <li>• <strong>Todos os campos:</strong> preenchidos automaticamente</li>
-                      <li>• <strong>Target CPA:</strong> calculado automaticamente (45% comissão)</li>
-                      <li>• <strong>Edis tracking:</strong> integrado automaticamente</li>
-                      <li>• <strong>Exclusões:</strong> aplicadas automaticamente</li>
+                      <li>• <strong>Nome produto:</strong> auto-populado</li>
+                      <li>• <strong>URL afiliado:</strong> obrigatório</li>
+                      <li>• <strong>Producer Page:</strong> auto-populado</li>
+                      <li>• <strong>Template:</strong> Cookie recomendado</li>
+                      <li>• <strong>País:</strong> auto-populado</li>
                     </ul>
                   </div>
+                  
+                  <div>
+                    <h4 className="font-semibold text-sm mb-2 text-orange-700">🎯 CAMPAIGN BUILDER</h4>
+                    <ul className="text-xs space-y-1">
+                      <li>• <strong>Presell URL:</strong> auto-populado</li>
+                      <li>• <strong>Target CPA:</strong> calculado (45%)</li>
+                      <li>• <strong>Tracking:</strong> integrado automático</li>
+                      <li>• <strong>Budget:</strong> R$ 350 fixo</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* FLUXO DETALHADO PRESELL GENERATOR */}
+              <div className="bg-white/60 p-4 rounded-lg border border-purple-200">
+                <h3 className="text-lg font-bold mb-3 text-purple-800">📄 FLUXO DETALHADO: PRESELL GENERATOR</h3>
+                <div className="space-y-4">
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="font-semibold text-sm mb-2 text-purple-700">🎯 TEMPLATES DISPONÍVEIS</h4>
+                      <ul className="text-xs space-y-1">
+                        <li>• <strong>Cookie Template:</strong> 3-5% CVR - Screenshots dinâmicos do produto</li>
+                        <li>• <strong>Review Template:</strong> 2-4% CVR - Formato review simulado</li>
+                        <li>• <strong>Expert Review:</strong> 4-6% CVR - Review de especialista</li>
+                        <li>• <strong>Quiz Template:</strong> 3-5% CVR - Interactive quiz format</li>
+                        <li>• <strong>COD Template:</strong> 2-3% CVR - Contra-entrega</li>
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-sm mb-2 text-green-700">⚡ PROCESSO AUTOMÁTICO</h4>
+                      <ol className="text-xs space-y-1">
+                        <li><strong>1.</strong> Captura screenshots da Producer Page</li>
+                        <li><strong>2.</strong> Gera HTML responsivo desktop/mobile</li>
+                        <li><strong>3.</strong> Integra tracking (Ratoeira + Microsoft Clarity)</li>
+                        <li><strong>4.</strong> Deploy automático via FTP Hostinger</li>
+                        <li><strong>5.</strong> Retorna URL final hospedada</li>
+                      </ol>
+                    </div>
+                  </div>
+                  
+                  <div className="border-l-4 border-blue-400 pl-3">
+                    <h4 className="font-semibold text-sm text-blue-700">🌐 MULTI-GEO SUPPORT (23 PAÍSES)</h4>
+                    <p className="text-xs text-gray-600">Brasil, Argentina, Chile, México, Espanha, Portugal, EUA, Canadá, UK, França, Alemanha, Itália, Austrália, e mais</p>
+                  </div>
+                  
+                  <div className="border-l-4 border-orange-400 pl-3">
+                    <h4 className="font-semibold text-sm text-orange-700">📊 ANALYTICS INTEGRADO</h4>
+                    <p className="text-xs text-gray-600">Tracking automático: Conversões, CTR, tempo na página, device breakdown, source analysis</p>
+                  </div>
+
                 </div>
               </div>
 
@@ -421,16 +476,18 @@ export default function SystemGuidePage() {
                     <ol className="text-xs space-y-1">
                       <li><strong>1.</strong> Review produtos descobertos durante mining 6:00 AM</li>
                       <li><strong>2.</strong> Validation dos top 3-5 produtos (Score &gt;80)</li>
-                      <li><strong>3.</strong> Presell generation dos produtos VIÁVEIS</li>
+                      <li><strong>3.</strong> Gerar presells com Cookie Template (melhor CVR)</li>
+                      <li><strong>4.</strong> Deploy automático FTP + capturar URLs finais</li>
                     </ol>
                   </div>
                   
                   <div>
                     <h4 className="font-semibold text-sm mb-2 text-blue-700">🌆 ROTINA TARDE (14:00-17:00)</h4>
                     <ol className="text-xs space-y-1">
-                      <li><strong>1.</strong> Campaign building para presells criados</li>
-                      <li><strong>2.</strong> Upload CSVs para Google Ads Editor</li>
-                      <li><strong>3.</strong> Launch campanhas + configurar tracking</li>
+                      <li><strong>1.</strong> Campaign building com URLs dos presells hospedados</li>
+                      <li><strong>2.</strong> Upload 7 CSVs para Google Ads Editor</li>
+                      <li><strong>3.</strong> Launch campanhas + verificar tracking integrado</li>
+                      <li><strong>4.</strong> Monitor performance inicial dos presells</li>
                     </ol>
                   </div>
                 </div>
