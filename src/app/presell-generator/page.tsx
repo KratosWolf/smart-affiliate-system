@@ -985,7 +985,7 @@ export default function PresellGeneratorPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">{console.log('⚪ generatedPresell está null/vazio:', generatedPresell)}
+                  <div className="text-center py-8 text-gray-500">
                     <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                     <p>Selecione um template e preencha os dados</p>
                     <p className="text-xs mt-2">
