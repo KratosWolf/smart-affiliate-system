@@ -13,6 +13,9 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
+// Use full path to sshpass on macOS
+const SSHPASS_CMD = process.platform === 'darwin' ? '/opt/homebrew/bin/sshpass' : 'sshpass'
+
 export type DeploymentType = 'domain-with-slug' | 'custom-domain' | 'subdomain'
 
 export interface DeploymentConfig {
@@ -248,27 +251,27 @@ server {
     const domainClean = domain.replace(/[^a-zA-Z0-9.-]/g, '')
     const fullPath = `/var/www/airbolt-presells/${slug}`
     
-    const command = `sshpass -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "mkdir -p ${fullPath} && chmod -R 755 ${fullPath}"`
+    const command = `${SSHPASS_CMD} -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "mkdir -p ${fullPath} && chmod -R 755 ${fullPath}"`
     
     console.log(`📁 Creating domain/slug structure: ${fullPath}`)
     await execAsync(command)
   }
 
   private async createDirectoryStructure(remotePath: string): Promise<void> {
-    const command = `sshpass -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "mkdir -p ${remotePath} && chmod 755 ${remotePath}"`
+    const command = `${SSHPASS_CMD} -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "mkdir -p ${remotePath} && chmod 755 ${remotePath}"`
     
     console.log(`📁 Creating directory: ${remotePath}`)
     await execAsync(command)
   }
 
   private async uploadFiles(localPath: string, remotePath: string): Promise<void> {
-    const rsyncCommand = `sshpass -p '${this.vpsConfig.password}' rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" "${localPath}/" root@${this.vpsConfig.host}:"${remotePath}/"`
+    const rsyncCommand = `${SSHPASS_CMD} -p '${this.vpsConfig.password}' rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" "${localPath}/" root@${this.vpsConfig.host}:"${remotePath}/"`
     
     console.log(`📤 Uploading: ${localPath} → ${remotePath}`)
     await execAsync(rsyncCommand)
     
     // Set permissions
-    const chmodCommand = `sshpass -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "chmod -R 755 ${remotePath}"`
+    const chmodCommand = `${SSHPASS_CMD} -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "chmod -R 755 ${remotePath}"`
     await execAsync(chmodCommand)
   }
 
@@ -278,11 +281,11 @@ server {
     await fs.writeFile(configPath, nginxConfig)
     
     // Upload to VPS
-    const uploadCommand = `sshpass -p '${this.vpsConfig.password}' scp -o StrictHostKeyChecking=no ${configPath} root@${this.vpsConfig.host}:/etc/nginx/sites-available/${configName}`
+    const uploadCommand = `${SSHPASS_CMD} -p '${this.vpsConfig.password}' scp -o StrictHostKeyChecking=no ${configPath} root@${this.vpsConfig.host}:/etc/nginx/sites-available/${configName}`
     await execAsync(uploadCommand)
     
     // Enable site
-    const enableCommand = `sshpass -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "ln -sf /etc/nginx/sites-available/${configName} /etc/nginx/sites-enabled/ && nginx -t && systemctl reload nginx"`
+    const enableCommand = `${SSHPASS_CMD} -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "ln -sf /etc/nginx/sites-available/${configName} /etc/nginx/sites-enabled/ && nginx -t && systemctl reload nginx"`
     await execAsync(enableCommand)
     
     // Cleanup
@@ -293,7 +296,7 @@ server {
     try {
       console.log(`🔒 Setting up SSL for ${domain}...`)
       
-      const certbotCommand = `sshpass -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "certbot --nginx -d ${domain} -d www.${domain} --non-interactive --agree-tos --email admin@${domain} --redirect"`
+      const certbotCommand = `${SSHPASS_CMD} -p '${this.vpsConfig.password}' ssh -o StrictHostKeyChecking=no root@${this.vpsConfig.host} "certbot --nginx -d ${domain} -d www.${domain} --non-interactive --agree-tos --email admin@${domain} --redirect"`
       
       await execAsync(certbotCommand)
       console.log(`✅ SSL configured for ${domain}`)
