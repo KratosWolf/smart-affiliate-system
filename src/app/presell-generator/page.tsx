@@ -527,11 +527,7 @@ export default function PresellGeneratorPage() {
                     return (
                       <div
                         key={template.id}
-                        onClick={() => {
-                          console.log('🎯 Template clicked:', template.id)
-                          setSelectedTemplate(template.id)
-                        }}
-                        data-template-id={template.id}
+                        onClick={() => setSelectedTemplate(template.id)}
                         className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                           selectedTemplate === template.id
                             ? 'border-blue-500 bg-blue-50'
