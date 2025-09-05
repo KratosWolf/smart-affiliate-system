@@ -1,13 +1,14 @@
 'use client'
 
-import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 export default function SystemGuidePage() {
-  const [activeTab, setActiveTab] = useState<'guide' | 'playbook' | 'implementation'>('guide')
+  const searchParams = useSearchParams()
+  const activeTab = (searchParams.get('tab') as 'guide' | 'playbook' | 'implementation') || 'guide'
 
 
   return (
@@ -37,36 +38,39 @@ export default function SystemGuidePage() {
           </div>
           
           <div className="flex gap-4 justify-center mb-8">
-            <button 
-              onClick={() => setActiveTab('guide')}
-              className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
-                activeTab === 'guide' 
-                  ? 'bg-yellow-400 text-black' 
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-              }`}
-            >
-              📚 SYSTEM GUIDE
-            </button>
-            <button 
-              onClick={() => setActiveTab('playbook')}
-              className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
-                activeTab === 'playbook' 
-                  ? 'bg-yellow-400 text-black' 
-                  : 'bg-purple-600 text-white hover:bg-purple-700'
-              }`}
-            >
-              📋 PLAYBOOK
-            </button>
-            <button 
-              onClick={() => setActiveTab('implementation')}
-              className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
-                activeTab === 'implementation' 
-                  ? 'bg-yellow-400 text-black' 
-                  : 'bg-green-600 text-white hover:bg-green-700'
-              }`}
-            >
-              🚀 IMPLEMENTATION
-            </button>
+            <Link href="/dashboard-guide?tab=guide">
+              <button 
+                className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
+                  activeTab === 'guide' 
+                    ? 'bg-yellow-400 text-black' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+              >
+                📚 SYSTEM GUIDE
+              </button>
+            </Link>
+            <Link href="/dashboard-guide?tab=playbook">
+              <button 
+                className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
+                  activeTab === 'playbook' 
+                    ? 'bg-yellow-400 text-black' 
+                    : 'bg-purple-600 text-white hover:bg-purple-700'
+                }`}
+              >
+                📋 PLAYBOOK
+              </button>
+            </Link>
+            <Link href="/dashboard-guide?tab=implementation">
+              <button 
+                className={`px-8 py-4 rounded-lg text-xl font-black shadow-lg transition-colors ${
+                  activeTab === 'implementation' 
+                    ? 'bg-yellow-400 text-black' 
+                    : 'bg-green-600 text-white hover:bg-green-700'
+                }`}
+              >
+                🚀 IMPLEMENTATION
+              </button>
+            </Link>
           </div>
         </div>
 

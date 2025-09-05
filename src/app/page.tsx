@@ -369,10 +369,9 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {modules.map((module, index) => (
               module.href !== '#' ? (
-                <Card key={index} 
-                      className="hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => window.open(module.href, '_blank')}>
-                  <CardHeader>
+                <Link key={index} href={module.href}>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+                    <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
                         {module.icon}
@@ -396,8 +395,9 @@ export default function Home() {
                     <div className="text-sm font-medium text-blue-600">
                       {module.metrics}
                     </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               ) : (
                 <Card key={index} className="hover:shadow-lg transition-shadow opacity-50">
                   <CardHeader>
