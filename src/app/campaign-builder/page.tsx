@@ -71,7 +71,7 @@ interface GeneratedCampaign {
   }
 }
 
-export default function CampaignBuilderPage() {
+export default function CampaignBuilderClient() {
   const [campaignData, setCampaignData] = useState<CampaignData>({
     productName: '',
     finalUrl: '',
@@ -106,26 +106,30 @@ export default function CampaignBuilderPage() {
     const validatedProduct = localStorage.getItem('validatedProduct')
     const savedCampaignData = localStorage.getItem('campaignData')
     
-    if (validatedProduct && savedCampaignData) {
+    if (validatedProduct) {
       try {
-        const validation = JSON.parse(validatedProduct)
-        const campaign = JSON.parse(savedCampaignData)
+        const data = JSON.parse(validatedProduct)
+        setCampaignData(prev => ({
+          ...prev,
+          productName: data.productName || '',
+          targetCountry: data.targetCountry || 'US',
+          platform: data.platform || 'CLICKBANK',
+          commissionValue: data.commissionPercentage || 100
+        }))
         
-        // Preenche o formulário automaticamente com TODOS os dados necessários
-        setCampaignData({
-          productName: validation.productName || campaign.productName,
-          affiliateUrl: validation.affiliateLink || '',
-          presellUrl: '', // Pre-sell será separada
-          producerPageUrl: validation.productUrl || '', // URL da página do produtor
-          targetCountry: validation.targetCountry || validation.country || 'Brasil',
-          dailyBudget: 350, // Metodologia Luiz - fixo R$ 350
-          targetCpa: validation.cpaTargets?.target || campaign.unitPrice * 0.3 * 1.1 || 25,
-          platform: validation.platform || 'CLICKBANK',
-          commissionValue: validation.expectedCommission || 100,
-          currency: 'BRL',
-          useEdisTracking: true,
-          edisBaseUrl: 'www.test.com'
-        })
+        // Limpa dados após usar (evita conflito)
+        localStorage.removeItem('validatedProduct')
+        
+        // Mostra alerta de sucesso
+        console.log('✅ Dados da validação carregados automaticamente!')
+        
+      } catch (error) {
+        console.error('Erro ao carregar dados da validação:', error)
+      }
+    } else if (savedCampaignData) {
+      try {
+        const data = JSON.parse(savedCampaignData)
+        setCampaignData(data)
         
         // Limpa dados após usar (evita conflito)
         localStorage.removeItem('validatedProduct')
@@ -162,34 +166,43 @@ export default function CampaignBuilderPage() {
   }
 
   const generateCampaign = async () => {
-    if (!campaignData.productName || !campaignData.affiliateUrl) {
-      alert('Por favor, preencha pelo menos o nome do produto e URL de afiliado')
+    if (!campaignData.productName || !campaignData.finalUrl) {
+      alert('Por favor, preencha o nome do produto e a URL final da campanha')
       return
     }
 
     setIsGenerating(true)
     
     try {
+      // Adaptar dados para API (ainda espera affiliateUrl)
+      const apiData = {
+        ...campaignData,
+        affiliateUrl: campaignData.finalUrl, // Mapeia finalUrl para affiliateUrl
+        presellUrl: campaignData.finalUrl // Usa a mesma URL
+      }
+      
       const response = await fetch('/api/v1/campaign', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(campaignData)
+        body: JSON.stringify(apiData)
       })
 
-      if (response.ok) {
-        const result = await response.json()
-        if (result.success) {
-          setGeneratedCampaign(result.data.campaign)
+      const result = await response.json()
+      
+      if (response.ok && result.success) {
+        // Salva a campanha completa
+        setGeneratedCampaign(result.data?.campaign || result.data || result)
+        // Muda para aba de campanha
+        setTimeout(() => {
           setActiveTab('campaign')
-        } else {
-          throw new Error(result.error || 'Erro ao gerar campanha')
-        }
+          alert('✅ Campanha gerada! Use a aba "Exportar" para baixar os CSVs do Google Ads.')
+        }, 100)
       } else {
-        throw new Error('Erro ao gerar campanha')
+        alert(result.error || 'Erro ao gerar campanha. Tente novamente.')
       }
     } catch (error) {
-      console.error('Erro:', error)
-      alert('Erro ao gerar campanha. Tente novamente.')
+      console.error('Erro na geração:', error)
+      alert('Erro ao conectar com o servidor. Verifique sua conexão.')
     } finally {
       setIsGenerating(false)
     }
@@ -200,7 +213,7 @@ export default function CampaignBuilderPage() {
     alert('Copiado para a área de transferência!')
   }
 
-  const downloadCampaign = () => {
+  const downloadJSON = () => {
     if (!generatedCampaign) return
     
     const dataStr = JSON.stringify(generatedCampaign, null, 2)
@@ -316,7 +329,7 @@ export default function CampaignBuilderPage() {
                       type="number"
                       placeholder="100"
                       value={campaignData.commissionValue}
-                      onChange={(e) => handleInputChange('commissionValue', parseFloat(e.target.value))}
+                      onChange={(e) => handleInputChange('commissionValue', parseFloat(e.target.value) || 0)}
                     />
                   </div>
 
@@ -445,22 +458,13 @@ export default function CampaignBuilderPage() {
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <div className="flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <AlertCircle className="w-5 h-5 text-blue-600 mt-1" />
                     <div>
-                      <h4 className="font-semibold text-blue-900">🎯 Metodologia Luiz - Especificações</h4>
-                      <ul className="text-sm text-blue-800 mt-2 space-y-1">
-                        <li>• <strong>Nome:</strong> [Produto] - [País] - [Data] - [Plataforma] - [Comissão]</li>
-                        <li>• <strong>Orçamento:</strong> Mínimo R$ 350/dia (ou $70 para contas USD)</li>
-                        <li>• <strong>CPA Alvo:</strong> 40-50% da comissão (45% padrão)</li>
-                        <li>• <strong>Estratégia:</strong> Target CPA (confirmado)</li>
-                        <li>• <strong>Rede:</strong> Google Search (SEM Parceiros, SEM Display)</li>
-                        <li>• <strong>Público:</strong> Não restrito a novos clientes</li>
-                        <li>• <strong>Primeira Headline:</strong> {'{KeyWord:[PRODUTO] Online Store}'}</li>
-                        <li>• <strong>Exclusões:</strong> Brasil, Índia, Vietnã, Indonésia, China, Nigéria, Rússia, Venezuela, Colômbia</li>
-                        <li>• <strong>Keywords:</strong> Nome do produto em MAIÚSCULA e minúscula (Broad Match)</li>
-                        <li>• <strong>Headlines:</strong> Checadas com página do produtor</li>
-                        <li>• <strong>Extensões:</strong> Selecionadas com inteligência baseada no produto</li>
-                      </ul>
+                      <h4 className="font-semibold text-blue-800 mb-2">🎯 Metodologia Luiz</h4>
+                      <p className="text-sm text-blue-700">
+                        Sistema automatizado baseado nas melhores práticas de campaigns de afiliados de sucesso.
+                        Usa estrutura 1 campanha = 1 ad, orçamento fixo R$ 350, e otimização baseada em 3 dias de dados.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -468,18 +472,18 @@ export default function CampaignBuilderPage() {
                 <div className="flex justify-center">
                   <Button
                     onClick={generateCampaign}
-                    disabled={isGenerating || !campaignData.productName || !campaignData.affiliateUrl}
+                    disabled={isGenerating || !campaignData.productName || !campaignData.finalUrl}
                     className="px-8 py-3 text-lg"
                   >
                     {isGenerating ? (
                       <>
-                        <Zap className="w-5 h-5 mr-2 animate-spin" />
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
                         Gerando Campanha...
                       </>
                     ) : (
                       <>
-                        <BarChart3 className="w-5 h-5 mr-2" />
-                        Gerar Campanha Google Ads
+                        <Zap className="w-5 h-5 mr-2" />
+                        🚀 Gerar Campanha Google Ads
                       </>
                     )}
                   </Button>
@@ -488,163 +492,67 @@ export default function CampaignBuilderPage() {
             </Card>
           </TabsContent>
 
+          {/* Generated Campaign Tab */}
           <TabsContent value="campaign" className="mt-6">
             {generatedCampaign && (
               <div className="space-y-6">
-                {/* Campaign Info */}
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-5 h-5 text-green-600" />
-                        Campanha Gerada: {generatedCampaign.campaign.name}
-                      </div>
-                      <Badge className="bg-green-100 text-green-800">
-                        CPA: ${generatedCampaign.campaign.targetCpa}
-                      </Badge>
+                    <CardTitle className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      Campanha Gerada com Sucesso!
                     </CardTitle>
+                    <CardDescription>
+                      Revise os detalhes da sua campanha antes de exportar
+                    </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-500">Orçamento Diário:</span>
-                        <p className="font-semibold">{generatedCampaign.campaign.currency} {generatedCampaign.campaign.budget}</p>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Estratégia:</span>
-                        <p className="font-semibold">{generatedCampaign.campaign.biddingStrategy}</p>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Localização:</span>
-                        <p className="font-semibold">{generatedCampaign.campaign.locations[0]}</p>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Idioma:</span>
-                        <p className="font-semibold">{generatedCampaign.campaign.languages[0]}</p>
+                  <CardContent className="space-y-4">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <h3 className="font-semibold text-green-800 mb-2">📊 Informações da Campanha</h3>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="font-medium">Nome:</span> {generatedCampaign.campaign.name}
+                        </div>
+                        <div>
+                          <span className="font-medium">Orçamento:</span> ${generatedCampaign.campaign.budget}/dia
+                        </div>
+                        <div>
+                          <span className="font-medium">CPA Alvo:</span> ${generatedCampaign.campaign.targetCpa}
+                        </div>
+                        <div>
+                          <span className="font-medium">País:</span> {generatedCampaign.campaign.locations.join(', ')}
+                        </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
 
-                {/* Keywords */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>🔍 Palavras-chave ({generatedCampaign.keywords.length})</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {generatedCampaign.keywords.map((keyword, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div>
-                            <span className="font-medium">{keyword.keyword}</span>
-                            <Badge className="ml-2 text-xs">{keyword.matchType}</Badge>
+                    <div>
+                      <h3 className="font-semibold mb-2">🔑 Palavras-chave ({generatedCampaign.keywords.length})</h3>
+                      <div className="bg-gray-50 p-3 rounded-lg max-h-60 overflow-y-auto">
+                        {generatedCampaign.keywords.map((kw, i) => (
+                          <div key={i} className="text-sm py-1 border-b last:border-0">
+                            {kw.keyword} [{kw.matchType}] - CPC: ${kw.maxCpc}
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm text-gray-600">Max CPC: ${keyword.maxCpc.toFixed(2)}</span>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => copyToClipboard(keyword.keyword)}
-                            >
-                              <Copy className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Ads */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>📝 Anúncios Gerados ({generatedCampaign.ads.length})</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {generatedCampaign.ads.map((ad, adIndex) => (
-                      <div key={adIndex} className="space-y-4">
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                          <div className="mb-3">
-                            <h4 className="font-semibold text-green-700 mb-2">📱 Preview do Anúncio</h4>
-                            <div className="bg-white border border-gray-200 rounded p-3 max-w-md">
-                              <p className="text-blue-600 text-sm">{ad.displayUrl}</p>
-                              <div className="space-y-1 mt-1">
-                                {ad.headlines.map((headline, hIndex) => (
-                                  <p key={hIndex} className="font-medium text-gray-900">{headline}</p>
-                                ))}
-                              </div>
-                              <div className="space-y-1 mt-2">
-                                {ad.descriptions.map((desc, dIndex) => (
-                                  <p key={dIndex} className="text-sm text-gray-700">{desc}</p>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                            <div>
-                              <h5 className="font-medium mb-2">Headlines:</h5>
-                              <ul className="space-y-1">
-                                {ad.headlines.map((headline, hIndex) => (
-                                  <li key={hIndex} className="text-sm flex items-center justify-between">
-                                    <span>{headline}</span>
-                                    <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      onClick={() => copyToClipboard(headline)}
-                                    >
-                                      <Copy className="w-3 h-3" />
-                                    </Button>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                            
-                            <div>
-                              <h5 className="font-medium mb-2">Descriptions:</h5>
-                              <ul className="space-y-1">
-                                {ad.descriptions.map((desc, dIndex) => (
-                                  <li key={dIndex} className="text-sm flex items-center justify-between">
-                                    <span>{desc}</span>
-                                    <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      onClick={() => copyToClipboard(desc)}
-                                    >
-                                      <Copy className="w-3 h-3" />
-                                    </Button>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </CardContent>
-                </Card>
+                    </div>
 
-                {/* Extensions */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>⚡ Extensões ({generatedCampaign.extensions.length})</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {generatedCampaign.extensions.map((extension, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div>
-                            <Badge className="text-xs mb-1">{extension.type}</Badge>
-                            <p className="font-medium">{extension.text}</p>
-                          </div>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => copyToClipboard(extension.text)}
-                          >
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                        </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">📝 Anúncios ({generatedCampaign.ads.length})</h3>
+                      {generatedCampaign.ads.map((ad, i) => (
+                        <Card key={i} className="mb-3">
+                          <CardContent className="pt-4">
+                            <div className="space-y-2">
+                              <div>
+                                <span className="font-medium text-sm">Headlines:</span>
+                                <div className="text-sm text-gray-600">{ad.headlines.join(' | ')}</div>
+                              </div>
+                              <div>
+                                <span className="font-medium text-sm">Descriptions:</span>
+                                <div className="text-sm text-gray-600">{ad.descriptions.join(' | ')}</div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
                       ))}
                     </div>
                   </CardContent>
@@ -653,74 +561,55 @@ export default function CampaignBuilderPage() {
             )}
           </TabsContent>
 
+          {/* Export Tab */}
           <TabsContent value="export" className="mt-6">
-            {generatedCampaign && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>📤 Exportar Campanha</CardTitle>
-                  <CardDescription>
-                    Baixe ou copie os dados da campanha para importar no Google Ads
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Button 
-                      onClick={downloadCSVs} 
-                      className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
-                    >
-                      <Download className="w-4 h-4" />
-                      📥 CSVs para Google Ads
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Download className="w-5 h-5 text-blue-600" />
+                  Exportar Campanha
+                </CardTitle>
+                <CardDescription>
+                  Baixe os arquivos prontos para importar no Google Ads
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-blue-800 mb-3">📥 Download dos Arquivos</h3>
+                  <div className="space-y-3">
+                    <Button onClick={downloadCSVs} className="w-full" size="lg">
+                      <Download className="w-4 h-4 mr-2" />
+                      📊 Baixar CSVs para Google Ads
                     </Button>
-                    
-                    <Button onClick={downloadCampaign} className="flex items-center gap-2">
-                      <Download className="w-4 h-4" />
-                      Download JSON
-                    </Button>
-                    
-                    <Button
-                      variant="outline"
-                      onClick={() => copyToClipboard(JSON.stringify(generatedCampaign, null, 2))}
-                      className="flex items-center gap-2"
-                    >
-                      <Copy className="w-4 h-4" />
-                      Copiar JSON
+                    <Button onClick={downloadJSON} variant="outline" className="w-full">
+                      <Download className="w-4 h-4 mr-2" />
+                      💾 Baixar JSON (Backup)
                     </Button>
                   </div>
+                </div>
 
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-yellow-900 mb-2">📋 Próximos Passos</h4>
-                    <ol className="text-sm text-yellow-800 space-y-1">
-                      <li>1. Baixe o arquivo JSON da campanha</li>
-                      <li>2. Acesse o Google Ads Editor ou interface web</li>
-                      <li>3. Crie uma nova campanha usando os dados gerados</li>
-                      <li>4. Configure o tracking de conversões</li>
-                      <li>5. Inicie com orçamento baixo para testes</li>
-                      <li>6. Monitor performance e otimize com base nos resultados</li>
-                    </ol>
-                  </div>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-yellow-800 mb-2">📚 Guia de Importação</h3>
+                  <ol className="list-decimal list-inside space-y-1 text-sm text-yellow-700">
+                    <li>Acesse sua conta Google Ads</li>
+                    <li>Vá em Ferramentas → Upload em massa</li>
+                    <li>Faça upload dos CSVs baixados</li>
+                    <li>Revise e aplique as mudanças</li>
+                    <li>Ative a campanha e monitore por 3 dias</li>
+                  </ol>
+                </div>
 
-                  <div className="text-center">
-                    <Button
-                      onClick={() => {
-                        setActiveTab('setup')
-                        setGeneratedCampaign(null)
-                        setCampaignData({
-                          productName: '',
-                          affiliateUrl: '',
-                          presellUrl: '',
-                          targetCountry: 'US',
-                          dailyBudget: 50,
-                          targetCpa: 25
-                        })
-                      }}
-                      variant="outline"
-                    >
-                      🔄 Nova Campanha
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-green-800 mb-2">✅ Próximos Passos</h3>
+                  <ul className="space-y-1 text-sm text-green-700">
+                    <li>• Monitorar performance após 3 dias</li>
+                    <li>• Se ROI maior que 2.0, aumentar budget para R$ 1750</li>
+                    <li>• Se ROI menor que 1.5, pausar e testar outro produto</li>
+                    <li>• Usar tracking Edis para análise detalhada</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
