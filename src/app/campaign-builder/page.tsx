@@ -520,7 +520,7 @@ export default function CampaignBuilderClient() {
                           <span className="font-medium">CPA Alvo:</span> ${generatedCampaign.campaign.targetCpa}
                         </div>
                         <div>
-                          <span className="font-medium">País:</span> {generatedCampaign.campaign.locations.join(', ')}
+                          <span className="font-medium">País:</span> {generatedCampaign.campaign.locations ? generatedCampaign.campaign.locations.join(', ') : campaignData.targetCountry}
                         </div>
                       </div>
                     </div>
@@ -544,11 +544,11 @@ export default function CampaignBuilderClient() {
                             <div className="space-y-2">
                               <div>
                                 <span className="font-medium text-sm">Headlines:</span>
-                                <div className="text-sm text-gray-600">{ad.headlines.join(' | ')}</div>
+                                <div className="text-sm text-gray-600">{ad.headlines ? ad.headlines.join(' | ') : 'Sem headlines'}</div>
                               </div>
                               <div>
                                 <span className="font-medium text-sm">Descriptions:</span>
-                                <div className="text-sm text-gray-600">{ad.descriptions.join(' | ')}</div>
+                                <div className="text-sm text-gray-600">{ad.descriptions ? ad.descriptions.join(' | ') : 'Sem descrições'}</div>
                               </div>
                             </div>
                           </CardContent>
