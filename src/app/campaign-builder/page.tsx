@@ -1,35 +1,22 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
 import BackToDashboard from '@/components/BackToDashboard'
-import { 
-  BarChart3, 
-  Target, 
-  Globe, 
-  DollarSign, 
-  Zap, 
-  CheckCircle,
-  Copy,
-  Download,
-  ExternalLink,
-  TrendingUp,
-  AlertCircle
-} from 'lucide-react'
-import { COUNTRY_OPTIONS } from '@/lib/constants/countries'
-import { PLATFORM_OPTIONS } from '@/lib/constants/platforms'
+import { BarChart3 } from 'lucide-react'
+import { ErrorBoundary } from '@/lib/errors/ErrorBoundary'
+import { useCampaignBuilder } from '@/hooks/useCampaignBuilder'
+import { ErrorDisplay } from '@/components/shared/ErrorDisplay'
+import { CampaignForm } from '@/components/campaign/CampaignForm'
+import { CampaignDisplay } from '@/components/campaign/CampaignDisplay'
 
-interface CampaignData {
-  productName: string
-  finalUrl: string // URL única - presell OU página do produtor
-  targetCountry: string
-  dailyBudget: number // calculado automaticamente
-  targetCpa: number // calculado automaticamente
-  platform?: 'CLICKBANK' | 'BUYGOODS' | 'MAXWEB' | 'GURUMIDIA' | 'SMARTADV' | 'DIGISTORE24' | 'ADCOMBO' | 'DRCASH' | 'MIDIA_SCALERS' | 'SMASH_LOUD'
+import { CampaignParams } from '@/lib/types'
+
+interface CampaignData extends CampaignParams {
+  dailyBudget: number
+  targetCpa: number
+  platform?: string
   commissionValue?: number
   currency?: 'BRL' | 'USD'
   useEdisTracking?: boolean
@@ -71,22 +58,23 @@ interface GeneratedCampaign {
   }
 }
 
-export default function CampaignBuilderClient() {
+function CampaignBuilderContainer() {
+  const { campaign, isLoading, error, generateCampaign, clearError, safeAccess } = useCampaignBuilder()
   const [campaignData, setCampaignData] = useState<CampaignData>({
     productName: '',
-    finalUrl: '',
     targetCountry: 'US',
-    dailyBudget: 350, // será calculado automaticamente
-    targetCpa: 45, // será calculado automaticamente  
+    budgetRange: '350',
+    targetCpa: '45',
+    dailyBudget: 350,
     platform: 'SMARTADV',
     commissionValue: 100,
     currency: 'USD',
     useEdisTracking: true,
-    edisBaseUrl: 'www.test.com'
+    edisBaseUrl: 'www.test.com',
+    description: ''
   })
   
   const [generatedCampaign, setGeneratedCampaign] = useState<GeneratedCampaign | null>(null)
-  const [isGenerating, setIsGenerating] = useState(false)
   const [activeTab, setActiveTab] = useState('setup')
 
   // Cálculo automático do orçamento e CPA
@@ -165,46 +153,31 @@ export default function CampaignBuilderClient() {
     })
   }
 
-  const generateCampaign = async () => {
-    if (!campaignData.productName || !campaignData.finalUrl) {
-      alert('Por favor, preencha o nome do produto e a URL final da campanha')
+  const handleGenerateCampaign = async () => {
+    if (!campaignData.productName) {
+      alert('Por favor, preencha o nome do produto')
       return
     }
 
-    setIsGenerating(true)
+    clearError()
     
     try {
-      // Adaptar dados para API (ainda espera affiliateUrl)
-      const apiData = {
-        ...campaignData,
-        affiliateUrl: campaignData.finalUrl, // Mapeia finalUrl para affiliateUrl
-        presellUrl: campaignData.finalUrl // Usa a mesma URL
-      }
-      
-      const response = await fetch('/api/v1/campaign', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(apiData)
+      await generateCampaign({
+        productName: campaignData.productName,
+        targetCountry: campaignData.targetCountry,
+        budgetRange: campaignData.budgetRange,
+        targetCpa: campaignData.targetCpa.toString(),
+        description: campaignData.description
       })
-
-      const result = await response.json()
       
-      if (response.ok && result.success) {
-        // Salva a campanha completa
-        setGeneratedCampaign(result.data?.campaign || result.data || result)
-        // Muda para aba de campanha
-        setTimeout(() => {
-          setActiveTab('campaign')
-          alert('✅ Campanha gerada! Use a aba "Exportar" para baixar os CSVs do Google Ads.')
-        }, 100)
-      } else {
-        alert(result.error || 'Erro ao gerar campanha. Tente novamente.')
+      // Se sucesso, mover para aba de campanha
+      if (campaign) {
+        setActiveTab('campaign')
+        alert('✅ Campanha gerada! Use a aba "Exportar" para baixar os CSVs do Google Ads.')
       }
-    } catch (error) {
-      console.error('Erro na geração:', error)
-      alert('Erro ao conectar com o servidor. Verifique sua conexão.')
-    } finally {
-      setIsGenerating(false)
+    } catch (err) {
+      // Error já tratado pelo hook
+      console.error('Campaign generation failed:', err)
     }
   }
 
@@ -276,288 +249,32 @@ export default function CampaignBuilderClient() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="setup">🔧 Setup Campanha</TabsTrigger>
-            <TabsTrigger value="campaign" disabled={!generatedCampaign}>📊 Campanha Gerada</TabsTrigger>
-            <TabsTrigger value="export" disabled={!generatedCampaign}>📤 Exportar</TabsTrigger>
+            <TabsTrigger value="campaign" disabled={!campaign}>📊 Campanha Gerada</TabsTrigger>
+            <TabsTrigger value="export" disabled={!campaign}>📤 Exportar</TabsTrigger>
           </TabsList>
 
           <TabsContent value="setup" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Target className="w-5 h-5 text-orange-600" />
-                  Configuração da Campanha
-                </CardTitle>
-                <CardDescription>
-                  Configure os dados básicos para gerar uma campanha Google Ads otimizada
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nome do Produto *
-                    </label>
-                    <Input
-                      placeholder="Ex: GlicoShield, NerveCalm, Leptitox"
-                      value={campaignData.productName}
-                      onChange={(e) => handleInputChange('productName', e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Plataforma de Afiliado *
-                    </label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      value={campaignData.platform}
-                      onChange={(e) => handleInputChange('platform', e.target.value)}
-                    >
-                      {PLATFORM_OPTIONS.map(platform => (
-                        <option key={platform.value} value={platform.value}>
-                          {platform.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Valor da Comissão *
-                    </label>
-                    <Input
-                      type="number"
-                      placeholder="100"
-                      value={campaignData.commissionValue}
-                      onChange={(e) => handleInputChange('commissionValue', parseFloat(e.target.value) || 0)}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Moeda da Conta Google Ads
-                    </label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      value={campaignData.currency}
-                      onChange={(e) => handleInputChange('currency', e.target.value)}
-                    >
-                      <option value="BRL">🇧🇷 Real (BRL)</option>
-                      <option value="USD">🇺🇸 Dólar (USD)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      País de Targeting
-                    </label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      value={campaignData.targetCountry}
-                      onChange={(e) => handleInputChange('targetCountry', e.target.value)}
-                    >
-                      {COUNTRY_OPTIONS.map(country => (
-                        <option key={country.value} value={country.value}>
-                          {country.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      URL Final da Campanha * 
-                      <span className="text-blue-600 text-xs ml-2">(Para onde vai o tráfego do Google Ads)</span>
-                    </label>
-                    <Input
-                      placeholder="https://sua-presell.com OU https://hop.clickbank.net/your-link"
-                      value={campaignData.finalUrl}
-                      onChange={(e) => handleInputChange('finalUrl', e.target.value)}
-                      className="text-lg"
-                    />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 text-xs text-gray-500">
-                      <div className="bg-green-50 p-2 rounded border">
-                        <span className="font-medium text-green-700">✅ Se tem presell:</span>
-                        <br />Use a URL da sua presell (mais conversão)
-                      </div>
-                      <div className="bg-blue-50 p-2 rounded border">  
-                        <span className="font-medium text-blue-700">📄 Se não tem presell:</span>
-                        <br />Use o link de afiliado direto
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-800 mb-3">💰 Cálculos Automáticos (Regras do Sistema)</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-yellow-700 mb-2">
-                          Orçamento Diário Calculado
-                        </label>
-                        <Input
-                          type="number"
-                          value={campaignData.dailyBudget}
-                          disabled
-                          className="bg-yellow-100 text-yellow-800 font-semibold"
-                        />
-                        <p className="text-xs text-yellow-600 mt-1">
-                          📊 Fórmula: Máximo entre {campaignData.currency === 'BRL' ? 'R$350' : '$70'} (mínimo) ou 3.5x da comissão
-                        </p>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-yellow-700 mb-2">
-                          CPA Alvo Calculado (45% da comissão)
-                        </label>
-                        <Input
-                          type="number"
-                          value={campaignData.targetCpa}
-                          disabled
-                          className="bg-yellow-100 text-yellow-800 font-semibold"
-                        />
-                        <p className="text-xs text-yellow-600 mt-1">
-                          🎯 45% de {campaignData.currency === 'BRL' ? 'R$' : '$'}{campaignData.commissionValue || 100} = {campaignData.currency === 'BRL' ? 'R$' : '$'}{campaignData.targetCpa}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* EDIS Tracking Section */}
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <h4 className="font-semibold text-green-800">📊 Tracking Edis</h4>
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={campaignData.useEdisTracking}
-                        onChange={(e) => handleInputChange('useEdisTracking', e.target.checked)}
-                        className="rounded border-green-300 text-green-600 focus:ring-green-500"
-                      />
-                      <span className="text-sm text-green-700">Ativar tracking</span>
-                    </label>
-                  </div>
-                  
-                  {campaignData.useEdisTracking && (
-                    <div>
-                      <label className="block text-sm font-medium text-green-700 mb-2">
-                        URL Base do Edis
-                      </label>
-                      <Input
-                        placeholder="www.test.com"
-                        value={campaignData.edisBaseUrl}
-                        onChange={(e) => handleInputChange('edisBaseUrl', e.target.value)}
-                        className="border-green-300 focus:border-green-500 focus:ring-green-500"
-                      />
-                      <p className="text-xs text-green-600 mt-1">
-                        URLs finais terão: {campaignData.edisBaseUrl}?campaignid={'{campaignid}'}&keyword={'{keyword}'}&network={'{network}'}&extensionid={'{extensionid}'}&matchtype={'{matchtype}'}&adgroupid={'{adgroupid}'}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-blue-600 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-blue-800 mb-2">🎯 Metodologia Luiz</h4>
-                      <p className="text-sm text-blue-700">
-                        Sistema automatizado baseado nas melhores práticas de campaigns de afiliados de sucesso.
-                        Usa estrutura 1 campanha = 1 ad, orçamento fixo R$ 350, e otimização baseada em 3 dias de dados.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-center">
-                  <Button
-                    onClick={generateCampaign}
-                    disabled={isGenerating || !campaignData.productName || !campaignData.finalUrl}
-                    className="px-8 py-3 text-lg"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                        Gerando Campanha...
-                      </>
-                    ) : (
-                      <>
-                        <Zap className="w-5 h-5 mr-2" />
-                        🚀 Gerar Campanha Google Ads
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            {error && (
+              <ErrorDisplay 
+                error={error} 
+                onRetry={clearError}
+                className="mb-6" 
+              />
+            )}
+            <CampaignForm
+              campaignData={campaignData}
+              onInputChange={handleInputChange}
+              onSubmit={handleGenerateCampaign}
+              isLoading={isLoading}
+            />
           </TabsContent>
 
-          {/* Generated Campaign Tab */}
           <TabsContent value="campaign" className="mt-6">
-            {generatedCampaign && (
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-600" />
-                      Campanha Gerada com Sucesso!
-                    </CardTitle>
-                    <CardDescription>
-                      Revise os detalhes da sua campanha antes de exportar
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <h3 className="font-semibold text-green-800 mb-2">📊 Informações da Campanha</h3>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="font-medium">Nome:</span> {generatedCampaign.campaign.name}
-                        </div>
-                        <div>
-                          <span className="font-medium">Orçamento:</span> ${generatedCampaign.campaign.budget}/dia
-                        </div>
-                        <div>
-                          <span className="font-medium">CPA Alvo:</span> ${generatedCampaign.campaign.targetCpa}
-                        </div>
-                        <div>
-                          <span className="font-medium">País:</span> {generatedCampaign.campaign.locations ? generatedCampaign.campaign.locations.join(', ') : campaignData.targetCountry}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold mb-2">🔑 Palavras-chave ({generatedCampaign.keywords.length})</h3>
-                      <div className="bg-gray-50 p-3 rounded-lg max-h-60 overflow-y-auto">
-                        {generatedCampaign.keywords.map((kw, i) => (
-                          <div key={i} className="text-sm py-1 border-b last:border-0">
-                            {kw.keyword} [{kw.matchType}] - CPC: ${kw.maxCpc}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold mb-2">📝 Anúncios ({generatedCampaign.ads.length})</h3>
-                      {generatedCampaign.ads.map((ad, i) => (
-                        <Card key={i} className="mb-3">
-                          <CardContent className="pt-4">
-                            <div className="space-y-2">
-                              <div>
-                                <span className="font-medium text-sm">Headlines:</span>
-                                <div className="text-sm text-gray-600">{ad.headlines ? ad.headlines.join(' | ') : 'Sem headlines'}</div>
-                              </div>
-                              <div>
-                                <span className="font-medium text-sm">Descriptions:</span>
-                                <div className="text-sm text-gray-600">{ad.descriptions ? ad.descriptions.join(' | ') : 'Sem descrições'}</div>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+            {campaign && (
+              <CampaignDisplay 
+                campaign={campaign}
+                safeAccess={safeAccess}
+              />
             )}
           </TabsContent>
 
@@ -611,8 +328,31 @@ export default function CampaignBuilderClient() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* Export Tab */}
+          <TabsContent value="export" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Exportar Campanha</CardTitle>
+                <CardDescription>
+                  Funcionalidade de exportação será implementada
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Em desenvolvimento...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
+  )
+}
+
+export default function CampaignBuilderClient() {
+  return (
+    <ErrorBoundary>
+      <CampaignBuilderContainer />
+    </ErrorBoundary>
   )
 }
