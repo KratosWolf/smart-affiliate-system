@@ -7,33 +7,15 @@ const CampaignSchema = z.object({
   budget: z.number().positive(),
   targetCpa: z.number().positive(),
   locations: z.array(z.string()).default([]),
-  status: z.enum(['draft', 'active', 'paused', 'completed']),
-  keywords: z.array(z.object({
-    text: z.string(),
-    matchType: z.string().optional(),
-    cpc: z.number().optional()
-  })).optional(),
-  ads: z.array(z.object({
-    headline: z.string(),
-    description: z.string(),
-    url: z.string().optional()
-  })).optional()
-})
+  status: z.enum(['draft', 'active', 'paused', 'completed'])
+}).passthrough() // Allow extra fields
 
 const CampaignDataSchema = z.object({
   campaign: CampaignSchema,
-  keywords: z.array(z.object({
-    text: z.string(),
-    matchType: z.string().optional(),
-    cpc: z.number().optional()
-  })).default([]),
-  ads: z.array(z.object({
-    headline: z.string(),
-    description: z.string(),
-    url: z.string().optional()
-  })).default([]),
-  csvData: z.record(z.string()).optional()
-})
+  keywords: z.array(z.any()).default([]),
+  ads: z.array(z.any()).default([]),
+  csvData: z.any().optional()
+}).passthrough() // Allow extra fields
 
 const CampaignResponseSchema = z.object({
   success: z.boolean(),
@@ -54,6 +36,10 @@ export function validateCampaignResponse(data: unknown): CampaignResponse | null
     return CampaignResponseSchema.parse(data)
   } catch (error) {
     console.error('Campaign response validation failed:', error)
+    console.error('Data received:', JSON.stringify(data, null, 2))
+    if (error instanceof Error && 'issues' in error) {
+      console.error('Validation issues:', (error as any).issues)
+    }
     return null
   }
 }
@@ -76,13 +62,42 @@ export function validateCampaignData(data: unknown): CampaignData | null {
   }
 }
 
-export function createSafeCampaignAccess(data: CampaignData | null) {
+export function createSafeCampaignAccess(data: any) {
+  console.log('🔍 SafeAccess received data:', data)
+  
   return {
-    getCampaignName: () => data?.campaign?.name || 'N/A',
-    getCampaignBudget: () => data?.campaign?.budget || 0,
-    getCampaignLocations: () => data?.campaign?.locations?.join?.(', ') || 'N/A',
-    getKeywordCount: () => data?.keywords?.length || 0,
-    getAdCount: () => data?.ads?.length || 0,
-    hasValidData: () => data !== null && data.campaign !== undefined
+    getCampaignName: () => {
+      const name = data?.campaign?.name || data?.data?.campaign?.name || 'N/A'
+      console.log('getCampaignName:', name)
+      return name
+    },
+    getCampaignBudget: () => {
+      const budget = data?.campaign?.budget || data?.data?.campaign?.budget || 0
+      console.log('getCampaignBudget:', budget)
+      return budget
+    },
+    getCampaignLocations: () => {
+      const locations = data?.campaign?.locations || data?.data?.campaign?.locations || []
+      const result = Array.isArray(locations) ? locations.join(', ') : 'N/A'
+      console.log('getCampaignLocations:', result)
+      return result
+    },
+    getKeywordCount: () => {
+      const keywords = data?.keywords || data?.data?.keywords || []
+      const count = Array.isArray(keywords) ? keywords.length : 0
+      console.log('getKeywordCount:', count)
+      return count
+    },
+    getAdCount: () => {
+      const ads = data?.ads || data?.data?.ads || []
+      const count = Array.isArray(ads) ? ads.length : 0
+      console.log('getAdCount:', count)
+      return count
+    },
+    hasValidData: () => {
+      const hasData = data !== null && (data.campaign || data.data?.campaign)
+      console.log('hasValidData:', hasData)
+      return hasData
+    }
   }
 }

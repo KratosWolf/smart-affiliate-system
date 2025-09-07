@@ -5,6 +5,46 @@ import { luizCampaignGenerator } from '@/lib/campaigns/luiz-campaign-generator'
 import { csvGenerator } from '@/lib/campaigns/csv-generator'
 import { ProductValidationResponse } from '@/types'
 
+// Helper function to map Luiz format to validator format
+function mapLuizToValidatorFormat(luizCampaign: any, validationData: ProductValidationResponse) {
+  // Ensure csvData is properly formatted as Record<string, string>
+  const csvData: Record<string, string> = {};
+  if (luizCampaign.csvFiles && typeof luizCampaign.csvFiles === 'object') {
+    Object.keys(luizCampaign.csvFiles).forEach(key => {
+      csvData[key] = String(luizCampaign.csvFiles[key] || '');
+    });
+  }
+
+  return {
+    campaign: {
+      id: `campaign-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      name: String(luizCampaign.campaign?.name || 'Campaign'),
+      budget: Number(luizCampaign.campaign?.budget || 350),
+      targetCpa: Number(luizCampaign.campaign?.targetCpa || 45),
+      locations: [String(validationData.targetCountry || 'US')],
+      status: 'draft' as const
+    },
+    keywords: (luizCampaign.keywords || []).map((k: any) => ({
+      text: String(k.keyword || ''),
+      matchType: String(k.matchType || 'BROAD'),
+      cpc: Number(k.cpc || 0)
+    })),
+    ads: [
+      ...(luizCampaign.ads?.headlines || []).map((headline: string) => ({
+        headline: String(headline || ''),
+        description: String(luizCampaign.ads?.descriptions?.[0] || ''),
+        url: ''
+      })),
+      ...(luizCampaign.ads?.descriptions || []).map((description: string) => ({
+        headline: String(luizCampaign.ads?.headlines?.[0] || ''),
+        description: String(description || ''),
+        url: ''
+      }))
+    ],
+    csvData
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -18,23 +58,29 @@ export async function POST(request: NextRequest) {
       productName, 
       targetCountry, 
       dailyBudget, 
+      budgetRange, 
       targetCpa,
       // METODOLOGIA LUIZ - dados específicos
       useLuizMethod = true,
       campaignData = {}
     } = body
+
+    // Convert string values to numbers
+    const finalDailyBudget = dailyBudget || parseInt(budgetRange) || 350
+    const finalTargetCpa = typeof targetCpa === 'string' ? parseFloat(targetCpa) : targetCpa || 45
     
     let validationData: ProductValidationResponse
     
     if (validation) {
       // Use full validation data if provided
       validationData = validation
-    } else if (productName && targetCountry && affiliateUrl) {
+    } else if (productName && targetCountry) {
       // Create basic validation data for campaign builder
+      const defaultAffiliateUrl = affiliateUrl || 'https://go.hotmart.com/placeholder-url'
       validationData = {
         id: crypto.randomUUID(),
         productName,
-        productUrl: affiliateUrl,
+        productUrl: defaultAffiliateUrl,
         targetCountry,
         validationScore: 75,
         status: 'completed' as const,
@@ -49,7 +95,7 @@ export async function POST(request: NextRequest) {
         marketAnalysis: {
           searchVolume: 10000,
           competitionLevel: 'medium' as const,
-          avgCpc: targetCpa ? targetCpa * 0.4 : 2.5,
+          avgCpc: finalTargetCpa * 0.4,
           trend: 'stable' as const
         },
         viabilityMetrics: {
@@ -59,7 +105,7 @@ export async function POST(request: NextRequest) {
           scalability: 7
         },
         recommendations: {
-          suggestedBudget: dailyBudget || 50,
+          suggestedBudget: finalDailyBudget,
           estimatedRoi: 150,
           launchRecommendation: 'LAUNCH'
         },
@@ -69,7 +115,14 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json({
         success: false,
-        error: 'É necessário fornecer dados de validação OU (productName + targetCountry + affiliateUrl)'
+        error: 'É necessário fornecer dados de validação OU pelo menos (productName + targetCountry)',
+        debug: { 
+          hasValidation: !!validation,
+          hasProductName: !!productName,
+          hasTargetCountry: !!targetCountry,
+          hasAffiliateUrl: !!affiliateUrl,
+          receivedBody: JSON.stringify(body, null, 2)
+        }
       }, { status: 400 })
     }
 
@@ -82,9 +135,10 @@ export async function POST(request: NextRequest) {
       console.log('🎯 Usando METODOLOGIA LUIZ para gerar campanha...')
       
       // Gera campanha usando metodologia oficial do Luiz
+      const finalAffiliateUrl = affiliateUrl || 'https://go.hotmart.com/placeholder-url'
       const luizCampaign = luizCampaignGenerator.generateCampaign(
         validationData, 
-        affiliateUrl, 
+        finalAffiliateUrl, 
         campaignData
       )
 
@@ -98,11 +152,18 @@ export async function POST(request: NextRequest) {
           sitelinks: luizCampaign.extensions.sitelinks,
           callouts: luizCampaign.extensions.callouts,
           snippets: luizCampaign.extensions.snippets,
-          affiliateUrl
+          affiliateUrl: finalAffiliateUrl
         })
       }
 
-      campaign = luizCampaign
+      // Debug: Log dos dados antes do mapeamento
+      console.log('🔍 LUIZ CAMPAIGN ORIGINAL:', JSON.stringify(luizCampaign, null, 2))
+      
+      // Mapeia formato Luiz para formato esperado pelo validator
+      campaign = mapLuizToValidatorFormat(luizCampaign, validationData)
+      
+      // Debug: Log dos dados após mapeamento
+      console.log('🔍 CAMPAIGN APÓS MAPEAMENTO:', JSON.stringify(campaign, null, 2))
       summary = `# 🎯 CAMPANHA GERADA - METODOLOGIA LUIZ
 
 **Produto:** ${validationData.productName}
@@ -130,7 +191,8 @@ ${luizCampaign.keywords.map(k => `- ${k.keyword} (${k.case})`).join('\n')}
       console.log('🔧 Usando método tradicional...')
       
       // Método tradicional (backward compatibility)
-      campaign = await campaignBuilder.buildCampaign(validationData, affiliateUrl, presellUrl)
+      const finalAffiliateUrl = affiliateUrl || 'https://go.hotmart.com/placeholder-url'
+      campaign = await campaignBuilder.buildCampaign(validationData, finalAffiliateUrl, presellUrl)
       
       const validation_result = csvExporter.validateCampaign(campaign)
       if (!validation_result.valid) {
