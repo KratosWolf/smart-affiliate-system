@@ -1,0 +1,58 @@
+#!/bin/sh
+# 🛡️ PRE-COMMIT HOOK - BLOQUEIA COMMITS PROBLEMÁTICOS
+# Este hook roda ANTES de cada commit e BLOQUEIA se houver problemas
+
+echo "🛡️ Executando verificações obrigatórias..."
+echo "================================================="
+
+# 1. VERIFICAR CONSISTÊNCIA DO PROJETO
+echo "📋 Verificando consistência..."
+./scripts/check-consistency.sh
+if [ $? -ne 0 ]; then
+    echo "❌ COMMIT BLOQUEADO - Inconsistências encontradas!"
+    echo "   → Execute: ./scripts/check-consistency.sh"
+    echo "   → Corrija os problemas e tente novamente"
+    exit 1
+fi
+
+# 2. VERIFICAR TYPESCRIPT
+echo "🔍 Verificando TypeScript..."
+npm run type-check
+if [ $? -ne 0 ]; then
+    echo "❌ COMMIT BLOQUEADO - Erros de TypeScript!"
+    echo "   → Execute: npm run type-check"
+    echo "   → Corrija os erros e tente novamente"
+    exit 1
+fi
+
+# 3. VERIFICAR LINTING
+echo "🧹 Verificando ESLint..."
+npm run lint
+if [ $? -ne 0 ]; then
+    echo "❌ COMMIT BLOQUEADO - Erros de linting!"
+    echo "   → Execute: npm run lint:fix"
+    echo "   → Corrija os erros e tente novamente"
+    exit 1
+fi
+
+# 4. VERIFICAR BUILD
+echo "🏗️ Verificando build..."
+npm run build
+if [ $? -ne 0 ]; then
+    echo "❌ COMMIT BLOQUEADO - Falha no build!"
+    echo "   → Build quebrou - corrija os erros"
+    echo "   → Teste localmente com: npm run dev"
+    exit 1
+fi
+
+# 5. LIMPAR PROCESSOS NPM DUPLICADOS
+echo "🧹 Limpando processos NPM..."
+NPM_COUNT=$(ps aux | grep "npm run dev" | grep -v grep | wc -l)
+if [ $NPM_COUNT -gt 1 ]; then
+    echo "⚠️ Matando $NPM_COUNT processos npm duplicados..."
+    pkill -f "npm run dev"
+fi
+
+echo "================================================="
+echo "✅ TODAS VERIFICAÇÕES PASSARAM - COMMIT PERMITIDO"
+echo "🎉 Código limpo, build OK, consistência OK"

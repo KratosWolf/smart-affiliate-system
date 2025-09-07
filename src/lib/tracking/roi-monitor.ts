@@ -247,7 +247,7 @@ export class ROIMonitor {
   ): ROIAnalysis['scalingRecommendation'] {
     
     // Calcula confiança baseada em pontos de dados e tendência
-    let confidence = Math.min(95, (dataPoints / 3) * 70 + 
+    const confidence = Math.min(95, (dataPoints / 3) * 70 + 
       (trend.strength === 'strong' ? 15 : trend.strength === 'moderate' ? 10 : 5))
 
     let action: ROIAnalysis['scalingRecommendation']['action']

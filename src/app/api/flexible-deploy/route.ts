@@ -5,6 +5,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { flexibleDeploy } from '@/lib/deployment/vps-flexible-deploy'
+import fs from 'fs'
+import path from 'path'
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,8 +28,6 @@ export async function POST(request: NextRequest) {
         let finalLocalPath = localPath
         
         if (!localPath && presellFiles) {
-          const fs = require('fs')
-          const path = require('path')
           const tmpDir = `/tmp/${productName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Date.now()}`
           
           try {

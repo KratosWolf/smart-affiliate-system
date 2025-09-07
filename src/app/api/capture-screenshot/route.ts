@@ -82,19 +82,18 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('Error capturing screenshots:', error);
     console.log('🔧 Fallback: returning external URLs only');
     
     // Fallback - return external URLs
-    const cleanProductName = (request as any).productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'product';
-    const url = (request as any).url || 'https://example.com';
+    const cleanProductName = productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'product';
+    const fallbackUrl = url || 'https://example.com';
     
     return NextResponse.json({
       success: true,
       mode: 'fallback-external',
       urls: {
-        desktop: `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${url}`,
-        mobile: `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${url}`
+        desktop: `https://mini.s-shot.ru/1200x800/JPEG/1200/Z100/?${fallbackUrl}`,
+        mobile: `https://mini.s-shot.ru/375x812/JPEG/375/Z100/?${fallbackUrl}`
       }
     });
   }

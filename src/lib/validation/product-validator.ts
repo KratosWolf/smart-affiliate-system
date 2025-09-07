@@ -169,7 +169,7 @@ export class ProductValidator {
       const domain = url.hostname.toLowerCase();
       
       // Extract product name from URL path
-      let productName = this.extractProductNameFromUrl(productUrl);
+      const productName = this.extractProductNameFromUrl(productUrl);
       
       // Search for product information
       const searchResults = await googleSearchClient.searchProduct(productName, {

@@ -157,7 +157,7 @@ export class CharacterOptimizer {
    */
   private generateOptimizedContent(request: CharacterOptimizationRequest): string {
     const limits = CHARACTER_LIMITS[request.type];
-    let content = request.content.trim();
+    const content = request.content.trim();
     
     switch (request.type) {
       case 'headline':

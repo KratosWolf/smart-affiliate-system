@@ -79,7 +79,7 @@ export async function GET() {
     const staticDeploymentsPath = path.join(process.cwd(), 'static-deployments')
     const generatedPresellsPath = path.join(process.cwd(), 'generated-presells')
     
-    let deployments: any[] = []
+    const deployments: any[] = []
 
     try {
       const staticDirs = await fs.readdir(staticDeploymentsPath)
@@ -143,7 +143,7 @@ export async function DELETE(request: NextRequest) {
     const staticPath = path.join(process.cwd(), 'static-deployments', productName)
     const generatedPath = path.join(process.cwd(), 'generated-presells', productName)
     
-    let removedPaths: string[] = []
+    const removedPaths: string[] = []
 
     try {
       await fs.rm(staticPath, { recursive: true, force: true })
