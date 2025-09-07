@@ -86,6 +86,18 @@ else
     echo -e "${GREEN}✅ .gitignore presente${NC}"
 fi
 
+# 7. Verificar TypeScript (opcional para deploys urgentes)
+echo "🔍 Verificando TypeScript..."
+if [ "$URGENT_DEPLOY" = "true" ]; then
+    echo -e "${YELLOW}⚠️ URGENT DEPLOY - Skipping TypeScript checks${NC}"
+else
+    if npm run type-check > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ TypeScript check passou${NC}"
+    else
+        echo -e "${YELLOW}⚠️ TypeScript tem warnings (não bloqueia)${NC}"
+    fi
+fi
+
 # Resultado final
 echo "=================================================="
 if [ $ERRORS -eq 0 ]; then

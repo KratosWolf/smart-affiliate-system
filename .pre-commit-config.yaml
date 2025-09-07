@@ -1,0 +1,36 @@
+repos:
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint
+        entry: npx eslint --fix
+        language: node
+        files: \.(js|jsx|ts|tsx)$
+        stages: [commit]
+      
+      - id: prettier
+        name: prettier
+        entry: npx prettier --write
+        language: node
+        files: \.(js|jsx|ts|tsx|css|scss|md|json)$
+        stages: [commit]
+      
+      - id: typescript-check
+        name: TypeScript Check
+        entry: npm run type-check
+        language: node
+        pass_filenames: false
+        stages: [commit]
+      
+      - id: build-check
+        name: Build Check
+        entry: npm run build
+        language: node
+        pass_filenames: false
+        stages: [push]
+        
+      - id: prevent-main-commit
+        name: Prevent Direct Main Commits
+        entry: bash -c 'if [ "$PRE_COMMIT_FROM_REF" = "refs/heads/main" ]; then echo "❌ Direct commits to main branch are not allowed. Please use a feature branch."; exit 1; fi'
+        language: system
+        stages: [commit]
