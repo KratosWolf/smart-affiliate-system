@@ -1192,15 +1192,7 @@ window.addEventListener('load', function() {
     console.log('🔍 Producer URL:', originalPageUrl);
     console.log('🔍 Config object keys:', Object.keys(config));
     console.log('🔍 Options object:', options);
-    
-    // Enhanced language detection based on actual product URL
-    const isEnglish = originalPageUrl.includes('.com') || 
-                     originalPageUrl.toLowerCase().includes('english') ||
-                     originalPageUrl.includes('.us') ||
-                     originalPageUrl.includes('.uk');
-    
-    const isFrench = originalPageUrl.includes('.fr');
-    const isSpanish = originalPageUrl.includes('.es') || originalPageUrl.includes('spain');
+    console.log('🔍 Language analysis from options:', options?.languageAnalysis);
     
     // Cookie messages - exact user specifications
     const cookieMessages = {
@@ -1225,21 +1217,114 @@ window.addEventListener('load', function() {
         accept: "Aceptar",
         decline: "Rechazar"
       },
+      pl: {
+        title: "Zgoda na Cookies",
+        message: "Ta strona używa plików cookie, aby poprawić Twoje doświadczenie przeglądania i dostarczyć spersonalizowane treści.",
+        message2: "Klikając \"Akceptuj\", możesz odblokować jeszcze większe zniżki.",
+        accept: "Akceptuj",
+        decline: "Odrzuć"
+      },
       fr: {
         title: "Consentement aux Cookies",
         message: "Ce site utilise des cookies pour améliorer votre expérience de navigation et fournir un contenu personnalisé.",
         message2: "En cliquant sur \"Accepter\", vous pouvez débloquer des réductions encore plus importantes.",
         accept: "Accepter",
         decline: "Refuser"
+      },
+      de: {
+        title: "Cookie-Einstellungen",
+        message: "Diese Website verwendet Cookies, um Ihr Browsing-Erlebnis zu verbessern und personalisierte Inhalte bereitzustellen.",
+        message2: "Durch Klicken auf \"Akzeptieren\" können Sie noch größere Rabatte freischalten.",
+        accept: "Akzeptieren",
+        decline: "Ablehnen"
+      },
+      it: {
+        title: "Consenso ai Cookie",
+        message: "Questo sito utilizza cookie per migliorare la tua esperienza di navigazione e fornire contenuti personalizzati.",
+        message2: "Cliccando \"Accetta\", puoi sbloccare sconti ancora maggiori.",
+        accept: "Accetta",
+        decline: "Rifiuta"
+      },
+      sv: {
+        title: "Cookie-inställningar",
+        message: "Denna webbplats använder cookies för att förbättra din surfupplevelse och leverera personaliserat innehåll.",
+        message2: "Genom att klicka \"Acceptera\" kan du låsa upp ännu större rabatter.",
+        accept: "Acceptera",
+        decline: "Avvisa"
+      },
+      no: {
+        title: "Cookie-innstillinger",
+        message: "Denne nettsiden bruker informasjonskapsler for å forbedre din nettleseropplevelse og levere personalisert innhold.",
+        message2: "Ved å klikke \"Godta\" kan du låse opp enda større rabatter.",
+        accept: "Godta",
+        decline: "Avvis"
+      },
+      da: {
+        title: "Cookie-indstillinger",
+        message: "Denne hjemmeside bruger cookies for at forbedre din browseroplevelse og levere personaliseret indhold.",
+        message2: "Ved at klikke \"Accepter\" kan du låse op for endnu større rabatter.",
+        accept: "Accepter",
+        decline: "Afvis"
+      },
+      fi: {
+        title: "Evästeasetukset",
+        message: "Tämä verkkosivusto käyttää evästeitä parantaakseen selaamiskokemustasi ja tarjotakseen henkilökohtaista sisältöä.",
+        message2: "Klikkaamalla \"Hyväksy\" voit avata vielä suurempia alennuksia.",
+        accept: "Hyväksy",
+        decline: "Hylkää"
+      },
+      ro: {
+        title: "Setări Cookie",
+        message: "Acest site folosește cookie-uri pentru a îmbunătăți experiența de navigare și pentru a furniza conținut personalizat.",
+        message2: "Făcând clic pe \"Accept\", poți debloca reduceri și mai mari.",
+        accept: "Accept",
+        decline: "Refuz"
+      },
+      hu: {
+        title: "Cookie Beállítások",
+        message: "Ez a weboldal sütiket használ a böngészési élmény javítása és személyre szabott tartalom nyújtása érdekében.",
+        message2: "Az \"Elfogadom\" gombra kattintva még nagyobb kedvezményeket oldhat fel.",
+        accept: "Elfogadom",
+        decline: "Elutasítom"
+      },
+      tr: {
+        title: "Çerez Ayarları",
+        message: "Bu web sitesi, tarama deneyiminizi geliştirmek ve kişiselleştirilmiş içerik sunmak için çerezler kullanır.",
+        message2: "\"Kabul Et\"e tıklayarak daha büyük indirimler elde edebilirsiniz.",
+        accept: "Kabul Et",
+        decline: "Reddet"
       }
     };
 
-    let lang = 'pt'; // Default
-    if (isEnglish) lang = 'en';
-    else if (isFrench) lang = 'fr';
-    else if (isSpanish) lang = 'es';
+    // Priority 1: Use manually selected language (most reliable)
+    let lang = 'pt'; // Default to Portuguese
     
-    const messages = cookieMessages[lang];
+    if (options?.customization?.selectedLanguage) {
+      lang = options.customization.selectedLanguage;
+      console.log('🎯 Using manually selected language:', lang);
+    } else if (options?.languageAnalysis?.detected) {
+      lang = options.languageAnalysis.detected;
+      console.log('🌍 Using detected language from analysis:', lang, 'with confidence:', options.languageAnalysis.confidence);
+    } else {
+      // Fallback to URL-based detection
+      const isEnglish = originalPageUrl.includes('.com') || 
+                       originalPageUrl.toLowerCase().includes('english') ||
+                       originalPageUrl.includes('.us') ||
+                       originalPageUrl.includes('.uk');
+      
+      const isFrench = originalPageUrl.includes('.fr');
+      const isSpanish = originalPageUrl.includes('.es') || originalPageUrl.includes('spain');
+      const isPolish = originalPageUrl.includes('.pl') || originalPageUrl.toLowerCase().includes('polish');
+      
+      if (isPolish) lang = 'pl';
+      else if (isEnglish) lang = 'en';
+      else if (isFrench) lang = 'fr';
+      else if (isSpanish) lang = 'es';
+      
+      console.log('🔍 Fallback URL-based language detection:', lang);
+    }
+    
+    const messages = cookieMessages[lang] || cookieMessages['pt'];
     
     // FORCE use product name for screenshots - NEVER use URL-based naming
     const productName = config.productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'product';

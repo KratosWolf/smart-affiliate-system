@@ -5,10 +5,11 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { designMatcher } from '@/lib/design/design-matcher'
+import { ProducerPageAnalyzer } from '@/lib/presell/producer-page-analyzer'
 
 export async function POST(request: NextRequest) {
   try {
-    const { url, extractData } = await request.json()
+    const { url, extractData, includeLanguageAnalysis } = await request.json()
     
     if (!url) {
       return NextResponse.json({
@@ -22,6 +23,7 @@ export async function POST(request: NextRequest) {
     // Extract design tokens using existing design matcher
     let designTokens = null
     let productData = null
+    let languageAnalysis = null
 
     try {
       designTokens = await designMatcher.extractDesignTokens(url)
@@ -29,6 +31,37 @@ export async function POST(request: NextRequest) {
     } catch (error) {
       console.warn('⚠️ Failed to extract design tokens:', error)
       // Continue even if design extraction fails
+    }
+
+    // If language analysis is requested, use ProducerPageAnalyzer
+    if (includeLanguageAnalysis) {
+      try {
+        console.log('🌍 Analyzing page language...')
+        const analyzer = new ProducerPageAnalyzer()
+        const producerAnalysis = await analyzer.analyzeProducerPage(url)
+        
+        languageAnalysis = {
+          detected: producerAnalysis.language.detected,
+          confidence: producerAnalysis.language.confidence,
+          textSamples: producerAnalysis.language.textSamples
+        }
+        
+        console.log('✅ Language detected:', languageAnalysis.detected, 'with confidence:', languageAnalysis.confidence)
+      } catch (error) {
+        console.warn('⚠️ Failed to analyze language:', error)
+        // Fallback language detection from URL
+        const urlLower = url.toLowerCase()
+        let detectedLang = 'en'
+        if (urlLower.includes('.pl') || urlLower.includes('/pl/')) detectedLang = 'pl'
+        else if (urlLower.includes('.pt') || urlLower.includes('/pt/')) detectedLang = 'pt'
+        else if (urlLower.includes('.es') || urlLower.includes('/es/')) detectedLang = 'es'
+        
+        languageAnalysis = {
+          detected: detectedLang,
+          confidence: 0.5,
+          textSamples: []
+        }
+      }
     }
 
     // If extractData flag is set, also extract product information
@@ -60,6 +93,7 @@ export async function POST(request: NextRequest) {
         url,
         designTokens,
         productData,
+        languageAnalysis,
         extractedAt: new Date().toISOString()
       }
     })

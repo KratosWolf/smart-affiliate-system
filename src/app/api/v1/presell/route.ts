@@ -19,15 +19,44 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Extrair design tokens da página original se fornecida
+    // Extrair design tokens e análise de linguagem da página original se fornecida
     let designTokens = null
+    let languageAnalysis = null
+    
     if (originalPageUrl) {
       try {
-        console.log('Extracting design tokens from:', originalPageUrl)
-        designTokens = await designMatcher.extractDesignTokens(originalPageUrl)
-        console.log('Design tokens extracted:', designTokens)
+        console.log('Extracting design tokens and language from:', originalPageUrl)
+        
+        // Call design-extract API to get both design tokens and language analysis
+        const extractResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/v1/design-extract`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            url: originalPageUrl,
+            extractData: false,
+            includeLanguageAnalysis: true
+          })
+        })
+        
+        if (extractResponse.ok) {
+          const extractData = await extractResponse.json()
+          if (extractData.success) {
+            designTokens = extractData.data.designTokens
+            languageAnalysis = extractData.data.languageAnalysis
+            console.log('✅ Design tokens extracted:', designTokens)
+            console.log('✅ Language analysis extracted:', languageAnalysis)
+          }
+        }
+        
+        // Fallback: Try old design matcher if new API fails
+        if (!designTokens) {
+          designTokens = await designMatcher.extractDesignTokens(originalPageUrl)
+          console.log('Design tokens extracted via fallback:', designTokens)
+        }
       } catch (error) {
-        console.warn('Failed to extract design tokens:', error)
+        console.warn('Failed to extract design tokens and language:', error)
         // Use default design tokens in case of error
         designTokens = {
           colors: {
@@ -53,13 +82,15 @@ export async function POST(request: NextRequest) {
       console.log('🎯 generateFromValidation called with options:', { 
         designTokens, 
         customization,
-        templateType: templateType || 'default'
+        templateType: templateType || 'default',
+        languageAnalysis
       });
       
       presellData = generator.generateFromValidation(validation, affiliateUrl, { 
         designTokens, 
         customization,
-        templateType: templateType || 'default'
+        templateType: templateType || 'default',
+        languageAnalysis
       })
       
       console.log('✅ Presell generated successfully')

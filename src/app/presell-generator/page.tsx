@@ -10,6 +10,50 @@ import BackToDashboard from '@/components/BackToDashboard'
 import { Cookie, Star, UserCheck, HelpCircle, CreditCard, FileText, ArrowRight, Eye, Download, Upload } from 'lucide-react'
 import { COUNTRIES } from '@/lib/constants/countries'
 
+const COUNTRIES_WITH_LANGUAGES = [
+  // Português
+  { code: 'BR', name: 'Brasil', flag: '🇧🇷', language: 'pt' },
+  { code: 'PT', name: 'Portugal', flag: '🇵🇹', language: 'pt' },
+  
+  // English
+  { code: 'US', name: 'United States', flag: '🇺🇸', language: 'en' },
+  { code: 'CA', name: 'Canada', flag: '🇨🇦', language: 'en' },
+  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧', language: 'en' },
+  { code: 'AU', name: 'Australia', flag: '🇦🇺', language: 'en' },
+  
+  // Español
+  { code: 'ES', name: 'España', flag: '🇪🇸', language: 'es' },
+  { code: 'MX', name: 'México', flag: '🇲🇽', language: 'es' },
+  { code: 'AR', name: 'Argentina', flag: '🇦🇷', language: 'es' },
+  { code: 'CO', name: 'Colombia', flag: '🇨🇴', language: 'es' },
+  { code: 'CL', name: 'Chile', flag: '🇨🇱', language: 'es' },
+  { code: 'PE', name: 'Perú', flag: '🇵🇪', language: 'es' },
+  
+  // Polski  
+  { code: 'PL', name: 'Polska', flag: '🇵🇱', language: 'pl' },
+  
+  // Français
+  { code: 'FR', name: 'France', flag: '🇫🇷', language: 'fr' },
+  
+  // Deutsch
+  { code: 'DE', name: 'Deutschland', flag: '🇩🇪', language: 'de' },
+  { code: 'AT', name: 'Österreich', flag: '🇦🇹', language: 'de' },
+  
+  // Italiano
+  { code: 'IT', name: 'Italia', flag: '🇮🇹', language: 'it' },
+  
+  // Nordics
+  { code: 'SE', name: 'Sverige', flag: '🇸🇪', language: 'sv' },
+  { code: 'NO', name: 'Norge', flag: '🇳🇴', language: 'no' },
+  { code: 'DK', name: 'Danmark', flag: '🇩🇰', language: 'da' },
+  { code: 'FI', name: 'Suomi', flag: '🇫🇮', language: 'fi' },
+  
+  // Others
+  { code: 'RO', name: 'România', flag: '🇷🇴', language: 'ro' },
+  { code: 'HU', name: 'Magyarország', flag: '🇭🇺', language: 'hu' },
+  { code: 'TR', name: 'Türkiye', flag: '🇹🇷', language: 'tr' }
+]
+
 const templates = [
   {
     id: 'cookie',
@@ -59,10 +103,10 @@ export default function PresellGeneratorPage() {
     name: '',
     affiliateUrl: '',
     producerPageUrl: '', // Campo essencial para extração de dados
+    targetCountry: 'BR', // País alvo com mapeamento automático de idioma
     ratoEiraAdsCode: '', // Script ID da Ratoeira Ads
     clarityProjectId: '', // Project ID do MS Clarity
     useClarityTracking: false, // Flag para usar ou não MS Clarity
-    commission: '', // Opcional - pode não ser necessário
     domain: '', // Será sugerido automaticamente
     domainPurchased: false, // Flag para indicar se o domínio já foi comprado
     screenshots: null as any // Screenshots capturados automaticamente
@@ -74,7 +118,7 @@ export default function PresellGeneratorPage() {
   const [isExtractingData, setIsExtractingData] = useState(false)
   const [extractedData, setExtractedData] = useState<any>(null)
 
-  // Função para extrair dados da página do produtor
+  // Função para extrair dados da página do produtor com detecção de idioma
   const extractProducerData = async () => {
     if (!productData.producerPageUrl) {
       alert('Por favor, informe a URL da página do produtor')
@@ -84,18 +128,22 @@ export default function PresellGeneratorPage() {
     setIsExtractingData(true)
     
     try {
-      console.log('🔍 Extraindo dados da página do produtor...')
+      console.log('🔍 Extraindo dados da página do produtor com detecção de idioma...')
       
-      // Usar o design matcher para extrair informações da página
+      // Create producer analysis request
+      const analysisRequest = {
+        url: productData.producerPageUrl,
+        extractData: true,
+        includeLanguageAnalysis: true // Flag para incluir análise de idioma
+      }
+      
+      // Use design extraction API (will be updated to include language detection)
       const response = await fetch('/api/v1/design-extract', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          url: productData.producerPageUrl,
-          extractData: true // Flag para extrair dados do produto também
-        })
+        body: JSON.stringify(analysisRequest)
       })
 
       if (!response.ok) {
@@ -271,7 +319,9 @@ export default function PresellGeneratorPage() {
             },
             domain: productData.domain,
             domainPurchased: productData.domainPurchased,
-            originalPageUrl: productData.producerPageUrl // Passar URL do produtor
+            originalPageUrl: productData.producerPageUrl, // Passar URL do produtor
+            selectedCountry: productData.targetCountry, // País selecionado
+            selectedLanguage: COUNTRIES_WITH_LANGUAGES.find(c => c.code === productData.targetCountry)?.language || 'pt' // Idioma mapeado do país
           }
         })
       })
@@ -456,58 +506,6 @@ export default function PresellGeneratorPage() {
             Gere páginas de vendas otimizadas baseadas em critérios validados
           </p>
           
-          {/* Strategy Overview */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="bg-purple-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-                  <span className="text-2xl">🎯</span>
-                </div>
-                <h4 className="font-semibold text-gray-800 mb-2">CPA Targets</h4>
-                <p className="text-sm text-gray-600">40-45% comissão target<br/>ROI mínimo 150%</p>
-              </div>
-              <div className="text-center">
-                <div className="bg-blue-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-                  <span className="text-2xl">🌍</span>
-                </div>
-                <h4 className="font-semibold text-gray-800 mb-2">Multi-Geo</h4>
-                <p className="text-sm text-gray-600">9 países: US, FR, DE, GB<br/>CA, DK, SE, PL, RO</p>
-              </div>
-              <div className="text-center">
-                <div className="bg-green-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-                  <span className="text-2xl">⚡</span>
-                </div>
-                <h4 className="font-semibold text-gray-800 mb-2">Templates</h4>
-                <p className="text-sm text-gray-600">5 modelos otimizados<br/>Conv. 2-6%</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* PLAYBOOK Criteria Section */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">📋 Critérios PLAYBOOK</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold text-purple-800 mb-3">💰 Validação CPA</h4>
-              <ul className="text-sm space-y-1">
-                <li>🎯 <strong>Target:</strong> 40-45% da comissão</li>
-                <li>⚠️ <strong>Máximo:</strong> 80% da comissão</li>
-                <li>🛑 <strong>Stop Loss:</strong> 100% da comissão</li>
-                <li>💵 <strong>Budget Teste:</strong> R$350 ou 5x comissão</li>
-                <li>📈 <strong>ROI Mínimo:</strong> 150% para prosseguir</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-blue-800 mb-3">🏆 Produtos Exclusivos</h4>
-              <ul className="text-sm space-y-1">
-                <li>💊 <strong>Glucosense:</strong> 45% commission (95% pop.)</li>
-                <li>🧠 <strong>NerveCalm:</strong> 40% commission (88% pop.)</li>
-                <li>🩺 <strong>GlicoShield:</strong> 50% commission (92% pop.)</li>
-                <li>💧 <strong>GutDrops:</strong> 35% commission (85% pop.)</li>
-              </ul>
-            </div>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -628,32 +626,40 @@ export default function PresellGeneratorPage() {
                       </div>
                     )}
                   </div>
+                  
+                  {/* Campo de seleção de país com idioma automático */}
+                  <div>
+                    <Label className="text-base font-semibold">🌍 País Alvo *</Label>
+                    <select 
+                      value={productData.targetCountry}
+                      onChange={(e) => setProductData({...productData, targetCountry: e.target.value})}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      {COUNTRIES_WITH_LANGUAGES.map(country => (
+                        <option key={country.code} value={country.code}>
+                          {country.flag} {country.name} ({country.language.toUpperCase()})
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Selecione o país alvo. O idioma do cookie será definido automaticamente.
+                    </p>
+                  </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label>Nome do Produto *</Label>
-                      <Input
-                        placeholder="Ex: Glucosense, NerveCalm, GlicoShield"
-                        value={productData.name}
-                        onChange={(e) => {
-                          const newName = e.target.value
-                          setProductData(prev => ({
-                            ...prev, 
-                            name: newName,
-                            domain: newName ? generateSuggestedDomain(newName) : ''
-                          }))
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <Label>Comissão ($) <span className="text-gray-400">(opcional)</span></Label>
-                      <Input
-                        type="number"
-                        placeholder="Ex: 50"
-                        value={productData.commission}
-                        onChange={(e) => setProductData({...productData, commission: e.target.value})}
-                      />
-                    </div>
+                  <div>
+                    <Label>Nome do Produto *</Label>
+                    <Input
+                      placeholder="Ex: Glucosense, NerveCalm, GlicoShield"
+                      value={productData.name}
+                      onChange={(e) => {
+                        const newName = e.target.value
+                        setProductData(prev => ({
+                          ...prev, 
+                          name: newName,
+                          domain: newName ? generateSuggestedDomain(newName) : ''
+                        }))
+                      }}
+                    />
                   </div>
                 </div>
                 
