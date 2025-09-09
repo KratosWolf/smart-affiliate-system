@@ -10,6 +10,32 @@ import BackToDashboard from '@/components/BackToDashboard'
 import { Cookie, Star, UserCheck, HelpCircle, CreditCard, FileText, ArrowRight, Eye, Download, Upload } from 'lucide-react'
 import { COUNTRIES } from '@/lib/constants/countries'
 
+const COUNTRIES_WITH_LANGUAGES = [
+  { code: 'BR', name: 'Brasil', flag: '🇧🇷', language: 'pt' },
+  { code: 'US', name: 'Estados Unidos', flag: '🇺🇸', language: 'en' },
+  { code: 'CA', name: 'Canadá', flag: '🇨🇦', language: 'en' },
+  { code: 'GB', name: 'Reino Unido', flag: '🇬🇧', language: 'en' },
+  { code: 'AU', name: 'Austrália', flag: '🇦🇺', language: 'en' },
+  { code: 'ES', name: 'Espanha', flag: '🇪🇸', language: 'es' },
+  { code: 'MX', name: 'México', flag: '🇲🇽', language: 'es' },
+  { code: 'AR', name: 'Argentina', flag: '🇦🇷', language: 'es' },
+  { code: 'CO', name: 'Colômbia', flag: '🇨🇴', language: 'es' },
+  { code: 'CL', name: 'Chile', flag: '🇨🇱', language: 'es' },
+  { code: 'PE', name: 'Peru', flag: '🇵🇪', language: 'es' },
+  { code: 'PL', name: 'Polônia', flag: '🇵🇱', language: 'pl' },
+  { code: 'FR', name: 'França', flag: '🇫🇷', language: 'fr' },
+  { code: 'DE', name: 'Alemanha', flag: '🇩🇪', language: 'de' },
+  { code: 'AT', name: 'Áustria', flag: '🇦🇹', language: 'de' },
+  { code: 'IT', name: 'Itália', flag: '🇮🇹', language: 'it' },
+  { code: 'SE', name: 'Suécia', flag: '🇸🇪', language: 'sv' },
+  { code: 'NO', name: 'Noruega', flag: '🇳🇴', language: 'no' },
+  { code: 'DK', name: 'Dinamarca', flag: '🇩🇰', language: 'da' },
+  { code: 'FI', name: 'Finlândia', flag: '🇫🇮', language: 'fi' },
+  { code: 'RO', name: 'Romênia', flag: '🇷🇴', language: 'ro' },
+  { code: 'HU', name: 'Hungria', flag: '🇭🇺', language: 'hu' },
+  { code: 'TR', name: 'Turquia', flag: '🇹🇷', language: 'tr' }
+]
+
 const templates = [
   {
     id: 'cookie',
@@ -62,11 +88,11 @@ export default function PresellGeneratorPage() {
     ratoEiraAdsCode: '', // Script ID da Ratoeira Ads
     clarityProjectId: '', // Project ID do MS Clarity
     useClarityTracking: false, // Flag para usar ou não MS Clarity
-    commission: '', // Opcional - pode não ser necessário
     domain: '', // Será sugerido automaticamente
     domainPurchased: false, // Flag para indicar se o domínio já foi comprado
     screenshots: null as any // Screenshots capturados automaticamente
   })
+  const [selectedCountry, setSelectedCountry] = useState('BR') // País padrão: Brasil
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedPresell, setGeneratedPresell] = useState<any>(null)
   const [isDeploying, setIsDeploying] = useState(false)
@@ -227,10 +253,10 @@ export default function PresellGeneratorPage() {
         productName: productData.name,
         validationScore: 85,
         viable: true,
-        targetCountry: 'Brasil',
+        targetCountry: COUNTRIES_WITH_LANGUAGES.find(c => c.code === selectedCountry)?.name || 'Brasil',
         productData: {
           title: productData.name,
-          price: useExtractedData ? extractedData.productData.price : (parseInt(productData.commission || '97') || 97),
+          price: useExtractedData ? extractedData.productData.price : 97,
           currency: useExtractedData ? extractedData.productData.currency : 'BRL',
           description: useExtractedData ? extractedData.productData.description : `Produto inovador ${productData.name} com excelentes resultados comprovados`,
           benefits: useExtractedData ? extractedData.productData.benefits : [`Benefício premium do ${productData.name}`, `Resultado garantido em 30 dias`, `Aprovado por especialistas`],
@@ -646,13 +672,21 @@ export default function PresellGeneratorPage() {
                       />
                     </div>
                     <div>
-                      <Label>Comissão ($) <span className="text-gray-400">(opcional)</span></Label>
-                      <Input
-                        type="number"
-                        placeholder="Ex: 50"
-                        value={productData.commission}
-                        onChange={(e) => setProductData({...productData, commission: e.target.value})}
-                      />
+                      <Label>🌍 País/Mercado *</Label>
+                      <select
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white"
+                        value={selectedCountry}
+                        onChange={(e) => setSelectedCountry(e.target.value)}
+                      >
+                        {COUNTRIES_WITH_LANGUAGES.map((country) => (
+                          <option key={country.code} value={country.code}>
+                            {country.flag} {country.name}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Idioma: {COUNTRIES_WITH_LANGUAGES.find(c => c.code === selectedCountry)?.language.toUpperCase()}
+                      </p>
                     </div>
                   </div>
                 </div>
