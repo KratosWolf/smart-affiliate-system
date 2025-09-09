@@ -1,9 +1,10 @@
 /**
- * METODOLOGIA LUIZ v2 - ATUALIZADA
- * Estrutura exata da campanha com ajustes solicitados
+ * METODOLOGIA LUIZ v2 - ATUALIZADA COM FASE 1
+ * Headlines inteligentes sem APIs externas
  */
 
 import { ProductValidationResponse } from '@/types';
+import { smartFixedHeadlines, SmartHeadlineConfig } from './smart-headlines';
 
 export interface LuizCampaignConfigV2 {
   // Dados essenciais
@@ -66,31 +67,22 @@ export class LuizCampaignGeneratorV2 {
   }
 
   /**
-   * Analisa página do produtor para adaptar headlines
+   * FASE 1: Gera conteúdo inteligente sem APIs externas
    */
-  private async analyzeProducerPage(url: string): Promise<{
-    guarantee: string;
-    discount: string;
-    benefits: string[];
-    urgency: string[];
-  }> {
-    // Aqui seria feita a análise real da página
-    // Por enquanto, retorna valores padrão inteligentes
-    return {
-      guarantee: '30 dias',
-      discount: '50%',
-      benefits: [
-        'Entrega Imediata',
-        '100% Natural',
-        'Aprovado pela ANVISA',
-        'Frete Grátis'
-      ],
-      urgency: [
-        'Últimas Unidades',
-        'Oferta Por Tempo Limitado',
-        'Promoção Hoje'
-      ]
+  private generateSmartContent(config: LuizCampaignConfigV2) {
+    const smartConfig: SmartHeadlineConfig = {
+      productName: config.productName,
+      country: config.country,
+      currency: config.currency,
+      discountPercentage: config.discountPercentage,
+      discountAmount: config.discountAmount,
+      guaranteePeriod: config.guaranteePeriod,
+      deliveryType: config.deliveryType,
+      platform: config.platform,
+      commissionValue: config.commissionValue
     };
+    
+    return smartFixedHeadlines.generateSmartHeadlines(smartConfig);
   }
 
   /**
