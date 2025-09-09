@@ -275,10 +275,10 @@ export default function PresellGeneratorPage() {
         productName: productData.name,
         validationScore: 85,
         viable: true,
-        targetCountry: 'Brasil',
+        targetCountry: COUNTRIES_WITH_LANGUAGES.find(c => c.code === productData.targetCountry)?.name || 'Brasil',
         productData: {
           title: productData.name,
-          price: useExtractedData ? extractedData.productData.price : (parseInt(productData.commission || '97') || 97),
+          price: useExtractedData ? extractedData.productData.price : 97,
           currency: useExtractedData ? extractedData.productData.currency : 'BRL',
           description: useExtractedData ? extractedData.productData.description : `Produto inovador ${productData.name} com excelentes resultados comprovados`,
           benefits: useExtractedData ? extractedData.productData.benefits : [`Benefício premium do ${productData.name}`, `Resultado garantido em 30 dias`, `Aprovado por especialistas`],
