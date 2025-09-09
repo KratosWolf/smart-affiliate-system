@@ -795,6 +795,11 @@ export interface DesignTokens {
 // ================================
 
 export interface ProducerAnalysis {
+  language: {
+    detected: string; // e.g., 'pl', 'en', 'pt', 'es'
+    confidence: number; // 0-1
+    textSamples: string[];
+  };
   designSystem: DesignTokens;
   content: {
     headline: string;
@@ -807,7 +812,18 @@ export interface ProducerAnalysis {
       rating: number;
     }>;
     price: string;
+    currency: string;
+    originalPrice?: string;
+    discount?: {
+      amount: string;
+      percentage: number;
+    };
     guarantee: string;
+    shipping: {
+      type: 'free' | 'paid' | 'express' | 'cod';
+      cost?: string;
+      timeframe?: string;
+    };
     urgency: string[];
     ctaButtons: string[];
   };
