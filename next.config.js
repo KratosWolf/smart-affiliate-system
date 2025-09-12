@@ -4,9 +4,18 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true, // Temporarily ignore for production build
+    ignoreBuildErrors: true,
   },
-  // typedRoutes: true, // Disabled for production build
+  // Performance optimizations
+  poweredByHeader: false,
+  reactStrictMode: false, // Disable for performance
+  swcMinify: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-slot'],
+  },
+  // Reduce build overhead
+  generateEtags: false,
+  compress: true,
 };
 
 module.exports = nextConfig;
