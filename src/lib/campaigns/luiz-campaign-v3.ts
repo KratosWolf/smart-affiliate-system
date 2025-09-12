@@ -9,7 +9,7 @@ import { smartFixedHeadlines, SmartHeadlineConfig } from './smart-headlines';
 export interface LuizCampaignConfigV3 {
   // Dados essenciais
   productName: string;
-  platform: 'CLICKBANK' | 'MONETIZZE' | 'HOTMART' | 'EDUZZ' | 'OUTROS';
+  platform: 'CLICKBANK' | 'MONETIZZE' | 'HOTMART' | 'EDUZZ' | 'BUYGOODS' | 'MAXWEB' | 'GURUMIDIA' | 'SMARTADV' | 'DIGISTORE24' | 'ADCOMBO' | 'DRCASH' | 'MIDIA_SCALERS' | 'SMASH_LOUD' | 'OUTROS';
   commissionValue: number;
   country: string;
   currency: 'BRL' | 'USD';
@@ -24,6 +24,7 @@ export interface LuizCampaignConfigV3 {
   // Dados contextuais opcionais (FASE 1)
   discountPercentage?: number;
   discountAmount?: number;
+  productPrice?: number;
   guaranteePeriod?: string;
   deliveryType?: string;
 }

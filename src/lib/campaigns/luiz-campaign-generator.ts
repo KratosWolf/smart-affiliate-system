@@ -1,10 +1,10 @@
 /**
  * METODOLOGIA OFICIAL LUIZ - GERADOR DE CAMPANHAS
- * Implementação exata baseada nos prints e estrutura testada
- * NUNCA ALTERAR sem aprovação do Luiz
+ * ATUALIZADO PARA FASE 1: Smart headlines contextuais
  */
 
 import { ProductValidationResponse } from '@/types';
+import { luizCampaignV3, LuizCampaignConfigV3 } from './luiz-campaign-v3';
 import { countryDetector } from '../localization/country-detector';
 
 export interface LuizCampaignData {
@@ -250,65 +250,121 @@ export class LuizCampaignGenerator {
   /**
    * GERA CAMPANHA COMPLETA USANDO METODOLOGIA LUIZ
    */
-  generateCampaign(
+  async generateCampaign(
     validation: ProductValidationResponse,
     affiliateUrl: string,
     campaignData: Partial<LuizCampaignData> = {}
-  ): LuizCampaignOutput {
+  ): Promise<LuizCampaignOutput> {
     
-    // Extrai dados da validação + dados customizados
-    const data: LuizCampaignData = {
+    console.log('🚀 USANDO FASE 1 - Smart Headlines Contextuais!');
+    
+    // Mapeia dados antigos para o formato da Fase 1
+    const phase1Config: LuizCampaignConfigV3 = {
       productName: campaignData.productName || validation.productName,
-      guarantee: campaignData.guarantee || 90,
-      unitPrice: campaignData.unitPrice || validation.productData.price,
-      discountPercent: campaignData.discountPercent || 50,
-      valueDiscount: campaignData.valueDiscount || Math.round(validation.productData.price * 0.5),
+      platform: (campaignData.platform || validation.platform || 'CLICKBANK') as any,
+      commissionValue: campaignData.commissionValue || campaignData.unitPrice || 45,
       country: campaignData.country || validation.targetCountry,
-      language: campaignData.language || 'Portuguese',
-      currency: campaignData.currency || validation.productData.currency,
-      currencyExample: campaignData.currencyExample || `${validation.productData.currency} 1,000.00`
+      currency: (validation.productData.currency === 'BRL' ? 'BRL' : 'USD') as 'BRL' | 'USD',
+      producerPageUrl: validation.productUrl || 'https://example.com',
+      affiliateUrl: affiliateUrl,
+      // Dados contextuais opcionais da Fase 1
+      discountPercentage: campaignData.discountPercentage || campaignData.discountPercent,
+      discountAmount: campaignData.discountAmount || campaignData.valueDiscount,
+      productPrice: campaignData.productPrice,
+      guaranteePeriod: campaignData.guaranteePeriod || (
+        typeof campaignData.guarantee === 'string' ? campaignData.guarantee :
+        campaignData.guarantee && campaignData.guarantee !== undefined ? `${campaignData.guarantee} dias` : undefined
+      ),
+      deliveryType: campaignData.deliveryType
     };
-
-    // Detecta configurações do país
-    const countrySettings = countryDetector.detectByCountry(data.country);
-
-    // Gera componentes da campanha
-    const keywords = this.generateKeywords(data);
-    const headlines = this.generateHeadlines(data);
-    const descriptions = this.generateDescriptions(data);
-    const sitelinks = this.generateSitelinks(data);
-    const callouts = this.generateCallouts(data);
-    const snippets = this.generateSnippets(data);
-
-    // Configuração da campanha (METODOLOGIA LUIZ)
-    const campaign = {
-      name: `${data.productName} - ${this.getCountryCode(data.country)} - Teste CPA`,
-      budget: 350, // R$ 350,00 FIXO
-      targetCpa: Math.round(data.unitPrice * 0.3 * 1.1), // 110% da margem (30% comissão)
-      currency: data.currency,
-      type: 'SEARCH' as const,
-      structure: '1_CAMPAIGN_1_AD' as const
-    };
-
-    // Gera CSVs para Google Ads Editor
-    const csvFiles = this.generateCSVFiles({
-      campaign,
-      keywords,
-      headlines,
-      descriptions,
-      sitelinks,
-      callouts,
-      snippets,
-      affiliateUrl
+    
+    console.log('🎯 Config Fase 1:', {
+      productName: phase1Config.productName,
+      country: phase1Config.country,
+      currency: phase1Config.currency,
+      discountPercentage: phase1Config.discountPercentage,
+      discountAmount: phase1Config.discountAmount,
+      productPrice: phase1Config.productPrice,
+      guaranteePeriod: phase1Config.guaranteePeriod,
+      deliveryType: phase1Config.deliveryType
     });
-
-    return {
-      campaign,
-      keywords,
-      ads: { headlines, descriptions },
-      extensions: { sitelinks, callouts, snippets },
-      csvFiles
+    
+    // Usa o gerador da Fase 1
+    const phase1Result = await luizCampaignV3.generateCampaign(phase1Config);
+    
+    // Converte resultado para formato esperado pelo sistema atual
+    const convertedResult: LuizCampaignOutput = {
+      campaign: {
+        name: phase1Result.campaign.name,
+        budget: phase1Result.campaign.budget,
+        targetCpa: phase1Result.campaign.targetCPA,
+        currency: phase1Result.campaign.currency,
+        type: 'SEARCH' as const,
+        structure: '1_CAMPAIGN_1_AD' as const
+      },
+      keywords: phase1Result.keywords.map(k => ({
+        keyword: k.keyword,
+        matchType: 'BROAD' as const,
+        case: k.keyword === k.keyword.toLowerCase() ? 'lowercase' as const : 'uppercase' as const
+      })),
+      ads: {
+        headlines: phase1Result.ads[0]?.headlines || [],
+        descriptions: phase1Result.ads[0]?.descriptions || []
+      },
+      extensions: {
+        sitelinks: phase1Result.extensions.sitelinks.map(s => ({
+          text: s.text,
+          category: 'GENERAL'
+        })),
+        callouts: phase1Result.extensions.callouts.map(c => ({
+          text: c,
+          category: 'GENERAL'
+        })),
+        snippets: phase1Result.extensions.snippets.map(s => ({
+          text: s.values.join(', '),
+          category: s.header.toUpperCase()
+        }))
+      },
+      csvFiles: this.generateCSVFiles({
+        campaign: {
+          name: phase1Result.campaign.name,
+          budget: phase1Result.campaign.budget,
+          targetCpa: phase1Result.campaign.targetCPA,
+          currency: phase1Result.campaign.currency,
+          type: 'SEARCH' as const,
+          structure: '1_CAMPAIGN_1_AD' as const
+        },
+        keywords: phase1Result.keywords.map(k => ({
+          keyword: k.keyword,
+          matchType: 'BROAD' as const,
+          case: k.keyword === k.keyword.toLowerCase() ? 'lowercase' as const : 'uppercase' as const
+        })),
+        headlines: phase1Result.ads[0]?.headlines || [],
+        descriptions: phase1Result.ads[0]?.descriptions || [],
+        sitelinks: phase1Result.extensions.sitelinks.map(s => ({
+          text: s.text,
+          category: 'GENERAL'
+        })),
+        callouts: phase1Result.extensions.callouts.map(c => ({
+          text: c,
+          category: 'GENERAL'
+        })),
+        snippets: phase1Result.extensions.snippets.map(s => ({
+          text: s.values.join(', '),
+          category: s.header.toUpperCase()
+        })),
+        affiliateUrl
+      })
     };
+    
+    console.log('✅ FASE 1 RESULTADO:', {
+      headlines: convertedResult.ads.headlines.length,
+      descriptions: convertedResult.ads.descriptions.length,
+      sitelinks: convertedResult.extensions.sitelinks.length,
+      validation: phase1Result.csvFiles.metadata?.validation?.isValid
+    });
+    
+    return convertedResult;
   }
 
   /**
@@ -460,7 +516,8 @@ export class LuizCampaignGenerator {
   private generateCSVFiles(data: any): any {
     // Implementação básica para evitar erros
     return {
-      campaignStructure: 'Campaign,Status,Budget\n' + `${data.campaign.name},Active,${data.campaign.budget}`,
+      campaignStructure: 'Campaign,Campaign Type,Status,Budget,Budget Type,Bid Strategy,Target CPA,Currency,Target Locations,Excluded Locations\n' + 
+        `${data.campaign.name},Search,Active,${data.campaign.budget},Daily,Target CPA,${data.campaign.targetCpa || 20},${data.campaign.currency || 'USD'},"${(data.campaign.locations || ['PL']).join('; ')}","${(data.campaign.excludedLocations || ['Brasil', 'Brazil', 'Índia', 'India', 'Vietnã', 'Vietnam', 'Indonésia', 'Indonesia', 'China', 'Nigéria', 'Nigeria', 'Rússia', 'Russia', 'Venezuela', 'Colômbia', 'Colombia']).join('; ')}"`,
       keywords: 'Keyword,Match Type,Status\n' + data.keywords.map((k: any) => `${k.keyword},Broad,Active`).join('\n'),
       ads: 'Headlines,Descriptions\n' + `"${data.headlines.join(', ')}","${data.descriptions.join(', ')}"`,
       sitelinks: 'Sitelink,Category\n' + data.sitelinks.map((s: any) => `${s.text},${s.category}`).join('\n'),

@@ -28,8 +28,13 @@ const CampaignParamsSchema = z.object({
   targetCountry: z.string().min(1, 'Target country is required'),
   budgetRange: z.string().min(1, 'Budget range is required'),
   targetCpa: z.string().min(1, 'Target CPA is required'),
-  description: z.string().optional()
-})
+  description: z.string().optional(),
+  // Campos contextuais da Fase 1 - CRÍTICOS para funcionamento!
+  discountPercentage: z.number().optional(),
+  discountAmount: z.number().optional(),
+  guaranteePeriod: z.string().optional(),
+  deliveryType: z.string().optional()
+}).passthrough() // Allow extra fields para compatibilidade
 
 export function validateCampaignResponse(data: unknown): CampaignResponse | null {
   try {

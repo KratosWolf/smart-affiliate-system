@@ -12,6 +12,7 @@ export interface SmartHeadlineConfig {
   // Dados opcionais do produto
   discountPercentage?: number
   discountAmount?: number
+  productPrice?: number
   guaranteePeriod?: string
   deliveryType?: string
   platform?: string
@@ -132,6 +133,14 @@ export class SmartFixedHeadlines {
     // 8 HEADLINES VARIÁVEIS CONTEXTUAIS
     // Só adiciona se tiver dados específicos
     
+    // Preço do produto - "For Only $X" ou equivalente local
+    if (config.productPrice && config.productPrice > 0) {
+      const currency = this.getCurrencyForCountry(config.country, config.currency)
+      headlines.push(`${translations.forOnly} ${currency}${config.productPrice}`)
+      headlines.push(`${productName} ${translations.starting} ${currency}${config.productPrice}`)
+      contextualElements.push('product_price')
+    }
+    
     // Desconto - só se fornecido
     if (config.discountPercentage && config.discountPercentage > 0) {
       headlines.push(`${productName} ${translations.discount} ${config.discountPercentage}%`)
@@ -141,8 +150,10 @@ export class SmartFixedHeadlines {
       const currency = config.currency === 'BRL' ? 'R$' : '$'
       headlines.push(`${translations.save} ${currency}${config.discountAmount}`)
       contextualElements.push('discount_amount')
-    } else {
-      // Headlines genéricas de urgência
+    }
+    
+    // Se não tiver preço nem desconto, usa headlines genéricas
+    if (!config.productPrice && !config.discountPercentage && !config.discountAmount) {
       headlines.push(`${productName} ${translations.limitedOffer}`)
       headlines.push(`${translations.lastUnits}`)
     }
@@ -284,6 +295,40 @@ export class SmartFixedHeadlines {
   }
   
   /**
+   * Determina a moeda local baseada no país
+   */
+  private getCurrencyForCountry(country: string, defaultCurrency: 'BRL' | 'USD'): string {
+    const currencyMap: Record<string, string> = {
+      'BR': 'R$',
+      'PT': '€',
+      'US': '$',
+      'CA': 'CAD$',
+      'UK': '£',
+      'AU': 'AUD$',
+      'ES': '€',
+      'MX': 'MXN$',
+      'AR': 'ARS$',
+      'CO': 'COP$',
+      'CL': 'CLP$',
+      'PE': 'PEN$',
+      'PL': 'zł',
+      'FR': '€',
+      'DE': '€',
+      'AT': '€',
+      'IT': '€',
+      'SE': 'kr',
+      'NO': 'kr',
+      'DK': 'kr',
+      'FI': '€',
+      'RO': 'lei',
+      'HU': 'Ft',
+      'TR': '₺'
+    }
+    
+    return currencyMap[country] || (defaultCurrency === 'BRL' ? 'R$' : '$')
+  }
+
+  /**
    * Detecta idioma baseado no país
    */
   private detectLanguage(country: string): string {
@@ -332,6 +377,8 @@ export class SmartFixedHeadlines {
         discount: 'Desconto',
         save: 'Economize',
         today: 'Hoje',
+        forOnly: 'Apenas por',
+        starting: 'a partir de',
         limitedOffer: 'Oferta Limitada',
         lastUnits: 'Últimas Unidades',
         guarantee: 'Garantia de',
@@ -375,6 +422,8 @@ export class SmartFixedHeadlines {
         discount: 'Discount',
         save: 'Save',
         today: 'Today',
+        forOnly: 'For Only',
+        starting: 'Starting at',
         limitedOffer: 'Limited Offer',
         lastUnits: 'Last Units',
         guarantee: 'Guarantee',
@@ -418,6 +467,8 @@ export class SmartFixedHeadlines {
         discount: 'Zniżka',
         save: 'Oszczędź',
         today: 'Dziś',
+        forOnly: 'Tylko za',
+        starting: 'Od',
         limitedOffer: 'Oferta Limitowana',
         lastUnits: 'Ostatnie Sztuki',
         guarantee: 'Gwarancja',

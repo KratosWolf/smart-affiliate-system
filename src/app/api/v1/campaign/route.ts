@@ -60,9 +60,18 @@ export async function POST(request: NextRequest) {
       dailyBudget, 
       budgetRange, 
       targetCpa,
+      // Campaign Builder specific fields
+      platform,
+      commissionValue,
       // METODOLOGIA LUIZ - dados específicos
       useLuizMethod = true,
-      campaignData = {}
+      campaignData = {},
+      // Campos contextuais da Fase 1
+      discountPercentage,
+      discountAmount,
+      productPrice,
+      guaranteePeriod,
+      deliveryType
     } = body
 
     // Convert string values to numbers
@@ -136,24 +145,32 @@ export async function POST(request: NextRequest) {
       
       // Gera campanha usando metodologia oficial do Luiz
       const finalAffiliateUrl = affiliateUrl || 'https://go.hotmart.com/placeholder-url'
-      const luizCampaign = luizCampaignGenerator.generateCampaign(
+      
+      // Add contextual fields to campaign data for Phase 1
+      const enhancedCampaignData = {
+        ...campaignData,
+        // Core fields from form
+        platform,
+        commissionValue,
+        // Contextual fields from Phase 1
+        discountPercentage,
+        discountAmount,
+        productPrice,
+        guaranteePeriod,
+        deliveryType
+      }
+      
+      const luizCampaign = await luizCampaignGenerator.generateCampaign(
         validationData, 
         finalAffiliateUrl, 
-        campaignData
+        enhancedCampaignData
       )
 
-      // Gera CSVs para Google Ads Editor
+      // USA OS CSVs JÁ GERADOS PELA PHASE 1 (em polonês)
       if (exportFormat === 'csv') {
-        csvData = csvGenerator.generateAllCSVs({
-          campaign: luizCampaign.campaign,
-          keywords: luizCampaign.keywords,
-          headlines: luizCampaign.ads.headlines,
-          descriptions: luizCampaign.ads.descriptions,
-          sitelinks: luizCampaign.extensions.sitelinks,
-          callouts: luizCampaign.extensions.callouts,
-          snippets: luizCampaign.extensions.snippets,
-          affiliateUrl: finalAffiliateUrl
-        })
+        // Luiz campaign já contém os CSVs gerados pela Phase 1 no idioma correto
+        csvData = luizCampaign.csvFiles || {}
+        console.log('✅ Using Phase 1 generated CSVs in correct language:', Object.keys(csvData))
       }
 
       // Debug: Log dos dados antes do mapeamento
