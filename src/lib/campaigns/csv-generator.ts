@@ -26,18 +26,43 @@ export interface CSVCampaignData {
 export class GoogleAdsCSVGenerator {
 
   /**
-   * GERA TODOS OS ARQUIVOS CSV
+   * GERA TODOS OS ARQUIVOS CSV COM NOME DO PRODUTO
    */
   generateAllCSVs(data: CSVCampaignData): Record<string, string> {
+    // Extrai nome do produto e sanitiza
+    const productName = this.sanitizeFileName(this.extractProductName(data.campaign.name));
+    
     return {
-      'campaign-structure.csv': this.generateCampaignCSV(data),
-      'keywords.csv': this.generateKeywordsCSV(data),
-      'ads.csv': this.generateAdsCSV(data),
-      'sitelinks.csv': this.generateSitelinksCSV(data),
-      'callouts.csv': this.generateCalloutsCSV(data),
-      'snippets.csv': this.generateSnippetsCSV(data),
-      'import-guide.md': this.generateImportGuide(data)
+      [`${productName}-campaign-structure.csv`]: this.generateCampaignCSV(data),
+      [`${productName}-keywords.csv`]: this.generateKeywordsCSV(data),
+      [`${productName}-ads.csv`]: this.generateAdsCSV(data),
+      [`${productName}-sitelinks.csv`]: this.generateSitelinksCSV(data),
+      [`${productName}-callouts.csv`]: this.generateCalloutsCSV(data),
+      [`${productName}-snippets.csv`]: this.generateSnippetsCSV(data),
+      [`${productName}-import-guide.md`]: this.generateImportGuide(data)
     };
+  }
+
+  /**
+   * EXTRAI NOME DO PRODUTO DA CAMPANHA
+   */
+  private extractProductName(campaignName: string): string {
+    // Campaign name format: "PRODUTO - PAÍS - DATA - PLATAFORMA - COMISSÃO"
+    const parts = campaignName.split(' - ');
+    return parts[0] || 'Produto';
+  }
+
+  /**
+   * SANITIZA NOME PARA ARQUIVO
+   */
+  private sanitizeFileName(name: string): string {
+    return name
+      .trim()
+      .replace(/[^a-zA-Z0-9]/g, '-')
+      .replace(/--+/g, '-')
+      .replace(/^-|-$/g, '')
+      .toLowerCase()
+      .substring(0, 20);
   }
 
   /**

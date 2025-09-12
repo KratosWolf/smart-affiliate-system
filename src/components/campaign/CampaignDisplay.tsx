@@ -30,7 +30,7 @@ export function CampaignDisplay({ campaign, safeAccess }: CampaignDisplayProps) 
             <h3 className="font-semibold text-green-800 mb-2">📊 Informações da Campanha</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="font-medium">Nome:</span> {campaign?.campaign?.name || campaign?.data?.campaign?.name || 'Air Bolt - US - Teste CPA'}
+                <span className="font-medium">Nome:</span> {campaign?.campaign?.name || campaign?.data?.campaign?.name || campaign?.name || 'Campanha não encontrada'}
               </div>
               <div>
                 <span className="font-medium">Orçamento:</span> R$ {campaign?.campaign?.budget || campaign?.data?.campaign?.budget || 350}/dia
@@ -53,7 +53,7 @@ export function CampaignDisplay({ campaign, safeAccess }: CampaignDisplayProps) 
                 <li>• <strong>CPA Target:</strong> R$ 33</li>
                 <li>• <strong>Total Headlines:</strong> 15 ✅</li>
                 <li>• <strong>Total Descriptions:</strong> 15</li>
-                <li>• <strong>Keywords:</strong> air bolt (minúscula) + AIR BOLT (maiúscula)</li>
+                <li>• <strong>Keywords:</strong> produto (minúscula) + PRODUTO (maiúscula)</li>
                 <li>• <strong>Extensions:</strong> Sitelinks, Callouts, Snippets</li>
                 <li>• <strong>Status:</strong> Pronto para Google Ads Editor</li>
               </ul>
@@ -78,8 +78,8 @@ export function CampaignDisplay({ campaign, safeAccess }: CampaignDisplayProps) 
               <div>
                 <h3 className="font-semibold mb-2">🔑 Keywords Geradas</h3>
                 <div className="bg-gray-50 p-3 rounded-lg">
-                  <div className="text-sm py-1 border-b">air bolt [BROAD]</div>
-                  <div className="text-sm py-1">AIR BOLT [BROAD]</div>
+                  <div className="text-sm py-1 border-b">produto [BROAD]</div>
+                  <div className="text-sm py-1">PRODUTO [BROAD]</div>
                 </div>
               </div>
             );
@@ -124,11 +124,11 @@ export function CampaignDisplay({ campaign, safeAccess }: CampaignDisplayProps) 
                       <div className="space-y-2">
                         <div>
                           <span className="font-medium text-sm">Exemplo de Headline:</span>
-                          <div className="text-sm text-gray-600">Air Bolt + Online Store</div>
+                          <div className="text-sm text-gray-600">Produto + Online Store</div>
                         </div>
                         <div>
                           <span className="font-medium text-sm">Exemplo de Description:</span>
-                          <div className="text-sm text-gray-600">Order Air Bolt Here On Website With 90 Days Guarantee. Best Value Pack 100/Bottle Now</div>
+                          <div className="text-sm text-gray-600">Order Produto Here On Website With 90 Days Guarantee. Best Value Pack 100/Bottle Now</div>
                         </div>
                       </div>
                     </CardContent>

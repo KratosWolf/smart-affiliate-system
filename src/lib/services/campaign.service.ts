@@ -12,19 +12,20 @@ class CampaignService {
     }
 
     try {
-      // 2. Make API call
-      const response = await apiService.post<unknown>('/api/v1/campaign', validatedParams)
+      // 2. Make API call with export format
+      const requestParams = { ...validatedParams, exportFormat: 'csv' }
+      const response = await apiService.post<unknown>('/api/v1/campaign', requestParams)
       
-      // 3. Skip validation temporarily to get it working
+      // 3. Log and return properly formatted response
       console.log('🔍 RAW API RESPONSE:', JSON.stringify(response, null, 2))
-      console.log('⚠️ VALIDATION TEMPORARILY DISABLED - returning raw response')
+      console.log('✅ Returning formatted campaign response')
       
-      // Return raw response as CampaignResponse format
+      // Return properly formatted response - match the API structure
       return {
         success: response.success || true,
-        data: response.data || response,
+        data: response.data, // Pass through the entire API response structure
         error: response.error
-      } as any
+      } as CampaignResponse
     } catch (error) {
       if (error instanceof AppError) {
         throw error

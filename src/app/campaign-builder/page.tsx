@@ -24,6 +24,12 @@ interface CampaignData extends CampaignParams {
   currency?: 'BRL' | 'USD'
   useEdisTracking?: boolean
   edisBaseUrl?: string
+  // Campos contextuais da Fase 1
+  discountPercentage?: number
+  discountAmount?: number
+  productPrice?: number
+  guaranteePeriod?: string
+  deliveryType?: string
 }
 
 function CampaignBuilderContainer() {
@@ -39,7 +45,13 @@ function CampaignBuilderContainer() {
     currency: 'USD',
     useEdisTracking: true,
     edisBaseUrl: 'www.test.com',
-    description: ''
+    description: '',
+    // Campos contextuais da Fase 1
+    discountPercentage: undefined,
+    discountAmount: undefined,
+    productPrice: undefined,
+    guaranteePeriod: '',
+    deliveryType: ''
   })
   
   const [activeTab, setActiveTab] = useState('setup')
@@ -95,7 +107,7 @@ function CampaignBuilderContainer() {
       // Recalcula valores automaticamente
       if (field === 'commissionValue' || field === 'currency') {
         // CPA Alvo = 45% da comissão
-        updated.targetCpa = (updated.commissionValue || 100) * 0.45
+        updated.targetCpa = Math.round((updated.commissionValue || 100) * 0.45 * 100) / 100
         
         // Orçamento mínimo baseado na moeda
         const minBudget = updated.currency === 'BRL' ? 350 : 70
@@ -114,6 +126,14 @@ function CampaignBuilderContainer() {
       return
     }
 
+    console.log('🎯 Gerando campanha com dados:', {
+      productName: campaignData.productName,
+      targetCountry: campaignData.targetCountry,
+      discountPercentage: campaignData.discountPercentage,
+      guaranteePeriod: campaignData.guaranteePeriod,
+      deliveryType: campaignData.deliveryType
+    })
+
     clearError()
     
     try {
@@ -122,19 +142,29 @@ function CampaignBuilderContainer() {
         targetCountry: campaignData.targetCountry,
         budgetRange: campaignData.budgetRange,
         targetCpa: campaignData.targetCpa.toString(),
-        description: campaignData.description
+        description: campaignData.description,
+        // Core campaign fields
+        platform: campaignData.platform,
+        commissionValue: campaignData.commissionValue,
+        // Campos contextuais da Fase 1
+        discountPercentage: campaignData.discountPercentage,
+        discountAmount: campaignData.discountAmount,
+        productPrice: campaignData.productPrice,
+        guaranteePeriod: campaignData.guaranteePeriod,
+        deliveryType: campaignData.deliveryType
       })
       
-      // Sucesso - não precisamos verificar campaign aqui pois o hook gerencia o estado
+      // Força atualização da interface
+      console.log('✅ Campanha gerada com sucesso!')
       
     } catch (err) {
-      console.error('Campaign generation failed:', err)
+      console.error('❌ Erro na geração da campanha:', err)
     }
   }
 
   // Generate sample CSV content based on campaign data
   const generateSampleCSV = (csvType: string): string => {
-    const productName = campaignData.productName || 'Air Bolt'
+    const productName = campaignData.productName || 'Sample Product'
     const budget = campaignData.dailyBudget || 350
     const targetCpa = campaignData.targetCpa || 33
     
@@ -205,25 +235,111 @@ Sample Data,Active`
     try {
       console.log('🔍 Generating CSV for type:', csvType)
       
-      // Always generate sample CSV based on form data
-      const sampleCSV = generateSampleCSV(csvType)
-      const csvBlob = new Blob([sampleCSV], { type: 'text/csv;charset=utf-8;' })
+      let csvContent: string
+      
+      // Debug: Log campaign structure
+      console.log('🔍 CAMPAIGN OBJECT:', JSON.stringify(campaign, null, 2))
+      console.log('🔍 CSV TYPE REQUESTED:', csvType)
+      console.log('🔍 AVAILABLE CSV KEYS:', campaign?.csvData ? Object.keys(campaign.csvData) : 'NO csvData')
+      
+      // Use real campaign data if available, otherwise fallback to sample  
+      // Based on API structure: response.data.csvData[csvType]
+      const realCsvData = campaign?.csvData?.[csvType]
+      
+      if (realCsvData) {
+        console.log('✅ Using real campaign CSV data')
+        csvContent = realCsvData
+      } else {
+        console.log('⚠️ Using fallback sample CSV data - real CSV data not found')
+        console.log('⚠️ Campaign structure:', {
+          hasCampaign: !!campaign,
+          campaignKeys: campaign ? Object.keys(campaign) : 'No campaign',
+          hasCsvData: !!campaign?.csvData,
+          csvDataKeys: campaign?.csvData ? Object.keys(campaign.csvData) : 'No csvData',
+          requestedType: csvType
+        })
+        csvContent = generateSampleCSV(csvType)
+      }
+      
+      // Add product name prefix to filename
+      const productPrefix = campaignData.productName ? `${campaignData.productName.replace(/[^a-zA-Z0-9]/g, '')}_` : ''
+      const finalFilename = `${productPrefix}${filename}`
+      
+      const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
       const downloadLink = document.createElement('a')
       downloadLink.href = URL.createObjectURL(csvBlob)
-      downloadLink.download = filename
+      downloadLink.download = finalFilename
       downloadLink.click()
       URL.revokeObjectURL(downloadLink.href)
       
-      console.log(`✅ Downloaded ${filename}`)
+      console.log(`✅ Downloaded ${finalFilename}`)
     } catch (error) {
       console.error('Erro ao baixar CSV:', error)
       alert('Erro ao baixar arquivo CSV')
     }
   }
 
+  const downloadAllCSVsAsZip = async () => {
+    if (!campaign || !campaignData.productName) {
+      alert('❌ Nenhuma campanha disponível para download')
+      return
+    }
+
+    try {
+      // Dynamic import do JSZip
+      const JSZip = (await import('jszip')).default
+      const zip = new JSZip()
+      
+      const productName = campaignData.productName.replace(/[^a-zA-Z0-9]/g, '')
+      
+      const filesToDownload = [
+        { type: 'campaignStructure', name: 'Estrutura_Campanha.csv' },
+        { type: 'keywords', name: 'Keywords.csv' },
+        { type: 'ads', name: 'Anuncios.csv' },
+        { type: 'sitelinks', name: 'Sitelinks.csv' },
+        { type: 'callouts', name: 'Callouts.csv' },
+        { type: 'snippets', name: 'Snippets.csv' }
+      ]
+      
+      // Adiciona cada arquivo CSV ao ZIP
+      filesToDownload.forEach(file => {
+        const realCsvData = campaign?.csvData?.[file.type]
+        let csvContent = ''
+        
+        if (realCsvData) {
+          csvContent = realCsvData
+        } else {
+          csvContent = generateSampleCSV(file.type)
+        }
+        
+        const finalFilename = `${productName}_${file.name}`
+        zip.file(finalFilename, csvContent)
+      })
+      
+      // Gera e baixa o ZIP
+      const zipBlob = await zip.generateAsync({ type: 'blob' })
+      const zipUrl = window.URL.createObjectURL(zipBlob)
+      
+      const link = document.createElement('a')
+      link.href = zipUrl
+      link.download = `${productName}_GoogleAds_Campaign.zip`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(zipUrl)
+      
+      alert(`📦 ZIP baixado: ${productName}_GoogleAds_Campaign.zip`)
+      
+    } catch (error) {
+      console.error('Erro ao criar ZIP:', error)
+      alert('❌ Erro ao criar arquivo ZIP')
+    }
+  }
+
   const downloadAllCSVs = () => {
     try {
-      // Download all CSV files
+      console.log('🎯 Starting download of all CSVs with product prefix')
+      
       const files = [
         { type: 'campaignStructure', name: 'Estrutura_Campanha.csv' },
         { type: 'keywords', name: 'Keywords.csv' },
@@ -233,11 +349,14 @@ Sample Data,Active`
         { type: 'snippets', name: 'Snippets.csv' }
       ]
 
+      // Download each file with proper naming and real data
       files.forEach((file, index) => {
-        setTimeout(() => downloadCSV(file.type, file.name), index * 200)
+        setTimeout(() => downloadCSV(file.type, file.name), index * 300) // Slightly longer delay
       })
 
-      alert('Downloads iniciados! Verifique a pasta de Downloads.')
+      const productName = campaignData.productName || 'Produto'
+      alert(`📦 Iniciando downloads dos CSVs para ${productName}! Verifique a pasta de Downloads.`)
+      
     } catch (error) {
       console.error('Erro ao baixar todos os CSVs:', error)
       alert('Erro ao iniciar downloads')
@@ -378,11 +497,11 @@ Sample Data,Active`
 
                       <div className="border-t pt-4">
                         <Button 
-                          onClick={downloadAllCSVs}
+                          onClick={downloadAllCSVsAsZip}
                           className="w-full flex items-center gap-2 h-12 bg-green-600 hover:bg-green-700"
                         >
                           <Download className="w-4 h-4" />
-                          Baixar Todos os CSVs (ZIP)
+                          📦 Baixar ZIP Completo
                         </Button>
                       </div>
                     </>
