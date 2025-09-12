@@ -283,7 +283,7 @@ export class ProductDiscoveryEngine {
         id: `cb_${product.nickname}`,
         productName: product.title,
         vendor: product.nickname,
-        platform: 'clickbank' as const,
+        platform: 'CLICKBANK' as const,
         category: product.category,
         commission: product.commission,
         paymentType: 'commission' as const,
@@ -367,7 +367,7 @@ export class ProductDiscoveryEngine {
           id: `yt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           productName,
           vendor: 'Unknown',
-          platform: 'other' as const,
+          platform: 'OTHER' as const,
           category: 'Unknown',
           commission: 50, // Estimated
           paymentType: 'commission' as const,
@@ -433,7 +433,7 @@ export class ProductDiscoveryEngine {
       id: `trend_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       productName: `${term.charAt(0).toUpperCase() + term.slice(1)} Master Course`,
       vendor: 'TrendVendor',
-      platform: 'other' as const,
+      platform: 'OTHER' as const,
       category,
       commission: 60,
       paymentType: 'commission' as const,
@@ -523,14 +523,14 @@ export class ProductDiscoveryEngine {
 
       // Platform credibility (0-15 points)
       const platformScores = {
-        'clickbank': 15,
-        'smartadv': 12,
-        'drcash': 12,
-        'warriorplus': 10,
-        'jvzoo': 8,
-        'digistore24': 12,
-        'other': 5
-      }
+        'CLICKBANK': 15,
+        'SMARTADV': 12,
+        'DRCASH': 12,
+        'BUYGOODS': 10,
+        'MAXWEB': 8,
+        'DIGISTORE24': 12,
+        'OTHER': 5
+      } as Record<string, number>
       score += platformScores[opportunity.platform]
 
       // Market data score (0-25 points)

@@ -261,21 +261,21 @@ export class LuizCampaignGenerator {
     // Mapeia dados antigos para o formato da Fase 1
     const phase1Config: LuizCampaignConfigV3 = {
       productName: campaignData.productName || validation.productName,
-      platform: (campaignData.platform || validation.platform || 'CLICKBANK') as any,
-      commissionValue: campaignData.commissionValue || campaignData.unitPrice || 45,
+      platform: ((campaignData as any).platform || (validation as any).platform || 'CLICKBANK') as any,
+      commissionValue: (campaignData as any).commissionValue || (campaignData as any).unitPrice || 45,
       country: campaignData.country || validation.targetCountry,
       currency: (validation.productData.currency === 'BRL' ? 'BRL' : 'USD') as 'BRL' | 'USD',
       producerPageUrl: validation.productUrl || 'https://example.com',
       affiliateUrl: affiliateUrl,
       // Dados contextuais opcionais da Fase 1
-      discountPercentage: campaignData.discountPercentage || campaignData.discountPercent,
-      discountAmount: campaignData.discountAmount || campaignData.valueDiscount,
-      productPrice: campaignData.productPrice,
-      guaranteePeriod: campaignData.guaranteePeriod || (
-        typeof campaignData.guarantee === 'string' ? campaignData.guarantee :
-        campaignData.guarantee && campaignData.guarantee !== undefined ? `${campaignData.guarantee} dias` : undefined
+      discountPercentage: (campaignData as any).discountPercentage || (campaignData as any).discountPercent,
+      discountAmount: (campaignData as any).discountAmount || (campaignData as any).valueDiscount,
+      productPrice: (campaignData as any).productPrice,
+      guaranteePeriod: (campaignData as any).guaranteePeriod || (
+        typeof (campaignData as any).guarantee === 'string' ? (campaignData as any).guarantee :
+        (campaignData as any).guarantee && (campaignData as any).guarantee !== undefined ? `${(campaignData as any).guarantee} dias` : undefined
       ),
-      deliveryType: campaignData.deliveryType
+      deliveryType: (campaignData as any).deliveryType
     };
     
     console.log('🎯 Config Fase 1:', {
@@ -312,15 +312,15 @@ export class LuizCampaignGenerator {
         descriptions: phase1Result.ads[0]?.descriptions || []
       },
       extensions: {
-        sitelinks: phase1Result.extensions.sitelinks.map(s => ({
+        sitelinks: phase1Result.extensions.sitelinks.map((s: any) => ({
           text: s.text,
           category: 'GENERAL'
         })),
-        callouts: phase1Result.extensions.callouts.map(c => ({
+        callouts: phase1Result.extensions.callouts.map((c: any) => ({
           text: c,
           category: 'GENERAL'
         })),
-        snippets: phase1Result.extensions.snippets.map(s => ({
+        snippets: phase1Result.extensions.snippets.map((s: any) => ({
           text: s.values.join(', '),
           category: s.header.toUpperCase()
         }))
@@ -341,15 +341,15 @@ export class LuizCampaignGenerator {
         })),
         headlines: phase1Result.ads[0]?.headlines || [],
         descriptions: phase1Result.ads[0]?.descriptions || [],
-        sitelinks: phase1Result.extensions.sitelinks.map(s => ({
+        sitelinks: phase1Result.extensions.sitelinks.map((s: any) => ({
           text: s.text,
           category: 'GENERAL'
         })),
-        callouts: phase1Result.extensions.callouts.map(c => ({
+        callouts: phase1Result.extensions.callouts.map((c: any) => ({
           text: c,
           category: 'GENERAL'
         })),
-        snippets: phase1Result.extensions.snippets.map(s => ({
+        snippets: phase1Result.extensions.snippets.map((s: any) => ({
           text: s.values.join(', '),
           category: s.header.toUpperCase()
         })),

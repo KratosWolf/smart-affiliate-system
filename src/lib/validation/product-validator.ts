@@ -50,7 +50,7 @@ export class ProductValidator {
       // Analyze competitor ads (NEW!)
       const competitorAnalysis = isTestMode
         ? await this.analyzeCompetitorAds(request.productUrl, request.targetCountry)
-        : null;
+        : undefined;
       
       // Calculate viability metrics
       const viabilityMetrics = this.calculateViabilityMetrics(
@@ -71,13 +71,13 @@ export class ProductValidator {
       
       const response: ProductValidationResponse = {
         id: validationId,
-        productName: request.productName || request.productUrl,
+        productName: request.productUrl,
         productUrl: request.productUrl,
         targetCountry: request.targetCountry || 'Brasil',
         validationScore,
         status: 'completed',
         productData,
-        marketAnalysis,
+        marketAnalysis: marketAnalysis as any,
         competitorAnalysis,
         viabilityMetrics,
         recommendations,
@@ -263,7 +263,7 @@ export class ProductValidator {
     };
 
     const key = productName.toLowerCase();
-    const product = testProducts[key] || {
+    const product = testProducts[key as keyof typeof testProducts] || {
       title: `${productName} - Produto Premium`,
       description: `${productName} com qualidade superior`,
       price: 97,
@@ -312,7 +312,7 @@ export class ProductValidator {
     };
 
     const key = productName.toLowerCase();
-    const data = testData[key] || {
+    const data = testData[key as keyof typeof testData] || {
       searchVolume: 5000,
       competition: 'medium',
       avgCpc: 0.50

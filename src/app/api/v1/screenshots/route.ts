@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     
     // Development: Use Puppeteer locally
     const browser = await puppeteer.launch({
-      headless: 'new',
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -103,9 +103,9 @@ export async function POST(request: NextRequest) {
         '--disable-web-security',
         '--disable-features=IsolateOrigins,site-per-process'
       ],
-      ...(isProduction && {
+      ...(isProduction ? {
         executablePath: '/usr/bin/chromium-browser' // Common path in Vercel
-      })
+      } : {})
     })
 
     try {

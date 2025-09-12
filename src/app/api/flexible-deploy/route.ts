@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
             fs.mkdirSync(tmpDir, { recursive: true })
             
             // Escrever arquivos de presell no diretório temporário
-            Object.entries(presellFiles).forEach(([filename, content]: [string, string]) => {
-              fs.writeFileSync(path.join(tmpDir, filename), content)
+            Object.entries(presellFiles).forEach(([filename, content]: [string, unknown]) => {
+              fs.writeFileSync(path.join(tmpDir, filename), content as string)
             })
             
             finalLocalPath = tmpDir

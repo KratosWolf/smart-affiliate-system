@@ -128,15 +128,24 @@ export class PresellTemplateGenerator {
     designTokens?: any;
     customization?: any;
   }): PresellConfig {
-    const productData = validation.productData;
+    // Handle case where productData might not exist (fallback to direct properties)
+    const productData = validation.productData || {
+      title: validation.productName || 'Unknown Product',
+      description: `${validation.productName} - Premium product`,
+      price: (validation as any).productPrice || 49.90,
+      currency: 'BRL',
+      images: [],
+      category: 'Health',
+      brand: validation.productName
+    };
     
     return {
       productName: productData.title,
       productUrl: affiliateUrl,
       price: productData.price,
       currency: productData.currency,
-      language: this.detectLanguage(validation.productData.description),
-      country: 'Brasil', // Default, will be enhanced
+      language: this.detectLanguage(productData.description),
+      country: validation.targetCountry || 'Brasil',
       
       originalDescription: productData.description,
       guaranteeDays: 90,
@@ -1324,7 +1333,7 @@ window.addEventListener('load', function() {
       console.log('🔍 Fallback URL-based language detection:', lang);
     }
     
-    const messages = cookieMessages[lang] || cookieMessages['pt'];
+    const messages = cookieMessages[lang as keyof typeof cookieMessages] || cookieMessages['pt'];
     
     // FORCE use product name for screenshots - NEVER use URL-based naming
     const productName = config.productName?.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'product';

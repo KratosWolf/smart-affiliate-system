@@ -460,7 +460,7 @@ export class GoogleAdsAnalyzer {
     return adTemplates.map(template => ({
       ...template,
       displayUrl: template.domain
-    }));
+    })) as CompetitorAd[];
   }
 }
 

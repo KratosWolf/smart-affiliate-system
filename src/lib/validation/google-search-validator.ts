@@ -692,6 +692,14 @@ export class GoogleSearchValidator {
       specificResults: number
       genericResults: number
       searchTime: number
+      competitionIndicators: {
+        ecommerceResults: number
+        reviewSites: number
+        adResults: number
+        highAuthorityDomains: number
+        estimatedCPC: string
+        competitionLevel: 'Low' | 'Medium' | 'High' | 'Very High'
+      }
     }
   } {
     // Simulate realistic search patterns based on product name characteristics
@@ -742,7 +750,15 @@ export class GoogleSearchValidator {
         totalResults: mockTotalResults,
         specificResults: mockSpecificResults,
         genericResults: mockGenericResults,
-        searchTime: 0.15 + (Math.random() * 0.1)
+        searchTime: 0.15 + (Math.random() * 0.1),
+        competitionIndicators: {
+          ecommerceResults: Math.floor(Math.random() * 3) + 1,
+          reviewSites: Math.floor(Math.random() * 2) + 1,
+          adResults: Math.floor(Math.random() * 4) + 2,
+          highAuthorityDomains: Math.floor(Math.random() * 2),
+          estimatedCPC: '$0.50-$2.00',
+          competitionLevel: mockTotalResults > 100000 ? 'High' : mockTotalResults > 50000 ? 'Medium' : 'Low'
+        }
       }
     }
   }

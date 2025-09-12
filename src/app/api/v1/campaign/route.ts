@@ -103,20 +103,24 @@ export async function POST(request: NextRequest) {
         },
         marketAnalysis: {
           searchVolume: 10000,
-          competitionLevel: 'medium' as const,
+          competition: 'medium' as const,
           avgCpc: finalTargetCpa * 0.4,
-          trend: 'stable' as const
+          seasonality: [],
+          trends: []
         },
         viabilityMetrics: {
-          profitability: 8,
-          competitiveness: 7,
-          demand: 8,
-          scalability: 7
+          demandScore: 8,
+          competitionScore: 7,
+          profitabilityScore: 8,
+          difficultyScore: 3
         },
         recommendations: {
-          suggestedBudget: finalDailyBudget,
+          shouldProceed: true,
           estimatedRoi: 150,
-          launchRecommendation: 'LAUNCH'
+          suggestedBudget: finalDailyBudget,
+          riskLevel: 'medium' as const,
+          keyInsights: ['High conversion potential', 'Good market demand'],
+          warnings: []
         },
         validatedAt: new Date(),
         expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days

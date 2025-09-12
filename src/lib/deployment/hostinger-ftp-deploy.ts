@@ -101,9 +101,7 @@ export class HostingerFTPDeploy {
         password: domainConfig.ftpPassword,
         secure: false,
         port: 21,
-        connTimeout: 60000, // 60 segundos timeout
-        pasvTimeout: 60000, // 60 segundos timeout passivo  
-        keepalive: 10000    // Keep-alive 10 segundos
+  
       })
       
       console.log('✅ Conectado ao FTP da Hostinger')
@@ -226,9 +224,7 @@ export class HostingerFTPDeploy {
         password: domainConfig.ftpPassword,
         secure: false,
         port: 21,
-        connTimeout: 60000, // 60 segundos timeout
-        pasvTimeout: 60000, // 60 segundos timeout passivo  
-        keepalive: 10000    // Keep-alive 10 segundos
+  
       })
       
       console.log('✅ Conexão FTP funcionando!')

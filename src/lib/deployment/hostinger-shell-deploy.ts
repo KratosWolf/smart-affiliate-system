@@ -98,15 +98,11 @@ sshpass -e ssh -o StrictHostKeyChecking=no -p ${this.config.port} ${this.config.
       
       const scpCommand = `sshpass -p '${this.config.password}' scp -o StrictHostKeyChecking=no -P ${this.config.port} -r "${localPath}" ${this.config.username}@${this.config.host}:"${remotePath}"`
       
-      const { stdout, stderr, code } = await execAsync(scpCommand)
+      const { stdout, stderr } = await execAsync(scpCommand)
       
-      if (code === 0) {
-        console.log('✅ Upload SCP realizado com sucesso')
-        return true
-      } else {
-        console.error('❌ Erro no upload SCP:', stderr)
-        return false
-      }
+      // Success case - execAsync doesn't throw if successful
+      console.log('✅ Upload SCP realizado com sucesso')
+      return true
     } catch (error: any) {
       console.error('❌ Erro no SCP:', error.message)
       return false
@@ -122,16 +118,12 @@ sshpass -e ssh -o StrictHostKeyChecking=no -p ${this.config.port} ${this.config.
       
       const rsyncCommand = `sshpass -p '${this.config.password}' rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no -p ${this.config.port}" "${localPath}/" ${this.config.username}@${this.config.host}:"${remotePath}/"`
       
-      const { stdout, stderr, code } = await execAsync(rsyncCommand)
+      const { stdout, stderr } = await execAsync(rsyncCommand)
       
-      if (code === 0) {
-        console.log('✅ Rsync realizado com sucesso')
-        console.log('📊 Rsync output:', stdout.split('\n').slice(-5).join('\n')) // Últimas 5 linhas
-        return true
-      } else {
-        console.error('❌ Erro no rsync:', stderr)
-        return false
-      }
+      // Success case - execAsync doesn't throw if successful
+      console.log('✅ Rsync realizado com sucesso')
+      console.log('📊 Rsync output:', stdout.split('\n').slice(-5).join('\n')) // Últimas 5 linhas
+      return true
     } catch (error: any) {
       console.error('❌ Erro no Rsync:', error.message)
       return false

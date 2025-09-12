@@ -28,6 +28,19 @@ export interface CampaignParams {
   budgetRange: string
   targetCpa: string
   description?: string
+  // Platform and commission fields
+  platform?: string
+  commissionValue?: number
+  currency?: 'BRL' | 'USD'
+  // Tracking fields
+  useEdisTracking?: boolean
+  edisBaseUrl?: string
+  // Phase 1 contextual fields
+  discountPercentage?: number
+  discountAmount?: number
+  productPrice?: number
+  guaranteePeriod?: string
+  deliveryType?: string
 }
 
 export interface Keyword {

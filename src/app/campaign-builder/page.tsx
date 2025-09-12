@@ -34,11 +34,28 @@ interface CampaignData extends Omit<CampaignParams, 'targetCpa'> {
 
 function CampaignBuilderContainer() {
   const { campaign, isLoading, error, isSuccess, generateCampaign, clearError, safeAccess } = useCampaignBuilder()
-  const [campaignData, setCampaignData] = useState<CampaignData>({
+  // Form state that matches CampaignForm expectations
+  type CampaignFormState = Omit<CampaignParams, 'targetCpa'> & {
+    dailyBudget: number
+    targetCpa: number  // Override to number for form inputs
+    platform?: string
+    commissionValue?: number
+    currency?: 'BRL' | 'USD'
+    useEdisTracking?: boolean
+    edisBaseUrl?: string
+    // Phase 1 contextual fields
+    discountPercentage?: number
+    discountAmount?: number
+    productPrice?: number
+    guaranteePeriod?: string
+    deliveryType?: string
+  }
+
+  const [campaignData, setCampaignData] = useState<CampaignFormState>({
     productName: '',
     targetCountry: 'PL',
     budgetRange: '350',
-    targetCpa: '45',
+    targetCpa: 45,  // Fixed: number instead of string
     dailyBudget: 350,
     platform: 'SMARTADV',
     commissionValue: 100,
@@ -141,7 +158,7 @@ function CampaignBuilderContainer() {
         productName: campaignData.productName,
         targetCountry: campaignData.targetCountry,
         budgetRange: campaignData.budgetRange,
-        targetCpa: campaignData.targetCpa,
+        targetCpa: String(campaignData.targetCpa),
         description: campaignData.description,
         // Core campaign fields
         platform: campaignData.platform,

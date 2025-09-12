@@ -7,7 +7,8 @@ import { headers } from 'next/headers'
 export async function GET(request: NextRequest) {
   try {
     // Verificar se é uma requisição autorizada do Vercel Cron
-    const authHeader = headers().get('authorization')
+    const headersList = await headers()
+    const authHeader = headersList.get('authorization')
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

@@ -3,8 +3,13 @@ import fs from 'fs/promises';
 import path from 'path';
 
 export async function POST(request: NextRequest) {
+  let url: string = '';
+  let productName: string = '';
+  
   try {
-    const { url, productName } = await request.json();
+    const requestData = await request.json();
+    url = requestData.url;
+    productName = requestData.productName;
     
     if (!url || !productName) {
       return NextResponse.json(

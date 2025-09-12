@@ -22,9 +22,9 @@ class CampaignService {
       
       // Return properly formatted response - match the API structure
       return {
-        success: response.success || true,
-        data: response.data, // Pass through the entire API response structure
-        error: response.error
+        success: (response as any).success || true,
+        data: (response as any).data, // Pass through the entire API response structure
+        error: (response as any).error
       } as CampaignResponse
     } catch (error) {
       if (error instanceof AppError) {

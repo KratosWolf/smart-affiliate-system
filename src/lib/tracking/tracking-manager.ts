@@ -74,7 +74,7 @@ export class TrackingManager {
       this.isInitialized = true
       
       // Track initialization
-      this.track('system', 'tracking', 'initialized', 'tracking_systems')
+      this.track('system', 'tracking', 'initialized', 1)
       
       console.log('Tracking systems initialized successfully')
       
@@ -227,7 +227,7 @@ export class TrackingManager {
     customDimensions?: Record<string, string | number>
   ): void {
     this.track('page', 'view', page, undefined, {
-      page_title: title,
+      page_title: title || 'Unknown Page',
       ...customDimensions
     })
   }
@@ -508,7 +508,7 @@ export class TrackingManager {
     if (!this.config.personalTrackerEndpoint) return
     
     // Send to personal tracking endpoint
-    if (typeof window !== 'undefined' && window.fetch) {
+    if (typeof window !== 'undefined' && typeof window.fetch === 'function') {
       fetch(this.config.personalTrackerEndpoint, {
         method: 'POST',
         headers: {

@@ -60,7 +60,7 @@ class ApiService {
         throw error
       }
 
-      if (error.name === 'AbortError') {
+      if (error instanceof Error && error.name === 'AbortError') {
         throw AppError.apiError('Request timeout', 'TIMEOUT')
       }
 

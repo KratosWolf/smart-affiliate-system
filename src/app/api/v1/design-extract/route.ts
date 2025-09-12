@@ -154,7 +154,7 @@ async function extractProductData(url: string) {
     
   } catch (error) {
     console.error('❌ Product data extraction failed:', error)
-    console.error('Error details:', error.message)
+    console.error('Error details:', error instanceof Error ? error.message : 'Unknown error')
     
     // Return more specific fallback based on URL
     const productName = url.includes('skinatrin') ? 'Skinatrin' : 'Product'

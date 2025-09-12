@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo "🔍 Verificação obrigatória de TypeScript antes do commit..."
+echo "========================================================"
+
+# Executa verificação de TypeScript
+npm run type-check
+
+# Se falhou, bloqueia o commit
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ COMMIT BLOQUEADO - Erros de TypeScript encontrados!"
+    echo "   → Execute: npm run type-check"
+    echo "   → Corrija TODOS os erros antes de fazer commit"
+    echo "   → Não é permitido bypass - ZERO ERROS obrigatório"
+    echo ""
+    exit 1
+fi
+
+echo ""
+echo "✅ TypeScript: ZERO ERROS - Commit permitido!"
+echo ""

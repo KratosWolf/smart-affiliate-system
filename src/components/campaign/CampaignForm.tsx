@@ -8,7 +8,7 @@ import { PLATFORM_OPTIONS } from '@/lib/constants/platforms'
 import { CampaignParams } from '@/lib/types'
 
 interface CampaignFormProps {
-  campaignData: CampaignParams & {
+  campaignData: Omit<CampaignParams, 'targetCpa'> & {
     dailyBudget: number
     targetCpa: number
     platform?: string
@@ -151,7 +151,7 @@ export function CampaignForm({
                   type="number"
                   placeholder="Ex: 50"
                   value={campaignData.discountPercentage || ''}
-                  onChange={(e) => onInputChange('discountPercentage', e.target.value ? Number(e.target.value) : undefined)}
+                  onChange={(e) => onInputChange('discountPercentage', e.target.value ? Number(e.target.value) : 0)}
                   className="text-lg"
                 />
                 <p className="text-xs text-blue-600 mt-1">Se fornecido, será usado em headlines específicas</p>
@@ -166,7 +166,7 @@ export function CampaignForm({
                   type="number"
                   placeholder={`Ex: ${campaignData.currency === 'BRL' ? '149' : '49'}`}
                   value={campaignData.productPrice || ''}
-                  onChange={(e) => onInputChange('productPrice', e.target.value ? Number(e.target.value) : undefined)}
+                  onChange={(e) => onInputChange('productPrice', e.target.value ? Number(e.target.value) : 0)}
                   className="text-lg"
                 />
                 <p className="text-xs text-blue-600 mt-1">Preço do produto para headlines "For Only $X"</p>
@@ -181,7 +181,7 @@ export function CampaignForm({
                   type="number"
                   placeholder={`Ex: ${campaignData.currency === 'BRL' ? '100' : '20'}`}
                   value={campaignData.discountAmount || ''}
-                  onChange={(e) => onInputChange('discountAmount', e.target.value ? Number(e.target.value) : undefined)}
+                  onChange={(e) => onInputChange('discountAmount', e.target.value ? Number(e.target.value) : 0)}
                   className="text-lg"
                 />
                 <p className="text-xs text-blue-600 mt-1">Valor fixo do desconto em {campaignData.currency}</p>

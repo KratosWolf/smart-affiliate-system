@@ -82,15 +82,13 @@ export async function POST(request: NextRequest) {
       console.log('🎯 generateFromValidation called with options:', { 
         designTokens, 
         customization,
-        templateType: templateType || 'default',
-        languageAnalysis
+        templateType: templateType || 'default'
       });
       
       presellData = generator.generateFromValidation(validation, affiliateUrl, { 
         designTokens, 
         customization,
-        templateType: templateType || 'default',
-        languageAnalysis
+        templateType: templateType || 'default'
       })
       
       console.log('✅ Presell generated successfully')

@@ -30,16 +30,16 @@ export function CampaignDisplay({ campaign, safeAccess }: CampaignDisplayProps) 
             <h3 className="font-semibold text-green-800 mb-2">📊 Informações da Campanha</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="font-medium">Nome:</span> {campaign?.campaign?.name || campaign?.data?.campaign?.name || campaign?.name || 'Campanha não encontrada'}
+                <span className="font-medium">Nome:</span> {(campaign as any)?.campaign?.name || (campaign as any)?.data?.campaign?.name || (campaign as any)?.name || 'Campanha não encontrada'}
               </div>
               <div>
-                <span className="font-medium">Orçamento:</span> R$ {campaign?.campaign?.budget || campaign?.data?.campaign?.budget || 350}/dia
+                <span className="font-medium">Orçamento:</span> R$ {(campaign as any)?.campaign?.budget || (campaign as any)?.data?.campaign?.budget || 350}/dia
               </div>
               <div>
-                <span className="font-medium">Localizações:</span> {(campaign?.campaign?.locations || campaign?.data?.campaign?.locations || ['US']).join(', ')}
+                <span className="font-medium">Localizações:</span> {((campaign as any)?.campaign?.locations || (campaign as any)?.data?.campaign?.locations || ['US']).join(', ')}
               </div>
               <div>
-                <span className="font-medium">Keywords:</span> {(campaign?.keywords || campaign?.data?.keywords || []).length} palavras-chave
+                <span className="font-medium">Keywords:</span> {((campaign as any)?.keywords || (campaign as any)?.data?.keywords || []).length} palavras-chave
               </div>
             </div>
             
@@ -62,7 +62,7 @@ export function CampaignDisplay({ campaign, safeAccess }: CampaignDisplayProps) 
 
           {/* Keywords Section */}
           {(() => {
-            const keywords = campaign?.keywords || campaign?.data?.keywords || [];
+            const keywords = campaign?.keywords || (campaign as any)?.data?.keywords || [];
             return keywords.length > 0 ? (
               <div>
                 <h3 className="font-semibold mb-2">🔑 Palavras-chave ({keywords.length})</h3>
@@ -87,7 +87,7 @@ export function CampaignDisplay({ campaign, safeAccess }: CampaignDisplayProps) 
 
           {/* Ads Section */}
           {(() => {
-            const ads = campaign?.ads || campaign?.data?.ads || [];
+            const ads = campaign?.ads || (campaign as any)?.data?.ads || [];
             return ads.length > 0 ? (
               <div>
                 <h3 className="font-semibold mb-2">📝 Anúncios ({ads.length})</h3>

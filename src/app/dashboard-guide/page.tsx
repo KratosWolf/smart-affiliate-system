@@ -9,7 +9,7 @@ import { Suspense } from 'react'
 
 function SystemGuideContent() {
   const searchParams = useSearchParams()
-  const activeTab = (searchParams.get('tab') as 'guide' | 'playbook' | 'implementation') || 'guide'
+  const activeTab = (searchParams?.get('tab') as 'guide' | 'playbook' | 'implementation') || 'guide'
 
 
   return (

@@ -451,7 +451,7 @@ export default function PresellGeneratorPage() {
       // Create temporary files for deployment
       const formData = new FormData()
       Object.entries(generatedPresell.files).forEach(([filename, content]) => {
-        const blob = new Blob([content], { type: 'text/html' })
+        const blob = new Blob([content as string], { type: 'text/html' })
         formData.append('files', blob, filename)
       })
 
@@ -840,7 +840,7 @@ export default function PresellGeneratorPage() {
               </CardHeader>
               <CardContent>
                 {generatedPresell ? (
-                  <div className="space-y-4">{console.log('🖥️ Renderizando resultado da presell:', generatedPresell)}
+                  <div className="space-y-4">
                     <div className="bg-gray-50 rounded-lg p-4">
                       <p className="text-sm font-medium text-gray-700">URL Final:</p>
                       <p className="text-xs text-blue-600 mt-1 break-all">
@@ -872,7 +872,7 @@ export default function PresellGeneratorPage() {
                           const zip = new JSZip();
                           
                           Object.entries(files).forEach(([filename, content]) => {
-                            zip.file(filename, content);
+                            zip.file(filename, content as string);
                           });
                           
                           zip.generateAsync({type: 'blob'}).then((blob) => {

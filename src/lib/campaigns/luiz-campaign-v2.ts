@@ -74,10 +74,10 @@ export class LuizCampaignGeneratorV2 {
       productName: config.productName,
       country: config.country,
       currency: config.currency,
-      discountPercentage: config.discountPercentage,
-      discountAmount: config.discountAmount,
-      guaranteePeriod: config.guaranteePeriod,
-      deliveryType: config.deliveryType,
+      discountPercentage: (config as any).discountPercentage,
+      discountAmount: (config as any).discountAmount,
+      guaranteePeriod: (config as any).guaranteePeriod,
+      deliveryType: (config as any).deliveryType,
       platform: config.platform,
       commissionValue: config.commissionValue
     };
@@ -207,7 +207,7 @@ export class LuizCampaignGeneratorV2 {
     csvFiles: any;
   }> {
     // Analisa página do produtor
-    const pageAnalysis = await this.analyzeProducerPage(config.producerPageUrl);
+    const pageAnalysis = await (this as any).analyzeProducerPage(config.producerPageUrl);
     
     // Gera componentes inteligentes
     const campaignName = this.generateCampaignName(config);

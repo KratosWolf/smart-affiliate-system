@@ -287,7 +287,7 @@ export class SmartScraper {
     // Extract price (simulate finding price patterns)
     const priceMatches = text.match(/\$(\d+(?:\.\d{2})?)/g)
     if (priceMatches) {
-      const prices = priceMatches.map(p => parseFloat(p.replace('$', '')))
+      const prices = priceMatches.map((p: string) => parseFloat(p.replace('$', '')))
       details.price = Math.max(...prices) // Usually the main product price is the highest
     }
 

@@ -620,7 +620,7 @@ export default function ValidationPage() {
                           <div className="space-y-2 text-sm">
                             {result.competitorAnalysis?.commonHeadlines ? (
                               <div className="flex flex-wrap gap-1">
-                                {result.competitorAnalysis.commonHeadlines.map((headline, index) => (
+                                {result.competitorAnalysis.commonHeadlines.map((headline: string, index: number) => (
                                   <Badge key={index} variant="outline" className="text-xs">"{headline}"</Badge>
                                 ))}
                               </div>
@@ -651,7 +651,7 @@ export default function ValidationPage() {
                           <div className="space-y-2 text-sm">
                             {result.competitorAnalysis?.topCTAs ? (
                               <div className="flex flex-wrap gap-1">
-                                {result.competitorAnalysis.topCTAs.slice(0, 5).map((cta, index) => (
+                                {result.competitorAnalysis.topCTAs.slice(0, 5).map((cta: string, index: number) => (
                                   <Badge key={index} variant="outline" className="text-xs">"{cta}"</Badge>
                                 ))}
                               </div>
@@ -707,7 +707,7 @@ export default function ValidationPage() {
                         const validationData = {
                           productName: result.productName,
                           country: formData.country,
-                          affiliateLink: formData.affiliateLink,
+                          affiliateLink: formData.producerPageUrl,
                           commissionValue: formData.commissionValue,
                           commissionType: formData.commissionType,
                           validationScore: result.score,
@@ -731,7 +731,7 @@ export default function ValidationPage() {
                         const validationData = {
                           productName: result.productName,
                           targetCountry: formData.country,
-                          productUrl: formData.affiliateLink,
+                          productUrl: formData.producerPageUrl,
                           validationScore: result.score,
                           productData: {
                             title: result.productName,

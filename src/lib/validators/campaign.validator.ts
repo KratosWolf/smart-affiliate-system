@@ -29,9 +29,17 @@ const CampaignParamsSchema = z.object({
   budgetRange: z.string().min(1, 'Budget range is required'),
   targetCpa: z.string().min(1, 'Target CPA is required'),
   description: z.string().optional(),
-  // Campos contextuais da Fase 1 - CRÍTICOS para funcionamento!
+  // Platform and commission fields
+  platform: z.string().optional(),
+  commissionValue: z.number().optional(),
+  currency: z.enum(['BRL', 'USD']).optional(),
+  // Tracking fields
+  useEdisTracking: z.boolean().optional(),
+  edisBaseUrl: z.string().optional(),
+  // Phase 1 contextual fields - CRÍTICOS para funcionamento!
   discountPercentage: z.number().optional(),
   discountAmount: z.number().optional(),
+  productPrice: z.number().optional(), // FIXED: Missing field was blocking Phase 1!
   guaranteePeriod: z.string().optional(),
   deliveryType: z.string().optional()
 }).passthrough() // Allow extra fields para compatibilidade
