@@ -16,7 +16,7 @@ import { PLATFORM_OPTIONS } from '@/lib/constants/platforms'
 
 import { CampaignParams } from '@/lib/types'
 
-interface CampaignData extends CampaignParams {
+interface CampaignData extends Omit<CampaignParams, 'targetCpa'> {
   dailyBudget: number
   targetCpa: number
   platform?: string
@@ -36,9 +36,9 @@ function CampaignBuilderContainer() {
   const { campaign, isLoading, error, isSuccess, generateCampaign, clearError, safeAccess } = useCampaignBuilder()
   const [campaignData, setCampaignData] = useState<CampaignData>({
     productName: '',
-    targetCountry: 'US',
+    targetCountry: 'PL',
     budgetRange: '350',
-    targetCpa: '45',
+    targetCpa: 45,
     dailyBudget: 350,
     platform: 'SMARTADV',
     commissionValue: 100,
