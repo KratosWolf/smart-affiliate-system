@@ -18,7 +18,7 @@ import { CampaignParams } from '@/lib/types'
 
 interface CampaignData extends Omit<CampaignParams, 'targetCpa'> {
   dailyBudget: number
-  targetCpa: number
+  targetCpa: string // Changed from number to string to match CampaignParams
   platform?: string
   commissionValue?: number
   currency?: 'BRL' | 'USD'
@@ -38,7 +38,7 @@ function CampaignBuilderContainer() {
     productName: '',
     targetCountry: 'PL',
     budgetRange: '350',
-    targetCpa: 45,
+    targetCpa: '45',
     dailyBudget: 350,
     platform: 'SMARTADV',
     commissionValue: 100,
@@ -141,7 +141,7 @@ function CampaignBuilderContainer() {
         productName: campaignData.productName,
         targetCountry: campaignData.targetCountry,
         budgetRange: campaignData.budgetRange,
-        targetCpa: campaignData.targetCpa.toString(),
+        targetCpa: campaignData.targetCpa,
         description: campaignData.description,
         // Core campaign fields
         platform: campaignData.platform,
