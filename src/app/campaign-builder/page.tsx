@@ -236,7 +236,7 @@ function CampaignBuilderContainer() {
     const productName = campaignData.productName || 'Sample Product'
     const platform = campaignData.platform || 'DR Cash'
     const commissionValue = campaignData.commissionValue || 30
-    const currency = campaignData.currency || 'USD'
+    const currency = 'USD' // Force USD for commission currency in fallback
     const convertedBudget = currency === 'USD' && campaignData.dailyBudget >= 100 ?
       Math.round(campaignData.dailyBudget / 5.4) : campaignData.dailyBudget
     const targetCpa = campaignData.targetCpa || 33
@@ -331,8 +331,10 @@ Rólunk ${productName},Active
 Hogyan Működik,Active
 Előnyök,Active
 Vásárlás Most,Active
-Ajánlats Especiais,Active
-Garancia,Active`
+${productName} Garancia,Active
+Hivatalos Oldal,Active
+Gyors Szállítás,Active
+Legjobb Ár,Active`
         } else {
           return `Sitelink Text,Status
 Where to Buy ${productName},Active
@@ -448,22 +450,20 @@ Sample Data,Active`
       console.log('🔍 CSV TYPE REQUESTED:', csvType)
       console.log('🔍 AVAILABLE CSV KEYS:', campaign?.csvFiles ? Object.keys(campaign.csvFiles) : 'NO csvFiles')
       
-      // Use real campaign data if available, otherwise fallback to sample
-      // Fixed: API returns csvFiles, not csvData
+      // CRITICAL FIX: Force Hungarian fallback for Hungary campaigns
+      // The API returns mixed Portuguese/Hungarian content, so we force pure Hungarian
+      const forceHungarianFallback = campaignData.targetCountry === 'HU'
       const realCsvData = campaign?.csvFiles?.[csvType]
-      
-      if (realCsvData) {
+
+      if (realCsvData && !forceHungarianFallback) {
         console.log('✅ Using real campaign CSV data')
         csvContent = realCsvData
       } else {
-        console.log('⚠️ Using fallback sample CSV data - real CSV data not found')
-        console.log('⚠️ Campaign structure:', {
-          hasCampaign: !!campaign,
-          campaignKeys: campaign ? Object.keys(campaign) : 'No campaign',
-          hasCsvFiles: !!campaign?.csvFiles,
-          csvFilesKeys: campaign?.csvFiles ? Object.keys(campaign.csvFiles) : 'No csvFiles',
-          requestedType: csvType
-        })
+        if (forceHungarianFallback) {
+          console.log('🇭🇺 FORCING Hungarian fallback for Hungary campaign')
+        } else {
+          console.log('⚠️ Using fallback sample CSV data - real CSV data not found')
+        }
         csvContent = generateSampleCSV(csvType)
       }
       
@@ -512,10 +512,11 @@ Sample Data,Active`
       
       // Adiciona cada arquivo CSV ao ZIP
       filesToDownload.forEach(file => {
+        const forceHungarianFallback = campaignData.targetCountry === 'HU'
         const realCsvData = campaign?.csvFiles?.[file.type]
         let csvContent = ''
 
-        if (realCsvData) {
+        if (realCsvData && !forceHungarianFallback) {
           csvContent = realCsvData
         } else {
           csvContent = generateSampleCSV(file.type)
