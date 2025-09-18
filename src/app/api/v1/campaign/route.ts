@@ -453,7 +453,7 @@ ${luizCampaign.keywords.map(k => `- ${k.keyword} (${k.case})`).join('\n')}
       data: {
         campaign,
         summary,
-        csvData,
+        csvFiles: csvData,
         methodology: useLuizMethod ? 'LUIZ_OFFICIAL' : 'TRADITIONAL',
         metadata: {
           productName: validationData.productName,
