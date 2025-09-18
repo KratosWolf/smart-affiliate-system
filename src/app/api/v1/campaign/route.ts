@@ -211,16 +211,20 @@ export async function POST(request: NextRequest) {
       let convertedBudget = finalDailyBudget
 
       // Convert BRL to account currency if needed
-      if (accountCurrency === 'USD' && finalDailyBudget > 200) {
+      if (accountCurrency === 'USD' && finalDailyBudget >= 100) {
         convertedBudget = Math.round(finalDailyBudget / 5.4) // BRL to USD conversion
-      } else if (accountCurrency === 'EUR' && finalDailyBudget > 200) {
+        console.log(`💰 Budget converted: ${finalDailyBudget} BRL → ${convertedBudget} USD`)
+      } else if (accountCurrency === 'EUR' && finalDailyBudget >= 100) {
         convertedBudget = Math.round(finalDailyBudget / 6.0) // BRL to EUR conversion
+        console.log(`💰 Budget converted: ${finalDailyBudget} BRL → ${convertedBudget} EUR`)
       }
 
       // Build campaign name with platform and commission
-      const campaignPlatform = enhancedCampaignData.platform || platform || 'Unknown'
-      const commission = enhancedCampaignData.commissionValue || 0
+      const campaignPlatform = enhancedCampaignData.platform || platform || 'DR Cash'
+      const commission = enhancedCampaignData.commissionValue || commissionValue || 0
       const commissionCurrency = enhancedCampaignData.currency || 'USD'
+
+      console.log(`🏷️ Campaign naming: ${validationData.productName} - ${validationData.targetCountry} - ${campaignPlatform} - ${commissionCurrency}${commission}`)
 
       luizCampaign = {
         campaign: {
@@ -232,8 +236,8 @@ export async function POST(request: NextRequest) {
           structure: '1_CAMPAIGN_1_AD'
         },
         ads: {
-          headlines: bilingualOutput.standardCsvs.headlines ? bilingualOutput.standardCsvs.headlines.split('\n').slice(1).map(line => line.split(',')[0]) : [],
-          descriptions: bilingualOutput.standardCsvs.descriptions ? bilingualOutput.standardCsvs.descriptions.split('\n').slice(1).map(line => line.split(',')[0]) : []
+          headlines: bilingualOutput.standardCsvs.headlines ? bilingualOutput.standardCsvs.headlines.split('\n').slice(1).map(line => line.replace(/"/g, '')) : [],
+          descriptions: bilingualOutput.standardCsvs.descriptions ? bilingualOutput.standardCsvs.descriptions.split('\n').slice(1).map(line => line.replace(/"/g, '')).slice(0, 4) : []
         },
         keywords: [
           { keyword: validationData.productName.toLowerCase(), matchType: 'BROAD', case: 'lowercase' },
@@ -274,14 +278,17 @@ export async function POST(request: NextRequest) {
             category: 'health',
             price: enhancedCampaignData.productPrice || 97
           },
-          language: validationData.targetCountry === 'BR' ? 'pt-BR' : 'en-US',
+          language: targetLanguage,
           targetCountry: validationData.targetCountry
         })
 
-        // Replace with clean AI headlines if available
+        // Replace with clean AI headlines if available (but keep original language)
         if (aiHeadlines.content.length > 0) {
-          console.log(`✅ Using ${aiHeadlines.content.length} clean AI headlines`)
-          luizCampaign.ads.headlines = aiHeadlines.content.slice(0, 15)
+          console.log(`✅ Using ${aiHeadlines.content.length} clean AI headlines in ${targetLanguage}`)
+          // Only use AI headlines if they're in the correct language
+          if (targetLanguage !== 'en-US' || validationData.targetCountry === 'US') {
+            luizCampaign.ads.headlines = aiHeadlines.content.slice(0, 15)
+          }
         }
 
       } catch (aiError) {

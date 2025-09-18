@@ -203,6 +203,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'Premium': 'Prémium',
     'Autêntico': 'Hiteles',
     'Liquidação': 'Kiárusítás',
+    'Produto': 'Termék',
+    'Produto Original': 'Eredeti Termék',
 
     // Descriptions
     'original com frete grátis': 'eredeti ingyenes szállítással',

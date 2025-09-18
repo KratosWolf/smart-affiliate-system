@@ -424,25 +424,17 @@ export function CampaignForm({
             </div>
           </div>
 
-          {/* EDIS Tracking Section */}
+          {/* Tracking Ads Section */}
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 md:col-span-2">
             <div className="flex items-center gap-3 mb-3">
-              <h4 className="font-semibold text-green-800">📊 Tracking Edis</h4>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={campaignData.useEdisTracking}
-                  onChange={(e) => onInputChange('useEdisTracking', e.target.checked)}
-                  className="rounded border-green-300 text-green-600 focus:ring-green-500"
-                />
-                <span className="text-sm text-green-700">Ativar tracking</span>
-              </label>
+              <h4 className="font-semibold text-green-800">📊 Tracking Ads</h4>
+              <div className="text-sm text-green-600 font-medium">✅ Sempre ativo</div>
             </div>
             
-            {campaignData.useEdisTracking && (
+            <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-green-700 mb-2">
-                  URL Base do Edis
+                  URL Base do Edis *
                 </label>
                 <Input
                   placeholder="www.test.com"
@@ -451,7 +443,7 @@ export function CampaignForm({
                   className="border-green-300 focus:border-green-500 focus:ring-green-500"
                 />
                 <p className="text-xs text-green-600 mt-1">
-                  URLs finais terão: {campaignData.edisBaseUrl}?campaignid={'{campaignid}'}&keyword={'{keyword}'}&network={'{network}'}&extensionid={'{extensionid}'}&matchtype={'{matchtype}'}&adgroupid={'{adgroupid}'}
+                  URLs finais terão: {campaignData.edisBaseUrl || 'https://0z15y.doctormium.com/'}?campaignid={'{campaignid}'}&keyword={'{keyword}'}&network={'{network}'}&extensionid={'{extensionid}'}&matchtype={'{matchtype}'}&adgroupid={'{adgroupid}'}
                 </p>
               </div>
             )}
