@@ -231,51 +231,84 @@ function CampaignBuilderContainer() {
     }
   }
 
-  // Generate sample CSV content based on campaign data
+  // Generate Hungarian fallback CSV content
   const generateSampleCSV = (csvType: string): string => {
     const productName = campaignData.productName || 'Sample Product'
-    const budget = campaignData.dailyBudget || 350
+    const platform = campaignData.platform || 'DR Cash'
+    const commissionValue = campaignData.commissionValue || 30
+    const currency = campaignData.currency || 'USD'
+    const convertedBudget = currency === 'USD' && campaignData.dailyBudget >= 100 ?
+      Math.round(campaignData.dailyBudget / 5.4) : campaignData.dailyBudget
     const targetCpa = campaignData.targetCpa || 33
-    
+
+    // Hungarian content based on target country
+    const isHungarian = campaignData.targetCountry === 'HU'
+
     switch (csvType) {
       case 'campaignStructure':
+        const campaignName = isHungarian ?
+          `${productName} - ${campaignData.targetCountry} - ${platform} - ${currency}${commissionValue}` :
+          `${productName} - ${campaignData.targetCountry} - ${platform} - ${currency}${commissionValue}`
         return `Campaign,Status,Budget,Target CPA,Locations
-${productName} - ${campaignData.targetCountry} - Teste CPA,Active,${budget},${targetCpa},"${campaignData.targetCountry}"`
-      
+${campaignName},Active,${convertedBudget},${targetCpa},"${campaignData.targetCountry}"`
+
       case 'keywords':
         return `Keyword,Match Type,Status,Max CPC
 ${productName.toLowerCase()},Broad,Active,2.50
 ${productName.toUpperCase()},Broad,Active,2.50`
-      
+
       case 'ads':
-        return `Headline,Description,Status
+        if (isHungarian) {
+          return `Headline,Description,Status
+${productName} Eredeti,Vásároljon ${productName} eredeti ingyenes szállítással. Korlátozott idejű ajánlat!,Active
+Vásároljon ${productName},Exkluzív Kedvezmény ${productName}. Hivatalos oldal gyors szállítással.,Active
+${productName} Hivatalos,${productName} garantált legjobb ár. Vásároljon most a hivatalos oldalon!,Active
+Legjobb Ár ${productName},Ajánlat specialis ${productName} - Ingyenes szállítás egész Magyarországon.,Active
+${productName} Kedvezménnyel,Hivatalos Oldal ${productName}. Eredeti termék garanciával.,Active
+Ajánlat ${productName},${productName} még soha nem volt ilyen könnyű. Legjobb Ár.,Active
+${productName} Gyors Szállítás,${productName} Eredeti közvetlenül a hivatalos üzletből.,Active
+${productName} Akció,Akció kihagyhatatlan ${productName}. Desconto especial korlátozott ideig!,Active
+Hivatalos Oldal ${productName},Hivatalos Üzlet ${productName} - Termék Valódi, Ingyenes Szállítás.,Active
+${productName} Közvetlen,${productName} Magyarország - Ajánlat especial com garantia.,Active`
+        } else {
+          return `Headline,Description,Status
 ${productName} + Online Store,Order ${productName} Here On Website With 90 Days Guarantee. Best Value Pack 100/Bottle Now,Active
 ${productName} Order Now,Buy ${productName} Today & Get $780 Off With 90-Days Money Back Guarantee + Free Shipping,Active
 ${productName} Buy Now,${productName}: #1 Voted Product. 100% Pure & Natural With Free U.S Shipping.,Active
-${productName} Special Offer,Get ${productName} Now For Over 50% Off and Free Prompt Delivery! Don't Miss Out On Savings,Active
-${productName} Save up to 50%,You Can Try ${productName} For 90Days With Your Money Back Guarantee Get It Before It's Gone,Active
-${productName} Official Store,Official ${productName} Website - Order Now With 90 Day Money Back Guarantee,Active
-${productName} Best Price,${productName} Best Price Online - Save Up To 50% Today Only Limited Time Offer,Active
-${productName} Half Price,Get ${productName} For Half Price Today - Limited Stock Available Order Before It's Gone,Active
-${productName} Free Shipping,${productName} With Free Shipping Worldwide - 90 Day Money Back Guarantee Included,Active
-${productName} Discount Code,Use Discount Code For ${productName} - Save $780 On Your Order Today Limited Time,Active
-${productName} Limited Offer,${productName} Limited Time Offer - Get 3 Bottles For The Price Of 1 Free Shipping,Active
-${productName} Reviews,${productName} Reviews: #1 Rated Product - Over 10000 Happy Customers Worldwide,Active
-${productName} Guarantee,${productName} 90 Day Money Back Guarantee - Risk Free Trial Order Your Supply Today,Active
-${productName} Fast Delivery,${productName} Fast Delivery Worldwide - Order Now And Receive In 3-5 Business Days,Active
-${productName} Natural Formula,${productName} 100% Natural Formula - Clinically Proven Results Order Risk Free Today,Active`
-      
+${productName} Special Offer,Get ${productName} Now For Over 50% Off and Free Prompt Delivery! Don't Miss Out On Savings,Active`
+        }
+
       case 'sitelinks':
-        return `Sitelink Text,Status
+        if (isHungarian) {
+          return `Sitelink Text,Status
+Rólunk ${productName},Active
+Hogyan Működik,Active
+Előnyök,Active
+Vásárlás Most,Active
+Ajánlats Especiais,Active
+Garancia,Active`
+        } else {
+          return `Sitelink Text,Status
 Where to Buy ${productName},Active
 ${productName} is Only Available for,Active
 Purchase On Website,Active
 Half Price Offer,Active
 Big Sale in Progress,Active
 Get 50% Off,Active`
-      
+        }
+
       case 'callouts':
-        return `Callout Text,Status
+        if (isHungarian) {
+          return `Callout Text,Status
+Ingyenes Szállítás,Active
+Gyors Szállítás,Active
+Hivatalos Oldal,Active
+Legjobb Ár,Active
+Exkluzív Kedvezmény,Active
+30 Napos Garancia,Active
+24 órás Támogatás,Active`
+        } else {
+          return `Callout Text,Status
 Only $49 per Bottle Today,Active
 Save Up to $780,Active
 Half Price Offer,Active
@@ -283,16 +316,27 @@ Best Offer Guarantee,Active
 ${productName} Order Now,Active
 Free Private Shipping,Active
 100% Organic & Natural,Active`
-      
+        }
+
       case 'snippets':
-        return `Snippet Text,Category,Status
+        if (isHungarian) {
+          return `Snippet Text,Category,Status
+Hivatalos Oldal,Information,Active
+Legjobb Ár,Price,Active
+Ingyenes Szállítás,Delivery,Active
+Gyors Szállítás,Delivery,Active
+Eredeti Termék,Quality,Active
+Exkluzív Kedvezmény,Offer,Active`
+        } else {
+          return `Snippet Text,Category,Status
 Half Price Offer,Savings,Active
 Save Big Order Now,Savings,Active
 Free Private Delivery,Delivery,Active
 90Days Money Back,Guarantee,Active
 Limited-Time Offer,Scarcity,Active
 Get It Now,CTA,Active`
-      
+        }
+
       default:
         return `Data,Status
 Sample Data,Active`
