@@ -231,8 +231,8 @@ function CampaignBuilderContainer() {
     }
   }
 
-  // Generate multilingual fallback CSV content
-  const generateSampleCSV = (csvType: string): string => {
+  // 🤖 100% AI-POWERED SYSTEM: No fallbacks - pure AI generation with competitive intelligence
+  const deprecatedGenerateSampleCSV = (csvType: string): string => {
     const productName = campaignData.productName || 'Sample Product'
     const platform = campaignData.platform || 'DR Cash'
     const commissionValue = campaignData.commissionValue || 30
@@ -521,21 +521,16 @@ Sample Data,Active`
       console.log('🔍 CSV TYPE REQUESTED:', csvType)
       console.log('🔍 AVAILABLE CSV KEYS:', campaign?.csvFiles ? Object.keys(campaign.csvFiles) : 'NO csvFiles')
       
-      // CRITICAL FIX: Force Hungarian fallback for Hungary campaigns
-      // The API returns mixed Portuguese/Hungarian content, so we force pure Hungarian
-      const forceHungarianFallback = campaignData.targetCountry === 'HU'
+      // 🤖 100% AI SYSTEM: Always use real AI-generated CSV data
       const realCsvData = campaign?.csvFiles?.[csvType]
 
-      if (realCsvData && !forceHungarianFallback) {
-        console.log('✅ Using real campaign CSV data')
+      if (realCsvData) {
+        console.log('✅ Using AI-generated CSV data with competitive intelligence')
         csvContent = realCsvData
       } else {
-        if (forceHungarianFallback) {
-          console.log('🇭🇺 FORCING Hungarian fallback for Hungary campaign')
-        } else {
-          console.log('⚠️ Using fallback sample CSV data - real CSV data not found')
-        }
-        csvContent = generateSampleCSV(csvType)
+        console.log('❌ Error: No AI-generated CSV data found. Check API logs.')
+        alert('Erro: Dados da campanha não foram gerados pela IA. Verifique os logs da API.')
+        return
       }
       
       // Add product name prefix to filename
@@ -583,18 +578,15 @@ Sample Data,Active`
       
       // Adiciona cada arquivo CSV ao ZIP
       filesToDownload.forEach(file => {
-        const forceHungarianFallback = campaignData.targetCountry === 'HU'
+        // 🤖 100% AI SYSTEM: Only use AI-generated data
         const realCsvData = campaign?.csvFiles?.[file.type]
-        let csvContent = ''
 
-        if (realCsvData && !forceHungarianFallback) {
-          csvContent = realCsvData
+        if (realCsvData) {
+          const finalFilename = `${productName}_${file.name}`
+          zip.file(finalFilename, realCsvData)
         } else {
-          csvContent = generateSampleCSV(file.type)
+          console.error(`❌ Missing AI data for CSV type: ${file.type}`)
         }
-        
-        const finalFilename = `${productName}_${file.name}`
-        zip.file(finalFilename, csvContent)
       })
       
       // Gera e baixa o ZIP

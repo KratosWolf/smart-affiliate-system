@@ -5,6 +5,7 @@ import { luizCampaignGenerator } from '@/lib/campaigns/luiz-campaign-generator'
 import { csvGenerator } from '@/lib/campaigns/csv-generator'
 import { integratedItalianGenerator } from '@/lib/campaigns/integrated-italian-generator'
 import { BilingualCsvGenerator } from '@/lib/campaigns/bilingual-csv-generator'
+import { CompetitiveIntelligenceEngineV3 } from '@/lib/intelligence/competitive-intelligence-engine-v3'
 import { getCurrencyForCountry } from '@/lib/constants/currencies'
 import { ProductValidationResponse } from '@/types'
 
@@ -193,13 +194,31 @@ export async function POST(request: NextRequest) {
       const targetLanguage = languageMapping[validationData.targetCountry] || 'en-US'
       console.log(`🌍 LANGUAGE MAPPING: ${validationData.targetCountry} → ${targetLanguage}`)
 
+      // 🧠 COMPETITIVE INTELLIGENCE ENGINE V3 - FUGIR DA MANADA
+      console.log('🧠 Iniciando Competitive Intelligence Engine V3...')
+      const competitiveEngine = new CompetitiveIntelligenceEngineV3()
+
+      let competitiveIntelligence = null
+      try {
+        // Run competitive analysis to get better phrases and patterns
+        competitiveIntelligence = await competitiveEngine.analyzeCompetitorsEnterprise(
+          validationData.productName,
+          validationData.targetCountry,
+          targetLanguage
+        )
+        console.log('✅ Competitive Intelligence completed - found', competitiveIntelligence.puppeteerData?.totalAdsFound || 0, 'competitor ads')
+      } catch (error) {
+        console.log('⚠️ Competitive Intelligence failed, continuing without competitor data:', error)
+      }
+
       const bilingualGenerator = new BilingualCsvGenerator({
         productName: validationData.productName,
         targetCountry: validationData.targetCountry,
         targetLanguage,
         countryCode: validationData.targetCountry,
         hasDiscountData: !!(enhancedCampaignData.discountPercentage || enhancedCampaignData.discountAmount),
-        campaignType: enhancedCampaignData.campaignType || 'Standard'
+        campaignType: enhancedCampaignData.campaignType || 'Standard',
+        competitiveIntelligence: competitiveIntelligence // Pass competitive data to generator
       })
 
       // Generate complete bilingual campaign with all features

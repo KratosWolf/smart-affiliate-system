@@ -3,6 +3,7 @@ import { AdComponent, SitelinkComponent } from '@/lib/types'
 import { HEADLINE_TEMPLATES, DESCRIPTION_TEMPLATES, SITELINK_TEMPLATES, CALLOUT_TEMPLATES, SNIPPET_TEMPLATES, COD_HEADLINE_ADAPTATIONS, COD_DESCRIPTION_ADAPTATIONS, COD_CALLOUTS } from '@/lib/constants/campaign-templates'
 import { getCurrencyForCountry } from '@/lib/constants/currencies'
 import { createTranslator, RealTranslator } from '@/lib/translation/real-translator'
+import type { EnterpriseCompetitiveAnalysis } from '@/lib/intelligence/competitive-intelligence-engine-v3'
 
 export interface BilingualCsvOptions {
   productName: string
@@ -18,6 +19,7 @@ export interface BilingualCsvOptions {
   bonuses?: string
   scarcityType?: string
   campaignType: string
+  competitiveIntelligence?: EnterpriseCompetitiveAnalysis | null
 }
 
 export interface CsvOutput {
@@ -83,10 +85,17 @@ export class BilingualCsvGenerator {
   private async generateHeadlines(): Promise<void> {
     const headlines: AdComponent[] = []
 
-    // Generate dynamic headlines (first 15)
-    const dynamicTemplates = HEADLINE_TEMPLATES.filter(h => h.type === 'dynamic').slice(0, 15)
-    for (let i = 0; i < dynamicTemplates.length; i++) {
-      const template = dynamicTemplates[i]
+    // 🧠 FUGIR DA MANADA: Apply competitive intelligence to improve headlines
+    let improvedTemplates = HEADLINE_TEMPLATES.filter(h => h.type === 'dynamic').slice(0, 15)
+
+    if (this.options.competitiveIntelligence) {
+      console.log('🎯 Aplicando regra "Fugir da Manada" aos headlines...')
+      improvedTemplates = await this.applyFugirDaMandaRule(improvedTemplates)
+    }
+
+    // Generate dynamic headlines (first 15) with competitive intelligence
+    for (let i = 0; i < improvedTemplates.length; i++) {
+      const template = improvedTemplates[i]
       const localContent = await this.translateTemplate(template.template)
       const englishContent = this.getEnglishVersion(template.template)
 
@@ -434,6 +443,108 @@ export class BilingualCsvGenerator {
     if (benefitRelated.includes(snippet)) return 'Benefício'
 
     return 'Promocional'
+  }
+
+  /**
+   * 🧠 FUGIR DA MANADA RULE
+   *
+   * Compares our standard headlines with competitor patterns.
+   * If competitors have better local expressions for the same concept, use those.
+   * Otherwise, keep our original templates.
+   *
+   * Example: If our template is "promoção termina hoje" but competitors use
+   * "última oportunidade" (which tests better), we switch to the competitor phrase.
+   */
+  private async applyFugirDaMandaRule(templates: any[]): Promise<any[]> {
+    if (!this.options.competitiveIntelligence?.puppeteerData?.languagePatterns) {
+      console.log('📊 No competitive language patterns found, keeping original templates')
+      return templates
+    }
+
+    const competitivePatterns = this.options.competitiveIntelligence.puppeteerData.languagePatterns
+    const improvedTemplates = [...templates]
+
+    console.log(`🔍 Analyzing ${competitivePatterns.commonPhrases.length} competitive phrases`)
+
+    // Map common concepts to check for improvements
+    const conceptMappings = [
+      { concept: 'urgency', ourPhrases: ['promoção termina', 'última chance', 'aproveite agora'], category: 'Urgência' },
+      { concept: 'trust', ourPhrases: ['site oficial', 'produto original', 'empresa confiável'], category: 'Confiança' },
+      { concept: 'price', ourPhrases: ['melhor preço', 'desconto exclusivo', 'oferta especial'], category: 'Preço' },
+      { concept: 'benefit', ourPhrases: ['frete grátis', 'entrega rápida', 'garantia'], category: 'Benefício' }
+    ]
+
+    for (const mapping of conceptMappings) {
+      // Find competitor phrases for this concept that perform better
+      const competitorAlternatives = competitivePatterns.commonPhrases.filter(phrase =>
+        phrase.performance > 0.7 && // High performance threshold
+        this.isRelatedConcept(phrase.phrase, mapping.concept)
+      )
+
+      if (competitorAlternatives.length > 0) {
+        // Find templates in our set that match this concept
+        const templatesForConcept = improvedTemplates.filter(template =>
+          mapping.ourPhrases.some(ourPhrase =>
+            template.template.toLowerCase().includes(ourPhrase)
+          )
+        )
+
+        // Replace with best performing competitor alternative
+        for (const template of templatesForConcept) {
+          const bestAlternative = competitorAlternatives.sort((a, b) => b.performance - a.performance)[0]
+          const originalPhrase = mapping.ourPhrases.find(phrase =>
+            template.template.toLowerCase().includes(phrase)
+          )
+
+          if (originalPhrase && bestAlternative) {
+            template.template = template.template.replace(
+              new RegExp(originalPhrase, 'gi'),
+              bestAlternative.phrase
+            )
+
+            console.log(`🔄 FUGIR DA MANADA: "${originalPhrase}" → "${bestAlternative.phrase}" (performance: ${bestAlternative.performance})`)
+          }
+        }
+      }
+    }
+
+    // Also check for best local expressions
+    if (competitivePatterns.localExpressions.length > 0) {
+      console.log(`🌍 Found ${competitivePatterns.localExpressions.length} local expressions, integrating best ones`)
+
+      // Add top local expressions as new templates if they're high quality
+      const topLocalExpressions = competitivePatterns.localExpressions.slice(0, 3)
+      for (let i = 0; i < topLocalExpressions.length && improvedTemplates.length < 15; i++) {
+        const localExpr = topLocalExpressions[i]
+
+        // Add as new dynamic template
+        improvedTemplates.push({
+          template: `${localExpr} ${this.options.productName}`,
+          category: 'Local',
+          type: 'dynamic'
+        })
+      }
+    }
+
+    console.log(`✅ FUGIR DA MANADA completed: analyzed ${templates.length} original templates`)
+    return improvedTemplates.slice(0, 15) // Ensure we don't exceed 15 headlines
+  }
+
+  /**
+   * Checks if a competitor phrase is related to a specific concept
+   */
+  private isRelatedConcept(phrase: string, concept: string): boolean {
+    const phraseWords = phrase.toLowerCase().split(' ')
+
+    const conceptKeywords = {
+      urgency: ['termina', 'última', 'aproveite', 'agora', 'hoje', 'urgente', 'limitado', 'acaba'],
+      trust: ['oficial', 'original', 'confiável', 'seguro', 'garantido', 'certificado', 'autêntico'],
+      price: ['preço', 'desconto', 'oferta', 'barato', 'econômico', 'promocional', 'liquidação'],
+      benefit: ['grátis', 'rápida', 'expressa', 'garantia', 'devolução', 'suporte', 'benefício']
+    }
+
+    const keywords = conceptKeywords[concept as keyof typeof conceptKeywords] || []
+    return keywords.some(keyword => phraseWords.some(word => word.includes(keyword)))
   }
 }
 
