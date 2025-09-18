@@ -218,13 +218,13 @@ export async function POST(request: NextRequest) {
       }
 
       // Build campaign name with platform and commission
-      const platform = enhancedCampaignData.platform || 'Unknown'
+      const campaignPlatform = enhancedCampaignData.platform || platform || 'Unknown'
       const commission = enhancedCampaignData.commissionValue || 0
       const commissionCurrency = enhancedCampaignData.currency || 'USD'
 
       luizCampaign = {
         campaign: {
-          name: `${validationData.productName} - ${validationData.targetCountry} - ${platform} - ${commissionCurrency}${commission}`,
+          name: `${validationData.productName} - ${validationData.targetCountry} - ${campaignPlatform} - ${commissionCurrency}${commission}`,
           budget: convertedBudget,
           targetCpa: finalTargetCpa,
           currency: accountCurrency,
