@@ -231,7 +231,7 @@ function CampaignBuilderContainer() {
     }
   }
 
-  // Generate Hungarian fallback CSV content
+  // Generate multilingual fallback CSV content
   const generateSampleCSV = (csvType: string): string => {
     const productName = campaignData.productName || 'Sample Product'
     const platform = campaignData.platform || 'DR Cash'
@@ -241,16 +241,212 @@ function CampaignBuilderContainer() {
       Math.round(campaignData.dailyBudget / 5.4) : campaignData.dailyBudget
     const targetCpa = campaignData.targetCpa || 33
 
-    // Hungarian content based on target country
-    const isHungarian = campaignData.targetCountry === 'HU'
+    // Get language for target country using dynamic mapping
+    const targetCountry = campaignData.targetCountry || 'US'
+    const getLanguageTemplates = (country: string) => {
+      switch (country) {
+        case 'HU': // Hungarian
+          return {
+            headlines: [
+              `${productName} Eredeti`, `Vásároljon ${productName}`, `${productName} Hivatalos`,
+              `Legjobb Ár ${productName}`, `${productName} Kedvezmény`, `Ajánlat ${productName}`,
+              `${productName} Gyors`, `${productName} Akció`, `Hivatalos ${productName}`,
+              `${productName} Most`, `${productName} Olcsón`, `${productName} Garancia`,
+              `${productName} Ingyen`, `Eredeti ${productName}`, `${productName} Szállítás`
+            ],
+            descriptions: [
+              `${productName} eredeti termék 30 napos garanciával. Ingyenes szállítás!`,
+              `Vásároljon ${productName} most! Exkluzív kedvezmény csak ma.`,
+              `Hivatalos ${productName} weboldal. Garantált eredmény 90 nap.`,
+              `${productName} legjobb ár online. Gyors szállítás Magyarországon.`
+            ],
+            sitelinks: [
+              'Rólunk', 'Hogyan Működik', 'Előnyök', 'Vásárlás Most',
+              'Garancia', 'Hivatalos Oldal', 'Gyors Szállítás', 'Legjobb Ár'
+            ],
+            callouts: [
+              'Ingyenes Szállítás', 'Gyors Szállítás', 'Hivatalos Oldal', 'Legjobb Ár',
+              'Exkluzív Kedvezmény', '30 Napos Garancia', '24 órás Támogatás'
+            ]
+          }
+        case 'PL': // Polish
+          return {
+            headlines: [
+              `${productName} Oryginalny`, `Kup ${productName}`, `${productName} Oficjalny`,
+              `Najlepsza Cena ${productName}`, `${productName} ze Zniżką`, `Oferta ${productName}`,
+              `${productName} Szybko`, `${productName} Promocja`, `Oficjalny ${productName}`,
+              `${productName} Teraz`, `${productName} Tanio`, `${productName} Gwarancja`,
+              `${productName} Gratis`, `Oryginalny ${productName}`, `${productName} Dostawa`
+            ],
+            descriptions: [
+              `${productName} oryginalny produkt z 30-dniową gwarancją. Darmowa dostawa!`,
+              `Kup ${productName} teraz! Ekskluzywna zniżka tylko dziś.`,
+              `Oficjalna strona ${productName}. Gwarantowane efekty przez 90 dni.`,
+              `${productName} najlepsza cena online. Szybka dostawa w Polsce.`
+            ],
+            sitelinks: [
+              'O Nas', 'Jak Działa', 'Korzyści', 'Kup Teraz',
+              'Gwarancja', 'Oficjalna Strona', 'Szybka Dostawa', 'Najlepsza Cena'
+            ],
+            callouts: [
+              'Darmowa Dostawa', 'Szybka Dostawa', 'Oficjalna Strona', 'Najlepsza Cena',
+              'Ekskluzywna Zniżka', '30 Dni Gwarancji', '24h Wsparcie'
+            ]
+          }
+        case 'DE': // German
+          return {
+            headlines: [
+              `${productName} Original`, `${productName} Kaufen`, `${productName} Offiziell`,
+              `Bester Preis ${productName}`, `${productName} Rabatt`, `${productName} Angebot`,
+              `${productName} Schnell`, `${productName} Aktion`, `Offiziell ${productName}`,
+              `${productName} Jetzt`, `${productName} Günstig`, `${productName} Garantie`,
+              `${productName} Kostenlos`, `Original ${productName}`, `${productName} Versand`
+            ],
+            descriptions: [
+              `${productName} original mit 30-Tage-Garantie. Kostenloser Versand!`,
+              `${productName} jetzt kaufen! Exklusiver Rabatt nur heute.`,
+              `Offizielle ${productName} Website. Garantierte Ergebnisse 90 Tage.`,
+              `${productName} bester Preis online. Schneller Versand in Deutschland.`
+            ],
+            sitelinks: [
+              'Über Uns', 'Wie Es Funktioniert', 'Vorteile', 'Jetzt Kaufen',
+              'Garantie', 'Offizielle Seite', 'Schneller Versand', 'Bester Preis'
+            ],
+            callouts: [
+              'Kostenloser Versand', 'Schneller Versand', 'Offizielle Seite', 'Bester Preis',
+              'Exklusiver Rabatt', '30 Tage Garantie', '24h Support'
+            ]
+          }
+        case 'ES': case 'MX': case 'AR': case 'CO': case 'CL': case 'PE': // Spanish
+          return {
+            headlines: [
+              `${productName} Original`, `Comprar ${productName}`, `${productName} Oficial`,
+              `Mejor Precio ${productName}`, `${productName} con Descuento`, `Oferta ${productName}`,
+              `${productName} Rápido`, `${productName} Promoción`, `Oficial ${productName}`,
+              `${productName} Ahora`, `${productName} Barato`, `${productName} Garantía`,
+              `${productName} Gratis`, `Original ${productName}`, `${productName} Envío`
+            ],
+            descriptions: [
+              `${productName} original con garantía de 30 días. ¡Envío gratis!`,
+              `¡Compra ${productName} ahora! Descuento exclusivo solo hoy.`,
+              `Sitio oficial de ${productName}. Resultados garantizados 90 días.`,
+              `${productName} mejor precio online. Envío rápido en España.`
+            ],
+            sitelinks: [
+              'Sobre Nosotros', 'Cómo Funciona', 'Beneficios', 'Comprar Ahora',
+              'Garantía', 'Sitio Oficial', 'Envío Rápido', 'Mejor Precio'
+            ],
+            callouts: [
+              'Envío Gratis', 'Envío Rápido', 'Sitio Oficial', 'Mejor Precio',
+              'Descuento Exclusivo', '30 Días Garantía', 'Soporte 24h'
+            ]
+          }
+        case 'FR': // French
+          return {
+            headlines: [
+              `${productName} Original`, `Acheter ${productName}`, `${productName} Officiel`,
+              `Meilleur Prix ${productName}`, `${productName} Remise`, `Offre ${productName}`,
+              `${productName} Rapide`, `${productName} Promotion`, `Officiel ${productName}`,
+              `${productName} Maintenant`, `${productName} Pas Cher`, `${productName} Garantie`,
+              `${productName} Gratuit`, `Original ${productName}`, `${productName} Livraison`
+            ],
+            descriptions: [
+              `${productName} original avec garantie 30 jours. Livraison gratuite!`,
+              `Achetez ${productName} maintenant! Remise exclusive aujourd'hui seulement.`,
+              `Site officiel ${productName}. Résultats garantis 90 jours.`,
+              `${productName} meilleur prix en ligne. Livraison rapide en France.`
+            ],
+            sitelinks: [
+              'À Propos', 'Comment Ça Marche', 'Avantages', 'Acheter Maintenant',
+              'Garantie', 'Site Officiel', 'Livraison Rapide', 'Meilleur Prix'
+            ],
+            callouts: [
+              'Livraison Gratuite', 'Livraison Rapide', 'Site Officiel', 'Meilleur Prix',
+              'Remise Exclusive', '30 Jours Garantie', 'Support 24h'
+            ]
+          }
+        case 'IT': // Italian
+          return {
+            headlines: [
+              `${productName} Originale`, `Comprare ${productName}`, `${productName} Ufficiale`,
+              `Miglior Prezzo ${productName}`, `${productName} Sconto`, `Offerta ${productName}`,
+              `${productName} Veloce`, `${productName} Promozione`, `Ufficiale ${productName}`,
+              `${productName} Adesso`, `${productName} Economico`, `${productName} Garanzia`,
+              `${productName} Gratis`, `Originale ${productName}`, `${productName} Spedizione`
+            ],
+            descriptions: [
+              `${productName} originale con garanzia 30 giorni. Spedizione gratuita!`,
+              `Compra ${productName} adesso! Sconto esclusivo solo oggi.`,
+              `Sito ufficiale ${productName}. Risultati garantiti 90 giorni.`,
+              `${productName} miglior prezzo online. Spedizione veloce in Italia.`
+            ],
+            sitelinks: [
+              'Chi Siamo', 'Come Funziona', 'Vantaggi', 'Comprare Adesso',
+              'Garanzia', 'Sito Ufficiale', 'Spedizione Veloce', 'Miglior Prezzo'
+            ],
+            callouts: [
+              'Spedizione Gratuita', 'Spedizione Veloce', 'Sito Ufficiale', 'Miglior Prezzo',
+              'Sconto Esclusivo', '30 Giorni Garanzia', 'Supporto 24h'
+            ]
+          }
+        case 'BR': // Portuguese Brazil
+          return {
+            headlines: [
+              `${productName} Original`, `Comprar ${productName}`, `${productName} Oficial`,
+              `Melhor Preço ${productName}`, `${productName} com Desconto`, `Oferta ${productName}`,
+              `${productName} Rápido`, `${productName} Promoção`, `Oficial ${productName}`,
+              `${productName} Agora`, `${productName} Barato`, `${productName} Garantia`,
+              `${productName} Grátis`, `Original ${productName}`, `${productName} Entrega`
+            ],
+            descriptions: [
+              `${productName} original com garantia de 30 dias. Frete grátis!`,
+              `Compre ${productName} agora! Desconto exclusivo só hoje.`,
+              `Site oficial ${productName}. Resultados garantidos 90 dias.`,
+              `${productName} melhor preço online. Entrega rápida no Brasil.`
+            ],
+            sitelinks: [
+              'Sobre Nós', 'Como Funciona', 'Benefícios', 'Comprar Agora',
+              'Garantia', 'Site Oficial', 'Entrega Rápida', 'Melhor Preço'
+            ],
+            callouts: [
+              'Frete Grátis', 'Entrega Rápida', 'Site Oficial', 'Melhor Preço',
+              'Desconto Exclusivo', '30 Dias Garantia', 'Suporte 24h'
+            ]
+          }
+        default: // English fallback
+          return {
+            headlines: [
+              `${productName} Original`, `Buy ${productName}`, `${productName} Official`,
+              `Best Price ${productName}`, `${productName} Discount`, `${productName} Offer`,
+              `${productName} Fast`, `${productName} Sale`, `Official ${productName}`,
+              `${productName} Now`, `${productName} Cheap`, `${productName} Guarantee`,
+              `${productName} Free`, `Original ${productName}`, `${productName} Shipping`
+            ],
+            descriptions: [
+              `${productName} original with 30-day guarantee. Free shipping!`,
+              `Buy ${productName} now! Exclusive discount today only.`,
+              `Official ${productName} website. Guaranteed results 90 days.`,
+              `${productName} best price online. Fast shipping worldwide.`
+            ],
+            sitelinks: [
+              'About Us', 'How It Works', 'Benefits', 'Buy Now',
+              'Guarantee', 'Official Site', 'Fast Shipping', 'Best Price'
+            ],
+            callouts: [
+              'Free Shipping', 'Fast Shipping', 'Official Site', 'Best Price',
+              'Exclusive Discount', '30 Day Guarantee', '24h Support'
+            ]
+          }
+      }
+    }
+
+    const templates = getLanguageTemplates(targetCountry)
 
     switch (csvType) {
       case 'campaignStructure':
-        const campaignName = isHungarian ?
-          `${productName} - ${campaignData.targetCountry} - ${platform} - ${currency}${commissionValue}` :
-          `${productName} - ${campaignData.targetCountry} - ${platform} - ${currency}${commissionValue}`
+        const campaignName = `${productName} - ${targetCountry} - ${platform} - ${currency}${commissionValue}`
         return `Campaign,Status,Budget,Target CPA,Locations
-${campaignName},Active,${convertedBudget},${targetCpa},"${campaignData.targetCountry}"`
+${campaignName},Active,${convertedBudget},${targetCpa},"${targetCountry}"`
 
       case 'keywords':
         return `Keyword,Match Type,Status,Max CPC
@@ -258,179 +454,54 @@ ${productName.toLowerCase()},Broad,Active,2.50
 ${productName.toUpperCase()},Broad,Active,2.50`
 
       case 'headlines':
-        if (isHungarian) {
-          return `Headline,Status
-${productName} Eredeti,Active
-Vásároljon ${productName},Active
-${productName} Hivatalos,Active
-Legjobb Ár ${productName},Active
-${productName} Kedvezmény,Active
-Ajánlat ${productName},Active
-${productName} Gyors,Active
-${productName} Akció,Active
-Hivatalos ${productName},Active
-${productName} Most,Active
-${productName} Olcsón,Active
-${productName} Garancia,Active
-${productName} Ingyen,Active
-Eredeti ${productName},Active
-${productName} Szállítás,Active`
-        } else {
-          return `Headline,Status
-${productName} + Online Store,Active
-${productName} Order Now,Active
-${productName} Buy Now,Active
-${productName} Special Offer,Active
-${productName} Save up to 50%,Active
-${productName} Official Store,Active
-${productName} Best Price,Active
-${productName} Half Price,Active
-${productName} Free Shipping,Active
-${productName} Discount Code,Active
-${productName} Limited Offer,Active
-${productName} Reviews,Active
-${productName} Guarantee,Active
-${productName} Fast Delivery,Active
-${productName} Natural Formula,Active`
-        }
+        const headlinesText = templates.headlines.map(headline => `${headline},Active`).join('\n')
+        return `Headline,Status\n${headlinesText}`
 
       case 'descriptions':
-        if (isHungarian) {
-          return `Description,Status
-${productName} eredeti termék 30 napos garanciával. Ingyenes szállítás!,Active
-Vásároljon ${productName} most! Exkluzív kedvezmény csak ma.,Active
-Hivatalos ${productName} weboldal. Garantált eredmény 90 nap.,Active
-${productName} legjobb ár online. Gyors szállítás Magyarországon.,Active`
-        } else {
-          return `Description,Status
-Order ${productName} with 90 days guarantee. Best value pack now!,Active
-Buy ${productName} today & get $780 off with free shipping!,Active
-${productName}: #1 voted product. 100% pure & natural shipping.,Active
-Get ${productName} for over 50% off and free prompt delivery!,Active`
-        }
+        const descriptionsText = templates.descriptions.map(description => `${description},Active`).join('\n')
+        return `Description,Status\n${descriptionsText}`
 
       case 'ads':
-        if (isHungarian) {
-          return `Headline,Description,Status
-${productName} Eredeti,${productName} eredeti termék 30 napos garanciával. Ingyenes szállítás!,Active
-Vásároljon ${productName},Vásároljon ${productName} most! Exkluzív kedvezmény csak ma.,Active
-${productName} Hivatalos,Hivatalos ${productName} weboldal. Garantált eredmény 90 nap.,Active
-Legjobb Ár ${productName},${productName} legjobb ár online. Gyors szállítás Magyarországon.,Active`
-        } else {
-          return `Headline,Description,Status
-${productName} + Online Store,Order ${productName} with 90 days guarantee. Best value pack now!,Active
-${productName} Order Now,Buy ${productName} today & get $780 off with free shipping!,Active
-${productName} Buy Now,${productName}: #1 voted product. 100% pure & natural shipping.,Active
-${productName} Special Offer,Get ${productName} for over 50% off and free prompt delivery!,Active`
-        }
+        const adsText = templates.headlines.slice(0, 4).map((headline, index) =>
+          `${headline},${templates.descriptions[index]},Active`
+        ).join('\n')
+        return `Headline,Description,Status\n${adsText}`
 
       case 'sitelinks':
-        if (isHungarian) {
-          return `Sitelink Text,Status
-Rólunk ${productName},Active
-Hogyan Működik,Active
-Előnyök,Active
-Vásárlás Most,Active
-${productName} Garancia,Active
-Hivatalos Oldal,Active
-Gyors Szállítás,Active
-Legjobb Ár,Active`
-        } else {
-          return `Sitelink Text,Status
-Where to Buy ${productName},Active
-${productName} is Only Available for,Active
-Purchase On Website,Active
-Half Price Offer,Active
-Big Sale in Progress,Active
-Get 50% Off,Active`
-        }
+        const sitelinksText = templates.sitelinks.map(sitelink => `${sitelink},Active`).join('\n')
+        return `Sitelink Text,Status\n${sitelinksText}`
 
       case 'callouts':
-        if (isHungarian) {
-          return `Callout Text,Status
-Ingyenes Szállítás,Active
-Gyors Szállítás,Active
-Hivatalos Oldal,Active
-Legjobb Ár,Active
-Exkluzív Kedvezmény,Active
-30 Napos Garancia,Active
-24 órás Támogatás,Active`
-        } else {
-          return `Callout Text,Status
-Only $49 per Bottle Today,Active
-Save Up to $780,Active
-Half Price Offer,Active
-Best Offer Guarantee,Active
-${productName} Order Now,Active
-Free Private Shipping,Active
-100% Organic & Natural,Active`
-        }
+        const calloutsText = templates.callouts.map(callout => `${callout},Active`).join('\n')
+        return `Callout Text,Status\n${calloutsText}`
 
       case 'snippets':
-        if (isHungarian) {
-          return `Snippet Text,Category,Status
-Hivatalos Oldal,Information,Active
-Legjobb Ár,Price,Active
-Ingyenes Szállítás,Delivery,Active
-Gyors Szállítás,Delivery,Active
-Eredeti Termék,Quality,Active
-Exkluzív Kedvezmény,Offer,Active`
-        } else {
-          return `Snippet Text,Category,Status
-Half Price Offer,Savings,Active
-Save Big Order Now,Savings,Active
-Free Private Delivery,Delivery,Active
-90Days Money Back,Guarantee,Active
-Limited-Time Offer,Scarcity,Active
-Get It Now,CTA,Active`
-        }
+        const snippetsText = templates.callouts.slice(0, 6).map((snippet, index) => {
+          const categories = ['Information', 'Price', 'Delivery', 'Quality', 'Offer', 'Support']
+          return `${snippet},${categories[index] || 'General'},Active`
+        }).join('\n')
+        return `Snippet Text,Category,Status\n${snippetsText}`
 
       case 'bilingual':
-        if (isHungarian) {
-          return `Content_HU,Characters,Content_EN,Category,Status
-${productName} Eredeti,14,${productName} Original,Headlines,Active
-Vásároljon ${productName},${(10 + productName.length)},Buy ${productName},Headlines,Active
-${productName} Hivatalos,${(10 + productName.length)},Official ${productName},Headlines,Active
-Legjobb Ár ${productName},${(12 + productName.length)},Best Price ${productName},Headlines,Active
-${productName} eredeti termék 30 napos garanciával. Ingyenes szállítás!,${(65 + productName.length)},${productName} original product with 30-day guarantee. Free shipping!,Descriptions,Active
-Vásároljon ${productName} most! Exkluzív kedvezmény csak ma.,${(49 + productName.length)},Buy ${productName} now! Exclusive discount today only.,Descriptions,Active
-Hivatalos ${productName} weboldal. Garantált eredmény 90 nap.,${(52 + productName.length)},Official ${productName} website. Guaranteed results 90 days.,Descriptions,Active
-${productName} legjobb ár online. Gyors szállítás Magyarországon.,${(58 + productName.length)},${productName} best price online. Fast shipping in Hungary.,Descriptions,Active
-Ingyenes Szállítás,17,Free Shipping,Callouts,Active
-Gyors Szállítás,14,Fast Shipping,Callouts,Active
-Hivatalos Oldal,15,Official Site,Callouts,Active
-Legjobb Ár,11,Best Price,Callouts,Active
-Rólunk ${productName},${(7 + productName.length)},About ${productName},Sitelinks,Active
-Hogyan Működik,13,How It Works,Sitelinks,Active
-Előnyök,8,Benefits,Sitelinks,Active
-Vásárlás Most,12,Buy Now,Sitelinks,Active
-Hivatalos Oldal,15,Official Site,Snippets,Active
-Legjobb Ár,11,Best Price,Snippets,Active
-Ingyenes Szállítás,17,Free Shipping,Snippets,Active
-Eredeti Termék,13,Original Product,Snippets,Active`
-        } else {
-          return `Content_EN,Characters,Content_HU,Category,Status
-${productName} Original,${(9 + productName.length)},${productName} Eredeti,Headlines,Active
-Buy ${productName},${(4 + productName.length)},Vásároljon ${productName},Headlines,Active
-Official ${productName},${(9 + productName.length)},${productName} Hivatalos,Headlines,Active
-Best Price ${productName},${(11 + productName.length)},Legjobb Ár ${productName},Headlines,Active
-${productName} original product with 30-day guarantee. Free shipping!,${(58 + productName.length)},${productName} eredeti termék 30 napos garanciával. Ingyenes szállítás!,Descriptions,Active
-Buy ${productName} now! Exclusive discount today only.,${(43 + productName.length)},Vásároljon ${productName} most! Exkluzív kedvezmény csak ma.,Descriptions,Active
-Official ${productName} website. Guaranteed results 90 days.,${(50 + productName.length)},Hivatalos ${productName} weboldal. Garantált eredmény 90 nap.,Descriptions,Active
-${productName} best price online. Fast shipping in Hungary.,${(48 + productName.length)},${productName} legjobb ár online. Gyors szállítás Magyarországon.,Descriptions,Active
-Free Shipping,13,Ingyenes Szállítás,Callouts,Active
-Fast Shipping,13,Gyors Szállítás,Callouts,Active
-Official Site,13,Hivatalos Oldal,Callouts,Active
-Best Price,10,Legjobb Ár,Callouts,Active
-About ${productName},${(6 + productName.length)},Rólunk ${productName},Sitelinks,Active
-How It Works,12,Hogyan Működik,Sitelinks,Active
-Benefits,8,Előnyök,Sitelinks,Active
-Buy Now,7,Vásárlás Most,Sitelinks,Active
-Official Site,13,Hivatalos Oldal,Snippets,Active
-Best Price,10,Legjobb Ár,Snippets,Active
-Free Shipping,13,Ingyenes Szállítás,Snippets,Active
-Original Product,16,Eredeti Termék,Snippets,Active`
-        }
+        const languageCode = targetCountry.toLowerCase()
+        const englishTemplates = getLanguageTemplates('US')
+
+        const bilingualEntries = [
+          ...templates.headlines.slice(0, 4).map((headline, index) =>
+            `${headline},${headline.length},${englishTemplates.headlines[index]},Headlines,Active`
+          ),
+          ...templates.descriptions.slice(0, 4).map((description, index) =>
+            `${description},${description.length},${englishTemplates.descriptions[index]},Descriptions,Active`
+          ),
+          ...templates.callouts.slice(0, 4).map((callout, index) =>
+            `${callout},${callout.length},${englishTemplates.callouts[index]},Callouts,Active`
+          ),
+          ...templates.sitelinks.slice(0, 4).map((sitelink, index) =>
+            `${sitelink},${sitelink.length},${englishTemplates.sitelinks[index]},Sitelinks,Active`
+          )
+        ]
+
+        return `Content_${languageCode.toUpperCase()},Characters,Content_EN,Category,Status\n${bilingualEntries.join('\n')}`
 
       default:
         return `Data,Status
