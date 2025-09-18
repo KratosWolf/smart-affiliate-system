@@ -172,12 +172,46 @@ export async function POST(request: NextRequest) {
       // ✅ USAR GERADOR PADRÃO PARA TODOS OS PAÍSES COM IA INTEGRADA
       console.log(`🤖 Using AI-Enhanced Luiz generator for ${validationData.targetCountry}`)
       
-      // Gera campanha base usando metodologia Luiz com AI integration
-      luizCampaign = await luizCampaignGenerator.generateCampaign(
-        validationData,
-        finalAffiliateUrl,
-        enhancedCampaignData
-      )
+      // 🚀 USAR NOVO GERADOR COM TODAS AS FEATURES
+      console.log('🚀 Using NEW BilingualCsvGenerator with AI + Translation + Competitive Intelligence')
+
+      const bilingualGenerator = new BilingualCsvGenerator({
+        productName: validationData.productName,
+        targetCountry: validationData.targetCountry,
+        targetLanguage: validationData.targetCountry === 'BR' ? 'pt-BR' : 'en-US',
+        countryCode: validationData.targetCountry,
+        hasDiscountData: !!(enhancedCampaignData.discountPercentage || enhancedCampaignData.discountAmount),
+        campaignType: enhancedCampaignData.campaignType || 'Standard'
+      })
+
+      // Generate complete bilingual campaign with all features
+      const bilingualOutput = await bilingualGenerator.generateAllCsvs()
+
+      // Convert to luizCampaign format for compatibility
+      luizCampaign = {
+        campaign: {
+          name: `${validationData.productName} - ${validationData.targetCountry}`,
+          budget: finalDailyBudget,
+          targetCpa: finalTargetCpa,
+          currency: getCurrencyForCountry(validationData.targetCountry),
+          type: 'SEARCH',
+          structure: '1_CAMPAIGN_1_AD'
+        },
+        ads: {
+          headlines: bilingualOutput.metadata.components.headlines || [],
+          descriptions: bilingualOutput.metadata.components.descriptions || []
+        },
+        keywords: [
+          { keyword: validationData.productName.toLowerCase(), matchType: 'BROAD', case: 'lowercase' },
+          { keyword: validationData.productName.toUpperCase(), matchType: 'BROAD', case: 'uppercase' }
+        ],
+        extensions: {
+          sitelinks: bilingualOutput.metadata.components.sitelinks || [],
+          callouts: bilingualOutput.metadata.components.callouts || [],
+          snippets: bilingualOutput.metadata.components.snippets || []
+        },
+        csvFiles: bilingualOutput.standardCsvs
+      }
 
       // 🤖 AI ENHANCEMENT: Replace headlines with clean AI-generated content
       try {
