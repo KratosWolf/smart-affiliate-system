@@ -179,6 +179,7 @@ export async function POST(request: NextRequest) {
       const languageMapping: Record<string, string> = {
         'BR': 'pt-BR',  // Brazil -> Portuguese
         'PL': 'pl-PL',  // Poland -> Polish
+        'HU': 'hu-HU',  // Hungary -> Hungarian
         'DE': 'de-DE',  // Germany -> German
         'ES': 'es-ES',  // Spain -> Spanish
         'FR': 'fr-FR',  // France -> French

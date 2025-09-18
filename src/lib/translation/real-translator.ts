@@ -180,6 +180,71 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'Premium': 'Premium',
     'Autêntico': 'Autentico',
     'Liquidação': 'Liquidazione'
+  },
+
+  // HUNGARIAN (Hungary)
+  'HU': {
+    'Frete Grátis': 'Ingyenes Szállítás',
+    'Desconto Exclusivo': 'Exkluzív Kedvezmény',
+    'Site Oficial': 'Hivatalos Oldal',
+    'Melhor Preço': 'Legjobb Ár',
+    'Compre': 'Vásároljon',
+    'Original': 'Eredeti',
+    'Oficial': 'Hivatalos',
+    'com Desconto': 'Kedvezménnyel',
+    'Oferta': 'Ajánlat',
+    'Entrega Rápida': 'Gyors Szállítás',
+    'Promoção': 'Akció',
+    'Direto': 'Közvetlen',
+    'Loja Oficial': 'Hivatalos Üzlet',
+    'Genuíno': 'Valódi',
+    'Super Oferta': 'Szuper Ajánlat',
+    'Exclusivo': 'Exkluzív',
+    'Premium': 'Prémium',
+    'Autêntico': 'Hiteles',
+    'Liquidação': 'Kiárusítás',
+
+    // Descriptions
+    'original com frete grátis': 'eredeti ingyenes szállítással',
+    'Oferta por tempo limitado': 'Korlátozott idejű ajánlat',
+    'Site oficial com entrega rápida': 'Hivatalos oldal gyors szállítással',
+    'melhor preço garantido': 'garantált legjobb ár',
+    'Compre agora no site oficial': 'Vásároljon most a hivatalos oldalon',
+    'Frete grátis para todo Brasil': 'Ingyenes szállítás egész Magyarországon',
+    'Aproveite': 'Használja ki',
+    'Produto original com garantia': 'Eredeti termék garanciával',
+    'nunca foi tão fácil': 'még soha nem volt ilyen könnyű',
+    'direto da loja oficial': 'közvetlenül a hivatalos üzletből',
+    'acima de': 'felett',
+    'imperdível': 'kihagyhatatlan',
+    'por tempo limitado': 'korlátozott ideig',
+    'genuíno': 'valódi',
+
+    // Sitelinks
+    'Sobre': 'Rólunk',
+    'Conheça todos os benefícios': 'Ismerje meg az összes előnyt',
+    'Como Funciona': 'Hogyan Működik',
+    'Veja o passo a passo completo': 'Tekintse meg a teljes útmutatót',
+    'Benefícios': 'Előnyök',
+    'Descubra todas as vantagens': 'Fedezze fel az összes előnyt',
+    'Comprar Agora': 'Vásárlás Most',
+    'Adquira com desconto exclusivo': 'Szerezze be exkluzív kedvezménnyel',
+    'Garantia': 'Garancia',
+    '30 dias para devolução': '30 napos visszatérítés',
+    'Suporte 24h': '24 órás Támogatás',
+    'Atendimento sempre disponível': 'Mindig elérhető ügyfélszolgálat',
+
+    // Callouts & Snippets
+    'Garantia 30 dias': '30 Napos Garancia',
+    'Sem Taxa Extra': 'Extra díj nélkül',
+    'Cashback': 'Visszatérítés',
+    'Parcele sem Juros': 'Kamatmentes Részletfizetés',
+    'Devolução Grátis': 'Ingyenes Visszaküldés',
+    'Empresa Confiável': 'Megbízható Cég',
+    'Compra Protegida': 'Védett Vásárlás',
+    'Certificado': 'Tanúsított',
+    'Garantia Total': 'Teljes Garancia',
+    'Sem Taxa': 'Díjmentes'
   }
 }
 
