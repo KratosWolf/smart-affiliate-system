@@ -112,14 +112,12 @@ export function CampaignForm({
             </label>
             <select
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              value={campaignData.currency || getCurrencyForCountry(campaignData.targetCountry)}
+              value={campaignData.currency || 'USD'}
               onChange={(e) => onInputChange('currency', e.target.value)}
             >
-              <option value="BRL">BRL - Real Brasileiro (R$)</option>
               <option value="USD">USD - Dólar Americano ($)</option>
               <option value="EUR">EUR - Euro (€)</option>
-              <option value="PLN">PLN - Zloty Polonês (zł)</option>
-              <option value="GBP">GBP - Libra Esterlina (£)</option>
+              <option value="BRL">BRL - Real Brasileiro (R$)</option>
             </select>
             <p className="text-xs text-gray-500 mt-1">Moeda utilizada para cálculos de CPA e comissão</p>
           </div>
@@ -143,17 +141,12 @@ export function CampaignForm({
             </label>
             <select
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              value={campaignData.accountCurrency || getCurrencyForCountry(campaignData.targetCountry)}
+              value={campaignData.accountCurrency || 'USD'}
               onChange={(e) => onInputChange('accountCurrency', e.target.value)}
             >
-              <option value="BRL">BRL - Real Brasileiro (R$)</option>
               <option value="USD">USD - Dólar Americano ($)</option>
               <option value="EUR">EUR - Euro (€)</option>
-              <option value="PLN">PLN - Zloty Polonês (zł)</option>
-              <option value="GBP">GBP - Libra Esterlina (£)</option>
-              <option value="HUF">HUF - Forint Húngaro (Ft)</option>
-              <option value="CAD">CAD - Dólar Canadense (C$)</option>
-              <option value="AUD">AUD - Dólar Australiano (A$)</option>
+              <option value="BRL">BRL - Real Brasileiro (R$)</option>
             </select>
             <p className="text-xs text-gray-500 mt-1">Moeda configurada na sua conta do Google Ads</p>
           </div>
