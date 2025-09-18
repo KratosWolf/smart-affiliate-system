@@ -446,7 +446,7 @@ export function CampaignForm({
                   URLs finais terão: {campaignData.edisBaseUrl || 'https://0z15y.doctormium.com/'}?campaignid={'{campaignid}'}&keyword={'{keyword}'}&network={'{network}'}&extensionid={'{extensionid}'}&matchtype={'{matchtype}'}&adgroupid={'{adgroupid}'}
                 </p>
               </div>
-            )}
+            </div>
           </div>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 md:col-span-2">
