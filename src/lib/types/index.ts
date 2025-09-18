@@ -14,6 +14,8 @@ export interface CampaignData {
   keywords: Keyword[]
   ads: Ad[]
   csvData?: Record<string, string>
+  // NEW: CSV files from API (csvFiles field)
+  csvFiles?: Record<string, string>
   // NEW: Bilingual CSV data
   bilingualCsvData?: BilingualCsvData
 }

@@ -309,11 +309,11 @@ Sample Data,Active`
       // Debug: Log campaign structure
       console.log('🔍 CAMPAIGN OBJECT:', JSON.stringify(campaign, null, 2))
       console.log('🔍 CSV TYPE REQUESTED:', csvType)
-      console.log('🔍 AVAILABLE CSV KEYS:', campaign?.csvData ? Object.keys(campaign.csvData) : 'NO csvData')
+      console.log('🔍 AVAILABLE CSV KEYS:', campaign?.csvFiles ? Object.keys(campaign.csvFiles) : 'NO csvFiles')
       
-      // Use real campaign data if available, otherwise fallback to sample  
-      // Based on API structure: response.data.csvData[csvType]
-      const realCsvData = campaign?.csvData?.[csvType]
+      // Use real campaign data if available, otherwise fallback to sample
+      // Fixed: API returns csvFiles, not csvData
+      const realCsvData = campaign?.csvFiles?.[csvType]
       
       if (realCsvData) {
         console.log('✅ Using real campaign CSV data')
@@ -323,8 +323,8 @@ Sample Data,Active`
         console.log('⚠️ Campaign structure:', {
           hasCampaign: !!campaign,
           campaignKeys: campaign ? Object.keys(campaign) : 'No campaign',
-          hasCsvData: !!campaign?.csvData,
-          csvDataKeys: campaign?.csvData ? Object.keys(campaign.csvData) : 'No csvData',
+          hasCsvFiles: !!campaign?.csvFiles,
+          csvFilesKeys: campaign?.csvFiles ? Object.keys(campaign.csvFiles) : 'No csvFiles',
           requestedType: csvType
         })
         csvContent = generateSampleCSV(csvType)
@@ -372,9 +372,9 @@ Sample Data,Active`
       
       // Adiciona cada arquivo CSV ao ZIP
       filesToDownload.forEach(file => {
-        const realCsvData = campaign?.csvData?.[file.type]
+        const realCsvData = campaign?.csvFiles?.[file.type]
         let csvContent = ''
-        
+
         if (realCsvData) {
           csvContent = realCsvData
         } else {
