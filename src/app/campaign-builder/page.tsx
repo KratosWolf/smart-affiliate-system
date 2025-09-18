@@ -257,25 +257,71 @@ ${campaignName},Active,${convertedBudget},${targetCpa},"${campaignData.targetCou
 ${productName.toLowerCase()},Broad,Active,2.50
 ${productName.toUpperCase()},Broad,Active,2.50`
 
+      case 'headlines':
+        if (isHungarian) {
+          return `Headline,Status
+${productName} Eredeti,Active
+Vásároljon ${productName},Active
+${productName} Hivatalos,Active
+Legjobb Ár ${productName},Active
+${productName} Kedvezmény,Active
+Ajánlat ${productName},Active
+${productName} Gyors,Active
+${productName} Akció,Active
+Hivatalos ${productName},Active
+${productName} Most,Active
+${productName} Olcsón,Active
+${productName} Garancia,Active
+${productName} Ingyen,Active
+Eredeti ${productName},Active
+${productName} Szállítás,Active`
+        } else {
+          return `Headline,Status
+${productName} + Online Store,Active
+${productName} Order Now,Active
+${productName} Buy Now,Active
+${productName} Special Offer,Active
+${productName} Save up to 50%,Active
+${productName} Official Store,Active
+${productName} Best Price,Active
+${productName} Half Price,Active
+${productName} Free Shipping,Active
+${productName} Discount Code,Active
+${productName} Limited Offer,Active
+${productName} Reviews,Active
+${productName} Guarantee,Active
+${productName} Fast Delivery,Active
+${productName} Natural Formula,Active`
+        }
+
+      case 'descriptions':
+        if (isHungarian) {
+          return `Description,Status
+${productName} eredeti termék 30 napos garanciával. Ingyenes szállítás!,Active
+Vásároljon ${productName} most! Exkluzív kedvezmény csak ma.,Active
+Hivatalos ${productName} weboldal. Garantált eredmény 90 nap.,Active
+${productName} legjobb ár online. Gyors szállítás Magyarországon.,Active`
+        } else {
+          return `Description,Status
+Order ${productName} with 90 days guarantee. Best value pack now!,Active
+Buy ${productName} today & get $780 off with free shipping!,Active
+${productName}: #1 voted product. 100% pure & natural shipping.,Active
+Get ${productName} for over 50% off and free prompt delivery!,Active`
+        }
+
       case 'ads':
         if (isHungarian) {
           return `Headline,Description,Status
-${productName} Eredeti,Vásároljon ${productName} eredeti ingyenes szállítással. Korlátozott idejű ajánlat!,Active
-Vásároljon ${productName},Exkluzív Kedvezmény ${productName}. Hivatalos oldal gyors szállítással.,Active
-${productName} Hivatalos,${productName} garantált legjobb ár. Vásároljon most a hivatalos oldalon!,Active
-Legjobb Ár ${productName},Ajánlat specialis ${productName} - Ingyenes szállítás egész Magyarországon.,Active
-${productName} Kedvezménnyel,Hivatalos Oldal ${productName}. Eredeti termék garanciával.,Active
-Ajánlat ${productName},${productName} még soha nem volt ilyen könnyű. Legjobb Ár.,Active
-${productName} Gyors Szállítás,${productName} Eredeti közvetlenül a hivatalos üzletből.,Active
-${productName} Akció,Akció kihagyhatatlan ${productName}. Desconto especial korlátozott ideig!,Active
-Hivatalos Oldal ${productName},Hivatalos Üzlet ${productName} - Termék Valódi, Ingyenes Szállítás.,Active
-${productName} Közvetlen,${productName} Magyarország - Ajánlat especial com garantia.,Active`
+${productName} Eredeti,${productName} eredeti termék 30 napos garanciával. Ingyenes szállítás!,Active
+Vásároljon ${productName},Vásároljon ${productName} most! Exkluzív kedvezmény csak ma.,Active
+${productName} Hivatalos,Hivatalos ${productName} weboldal. Garantált eredmény 90 nap.,Active
+Legjobb Ár ${productName},${productName} legjobb ár online. Gyors szállítás Magyarországon.,Active`
         } else {
           return `Headline,Description,Status
-${productName} + Online Store,Order ${productName} Here On Website With 90 Days Guarantee. Best Value Pack 100/Bottle Now,Active
-${productName} Order Now,Buy ${productName} Today & Get $780 Off With 90-Days Money Back Guarantee + Free Shipping,Active
-${productName} Buy Now,${productName}: #1 Voted Product. 100% Pure & Natural With Free U.S Shipping.,Active
-${productName} Special Offer,Get ${productName} Now For Over 50% Off and Free Prompt Delivery! Don't Miss Out On Savings,Active`
+${productName} + Online Store,Order ${productName} with 90 days guarantee. Best value pack now!,Active
+${productName} Order Now,Buy ${productName} today & get $780 off with free shipping!,Active
+${productName} Buy Now,${productName}: #1 voted product. 100% pure & natural shipping.,Active
+${productName} Special Offer,Get ${productName} for over 50% off and free prompt delivery!,Active`
         }
 
       case 'sitelinks':
@@ -335,6 +381,53 @@ Free Private Delivery,Delivery,Active
 90Days Money Back,Guarantee,Active
 Limited-Time Offer,Scarcity,Active
 Get It Now,CTA,Active`
+        }
+
+      case 'bilingual':
+        if (isHungarian) {
+          return `Content_HU,Characters,Content_EN,Category,Status
+${productName} Eredeti,14,${productName} Original,Headlines,Active
+Vásároljon ${productName},${(10 + productName.length)},Buy ${productName},Headlines,Active
+${productName} Hivatalos,${(10 + productName.length)},Official ${productName},Headlines,Active
+Legjobb Ár ${productName},${(12 + productName.length)},Best Price ${productName},Headlines,Active
+${productName} eredeti termék 30 napos garanciával. Ingyenes szállítás!,${(65 + productName.length)},${productName} original product with 30-day guarantee. Free shipping!,Descriptions,Active
+Vásároljon ${productName} most! Exkluzív kedvezmény csak ma.,${(49 + productName.length)},Buy ${productName} now! Exclusive discount today only.,Descriptions,Active
+Hivatalos ${productName} weboldal. Garantált eredmény 90 nap.,${(52 + productName.length)},Official ${productName} website. Guaranteed results 90 days.,Descriptions,Active
+${productName} legjobb ár online. Gyors szállítás Magyarországon.,${(58 + productName.length)},${productName} best price online. Fast shipping in Hungary.,Descriptions,Active
+Ingyenes Szállítás,17,Free Shipping,Callouts,Active
+Gyors Szállítás,14,Fast Shipping,Callouts,Active
+Hivatalos Oldal,15,Official Site,Callouts,Active
+Legjobb Ár,11,Best Price,Callouts,Active
+Rólunk ${productName},${(7 + productName.length)},About ${productName},Sitelinks,Active
+Hogyan Működik,13,How It Works,Sitelinks,Active
+Előnyök,8,Benefits,Sitelinks,Active
+Vásárlás Most,12,Buy Now,Sitelinks,Active
+Hivatalos Oldal,15,Official Site,Snippets,Active
+Legjobb Ár,11,Best Price,Snippets,Active
+Ingyenes Szállítás,17,Free Shipping,Snippets,Active
+Eredeti Termék,13,Original Product,Snippets,Active`
+        } else {
+          return `Content_EN,Characters,Content_HU,Category,Status
+${productName} Original,${(9 + productName.length)},${productName} Eredeti,Headlines,Active
+Buy ${productName},${(4 + productName.length)},Vásároljon ${productName},Headlines,Active
+Official ${productName},${(9 + productName.length)},${productName} Hivatalos,Headlines,Active
+Best Price ${productName},${(11 + productName.length)},Legjobb Ár ${productName},Headlines,Active
+${productName} original product with 30-day guarantee. Free shipping!,${(58 + productName.length)},${productName} eredeti termék 30 napos garanciával. Ingyenes szállítás!,Descriptions,Active
+Buy ${productName} now! Exclusive discount today only.,${(43 + productName.length)},Vásároljon ${productName} most! Exkluzív kedvezmény csak ma.,Descriptions,Active
+Official ${productName} website. Guaranteed results 90 days.,${(50 + productName.length)},Hivatalos ${productName} weboldal. Garantált eredmény 90 nap.,Descriptions,Active
+${productName} best price online. Fast shipping in Hungary.,${(48 + productName.length)},${productName} legjobb ár online. Gyors szállítás Magyarországon.,Descriptions,Active
+Free Shipping,13,Ingyenes Szállítás,Callouts,Active
+Fast Shipping,13,Gyors Szállítás,Callouts,Active
+Official Site,13,Hivatalos Oldal,Callouts,Active
+Best Price,10,Legjobb Ár,Callouts,Active
+About ${productName},${(6 + productName.length)},Rólunk ${productName},Sitelinks,Active
+How It Works,12,Hogyan Működik,Sitelinks,Active
+Benefits,8,Előnyök,Sitelinks,Active
+Buy Now,7,Vásárlás Most,Sitelinks,Active
+Official Site,13,Hivatalos Oldal,Snippets,Active
+Best Price,10,Legjobb Ár,Snippets,Active
+Free Shipping,13,Ingyenes Szállítás,Snippets,Active
+Original Product,16,Eredeti Termék,Snippets,Active`
         }
 
       default:
@@ -408,10 +501,13 @@ Sample Data,Active`
       const filesToDownload = [
         { type: 'campaignStructure', name: 'Estrutura_Campanha.csv' },
         { type: 'keywords', name: 'Keywords.csv' },
-        { type: 'ads', name: 'Anuncios.csv' },
+        { type: 'headlines', name: 'Headlines.csv' },
+        { type: 'descriptions', name: 'Descriptions.csv' },
+        { type: 'ads', name: 'Anuncios_Completos.csv' },
         { type: 'sitelinks', name: 'Sitelinks.csv' },
         { type: 'callouts', name: 'Callouts.csv' },
-        { type: 'snippets', name: 'Snippets.csv' }
+        { type: 'snippets', name: 'Snippets.csv' },
+        { type: 'bilingual', name: 'Arquivo_Consolidado_Bilingue.csv' }
       ]
       
       // Adiciona cada arquivo CSV ao ZIP
@@ -456,10 +552,13 @@ Sample Data,Active`
       const files = [
         { type: 'campaignStructure', name: 'Estrutura_Campanha.csv' },
         { type: 'keywords', name: 'Keywords.csv' },
-        { type: 'ads', name: 'Anuncios.csv' },
+        { type: 'headlines', name: 'Headlines.csv' },
+        { type: 'descriptions', name: 'Descriptions.csv' },
+        { type: 'ads', name: 'Anuncios_Completos.csv' },
         { type: 'sitelinks', name: 'Sitelinks.csv' },
         { type: 'callouts', name: 'Callouts.csv' },
-        { type: 'snippets', name: 'Snippets.csv' }
+        { type: 'snippets', name: 'Snippets.csv' },
+        { type: 'bilingual', name: 'Arquivo_Consolidado_Bilingue.csv' }
       ]
 
       // Download each file with proper naming and real data
