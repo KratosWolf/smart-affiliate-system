@@ -264,7 +264,7 @@ export class LuizCampaignGenerator {
       platform: ((campaignData as any).platform || (validation as any).platform || 'CLICKBANK') as any,
       commissionValue: (campaignData as any).commissionValue || (campaignData as any).unitPrice || 45,
       country: campaignData.country || validation.targetCountry,
-      currency: (validation.productData.currency === 'BRL' ? 'BRL' : 'USD') as 'BRL' | 'USD',
+      currency: 'USD', // Will be auto-detected inside luiz-campaign-v3 based on country
       producerPageUrl: validation.productUrl || 'https://example.com',
       affiliateUrl: affiliateUrl,
       // Dados contextuais opcionais da Fase 1
@@ -353,7 +353,8 @@ export class LuizCampaignGenerator {
           text: s.values.join(', '),
           category: s.header.toUpperCase()
         })),
-        affiliateUrl
+        affiliateUrl,
+        targetCountry: validation.targetCountry // CRITICAL FIX: Add missing targetCountry
       })
     };
     
@@ -517,7 +518,7 @@ export class LuizCampaignGenerator {
     // Implementação básica para evitar erros
     return {
       campaignStructure: 'Campaign,Campaign Type,Status,Budget,Budget Type,Bid Strategy,Target CPA,Currency,Target Locations,Excluded Locations\n' + 
-        `${data.campaign.name},Search,Active,${data.campaign.budget},Daily,Target CPA,${data.campaign.targetCpa || 20},${data.campaign.currency || 'USD'},"${(data.campaign.locations || ['PL']).join('; ')}","${(data.campaign.excludedLocations || ['Brasil', 'Brazil', 'Índia', 'India', 'Vietnã', 'Vietnam', 'Indonésia', 'Indonesia', 'China', 'Nigéria', 'Nigeria', 'Rússia', 'Russia', 'Venezuela', 'Colômbia', 'Colombia']).join('; ')}"`,
+        `${data.campaign.name},Search,Active,${data.campaign.budget},Daily,Target CPA,${data.campaign.targetCpa || 20},${data.campaign.currency || 'USD'},"${(data.campaign.locations || [data.targetCountry || 'US']).join('; ')}","${(data.campaign.excludedLocations || ['Brasil', 'Brazil', 'Índia', 'India', 'Vietnã', 'Vietnam', 'Indonésia', 'Indonesia', 'China', 'Nigéria', 'Nigeria', 'Rússia', 'Russia', 'Venezuela', 'Colômbia', 'Colombia']).join('; ')}"`,
       keywords: 'Keyword,Match Type,Status\n' + data.keywords.map((k: any) => `${k.keyword},Broad,Active`).join('\n'),
       ads: 'Headlines,Descriptions\n' + `"${data.headlines.join(', ')}","${data.descriptions.join(', ')}"`,
       sitelinks: 'Sitelink,Category\n' + data.sitelinks.map((s: any) => `${s.text},${s.category}`).join('\n'),

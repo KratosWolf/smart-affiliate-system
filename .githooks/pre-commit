@@ -1,22 +1,118 @@
 #!/bin/bash
 
-echo "🔍 Verificação obrigatória de TypeScript antes do commit..."
-echo "========================================================"
+echo "🔍 SISTEMA DE VERIFICAÇÃO PRE-COMMIT - SMART AFFILIATE SYSTEM"
+echo "=================================================================="
+echo ""
 
-# Executa verificação de TypeScript
-npm run type-check
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# Se falhou, bloqueia o commit
+# Flag para controlar se commit deve ser bloqueado
+BLOCK_COMMIT=0
+
+# 1. Verificação de TypeScript (OBRIGATÓRIA)
+echo -e "${YELLOW}🔍 1/5 Verificando TypeScript...${NC}"
+npm run type-check > /tmp/typecheck.log 2>&1
+
 if [ $? -ne 0 ]; then
-    echo ""
-    echo "❌ COMMIT BLOQUEADO - Erros de TypeScript encontrados!"
-    echo "   → Execute: npm run type-check"
-    echo "   → Corrija TODOS os erros antes de fazer commit"
-    echo "   → Não é permitido bypass - ZERO ERROS obrigatório"
-    echo ""
-    exit 1
+    echo -e "${RED}❌ ERROS DE TYPESCRIPT ENCONTRADOS!${NC}"
+    echo "   📝 Detalhes em /tmp/typecheck.log"
+    cat /tmp/typecheck.log
+    BLOCK_COMMIT=1
+else
+    echo -e "${GREEN}✅ TypeScript: ZERO ERROS${NC}"
+fi
+
+# 2. Verificação de Lint (OBRIGATÓRIA)
+echo -e "${YELLOW}🔍 2/5 Verificando ESLint...${NC}"
+npm run lint > /tmp/lint.log 2>&1
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}❌ ERROS DE LINT ENCONTRADOS!${NC}"
+    echo "   📝 Detalhes em /tmp/lint.log"
+    head -20 /tmp/lint.log
+    BLOCK_COMMIT=1
+else
+    echo -e "${GREEN}✅ ESLint: Código limpo${NC}"
+fi
+
+# 3. Verificação de Consistência do Projeto
+echo -e "${YELLOW}🔍 3/5 Verificando consistência do projeto...${NC}"
+if [ -f "./scripts/check-consistency.sh" ]; then
+    ./scripts/check-consistency.sh > /tmp/consistency.log 2>&1
+    
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ PROBLEMAS DE CONSISTÊNCIA ENCONTRADOS!${NC}"
+        echo "   📝 Detalhes em /tmp/consistency.log"
+        tail -10 /tmp/consistency.log
+        BLOCK_COMMIT=1
+    else
+        echo -e "${GREEN}✅ Consistência: Projeto organizado${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠️  Script de consistência não encontrado${NC}"
+fi
+
+# 4. Verificação de Secrets/Credenciais
+echo -e "${YELLOW}🔍 4/5 Verificando secrets e credenciais...${NC}"
+SECRET_PATTERNS=("password" "secret" "key" "token" "credential" "api_key")
+SECRET_FOUND=0
+
+for pattern in "${SECRET_PATTERNS[@]}"; do
+    # Verifica arquivos staged
+    if git diff --cached --name-only | xargs grep -l "$pattern" 2>/dev/null; then
+        echo -e "${RED}⚠️  Possível secret encontrado: '$pattern'${NC}"
+        SECRET_FOUND=1
+    fi
+done
+
+if [ $SECRET_FOUND -eq 1 ]; then
+    echo -e "${RED}❌ POSSÍVEIS SECRETS ENCONTRADOS!${NC}"
+    echo "   🔒 Revise os arquivos antes de fazer commit"
+    echo "   🔒 Remova credenciais hardcoded"
+    BLOCK_COMMIT=1
+else
+    echo -e "${GREEN}✅ Secrets: Nenhuma credencial exposta${NC}"
+fi
+
+# 5. Verificação de Arquivos Grandes
+echo -e "${YELLOW}🔍 5/5 Verificando arquivos grandes...${NC}"
+LARGE_FILES=$(git diff --cached --name-only | xargs ls -la 2>/dev/null | awk '$5 > 5242880 {print $9 " (" $5/1024/1024 "MB)"}')
+
+if [ -n "$LARGE_FILES" ]; then
+    echo -e "${RED}❌ ARQUIVOS GRANDES ENCONTRADOS:${NC}"
+    echo "$LARGE_FILES"
+    echo "   📦 Considere usar Git LFS ou remover estes arquivos"
+    BLOCK_COMMIT=1
+else
+    echo -e "${GREEN}✅ Tamanho: Todos os arquivos OK${NC}"
 fi
 
 echo ""
-echo "✅ TypeScript: ZERO ERROS - Commit permitido!"
-echo ""
+echo "=================================================================="
+
+# Decisão final
+if [ $BLOCK_COMMIT -eq 1 ]; then
+    echo -e "${RED}❌ COMMIT BLOQUEADO - Correções necessárias!${NC}"
+    echo ""
+    echo -e "${YELLOW}🔧 Como corrigir:${NC}"
+    echo "   → npm run type-check (corrigir erros TS)"
+    echo "   → npm run lint:fix (corrigir lint)"
+    echo "   → ./scripts/check-consistency.sh (verificar organização)"
+    echo "   → Remover credenciais/secrets expostos"
+    echo "   → Remover/otimizar arquivos grandes"
+    echo ""
+    echo -e "${RED}🚫 NÃO É POSSÍVEL FAZER BYPASS - Sistema de segurança obrigatório${NC}"
+    echo ""
+    exit 1
+else
+    echo -e "${GREEN}🎉 TODAS AS VERIFICAÇÕES PASSARAM!${NC}"
+    echo -e "${GREEN}✅ Commit permitido - Código seguro e organizado${NC}"
+    echo ""
+    
+    # Log do commit bem-sucedido
+    echo "$(date): Pre-commit checks passed - TypeScript OK, Lint OK, Consistency OK, No secrets, File sizes OK" >> .git/hooks/pre-commit.log
+fi

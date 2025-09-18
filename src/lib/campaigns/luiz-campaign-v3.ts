@@ -5,6 +5,7 @@
 
 import { ProductValidationResponse } from '@/types';
 import { smartFixedHeadlines, SmartHeadlineConfig } from './smart-headlines';
+import { getCurrencyForCountry } from '../constants/currencies';
 
 export interface LuizCampaignConfigV3 {
   // Dados essenciais
@@ -12,7 +13,7 @@ export interface LuizCampaignConfigV3 {
   platform: 'CLICKBANK' | 'MONETIZZE' | 'HOTMART' | 'EDUZZ' | 'BUYGOODS' | 'MAXWEB' | 'GURUMIDIA' | 'SMARTADV' | 'DIGISTORE24' | 'ADCOMBO' | 'DRCASH' | 'MIDIA_SCALERS' | 'SMASH_LOUD' | 'OUTROS';
   commissionValue: number;
   country: string;
-  currency: 'BRL' | 'USD';
+  currency: string;
   producerPageUrl: string;
   affiliateUrl: string;
   presellUrl?: string;
@@ -41,12 +42,20 @@ export class LuizCampaignGeneratorV3 {
     extensions: any;
     csvFiles: any;
   }> {
+    // Auto-detect currency based on country
+    const detectedCurrency = getCurrencyForCountry(config.country)
+    const finalConfig = {
+      ...config,
+      currency: detectedCurrency
+    }
+    console.log(`🌍 País: ${config.country}, Moeda detectada: ${detectedCurrency}`)
+    
     // FASE 1: Gera conteúdo inteligente sem APIs externas
-    const smartContent = this.generateSmartContent(config);
+    const smartContent = this.generateSmartContent(finalConfig);
     
     // Gera dados da campanha
     const campaignName = this.generateCampaignName(config);
-    const budget = this.calculateDailyBudget(config);
+    const budget = this.calculateDailyBudget(finalConfig);
     const targetCPA = this.calculateTargetCPA(config);
 
     return {
@@ -54,7 +63,7 @@ export class LuizCampaignGeneratorV3 {
         name: campaignName,
         budget: budget,
         budgetType: 'Daily',
-        currency: config.currency,
+        currency: finalConfig.currency,
         targetCPA: targetCPA,
         biddingStrategy: 'Target CPA',
         networks: 'Google Search',
@@ -98,7 +107,7 @@ export class LuizCampaignGeneratorV3 {
     const smartConfig: SmartHeadlineConfig = {
       productName: config.productName,
       country: config.country,
-      currency: config.currency,
+      currency: (config.currency === 'BRL' || config.currency === 'USD') ? config.currency : 'USD',
       discountPercentage: config.discountPercentage,
       discountAmount: config.discountAmount,
       guaranteePeriod: config.guaranteePeriod,
@@ -126,11 +135,21 @@ export class LuizCampaignGeneratorV3 {
    * Calcula orçamento diário baseado na moeda
    */
   private calculateDailyBudget(config: LuizCampaignConfigV3): number {
-    if (config.currency === 'BRL') {
-      return 350; // Mínimo R$ 350/dia
-    } else {
-      return 70; // Mínimo $70/dia
+    // Currency-aware budget calculation
+    const getMinBudgetForCurrency = (currency: string): number => {
+      switch (currency) {
+        case 'BRL': return 350  // Brazil Real - R$ 350
+        case 'PLN': return 280  // Polish Zloty - 280 zł
+        case 'EUR': return 65   // Euro - €65
+        case 'GBP': return 55   // British Pound - £55
+        case 'CAD': return 95   // Canadian Dollar - C$95
+        case 'AUD': return 105  // Australian Dollar - A$105
+        case 'MXN': return 1400 // Mexican Peso - $1400
+        case 'USD': 
+        default: return 70      // US Dollar - $70 (default)
+      }
     }
+    return getMinBudgetForCurrency(config.currency || 'USD');
   }
 
   /**

@@ -14,6 +14,22 @@ export interface CampaignData {
   keywords: Keyword[]
   ads: Ad[]
   csvData?: Record<string, string>
+  // NEW: Bilingual CSV data
+  bilingualCsvData?: BilingualCsvData
+}
+
+// NEW: Bilingual CSV export structure
+export interface BilingualCsvData {
+  standardCsvs: {
+    headlines: string
+    descriptions: string
+    sitelinks: string
+    callouts: string
+    snippets: string
+  }
+  consolidatedCsv: string
+  targetLanguage: string
+  countryCode: string
 }
 
 export interface CampaignResponse {
@@ -31,7 +47,10 @@ export interface CampaignParams {
   // Platform and commission fields
   platform?: string
   commissionValue?: number
-  currency?: 'BRL' | 'USD'
+  currency?: string
+  // NEW FIELDS - Campaign Builder Redesign
+  urlBase: string
+  campaignType: 'Standard' | 'COD' | 'Review' | 'E-commerce' | 'Produto Restrito'
   // Tracking fields
   useEdisTracking?: boolean
   edisBaseUrl?: string
@@ -41,6 +60,14 @@ export interface CampaignParams {
   productPrice?: number
   guaranteePeriod?: string
   deliveryType?: string
+  // Enhanced contextual fields
+  packQuantity?: number
+  packTotalPrice?: number
+  returnPolicy?: string
+  targetCity?: string
+  excludedRegions?: string
+  bonuses?: string
+  scarcityType?: string
 }
 
 export interface Keyword {
@@ -53,6 +80,22 @@ export interface Ad {
   headline: string
   description: string
   url?: string
+}
+
+// NEW: Enhanced ad components with categorization
+export interface AdComponent {
+  type: 'Headlines' | 'Descriptions' | 'Sitelinks' | 'Callouts' | 'Snippets'
+  content_local: string
+  characters: number
+  category: 'Preço' | 'Urgência' | 'Escassez' | 'Confiança' | 'Benefício' | 'Promocional' | 'Informativo'
+  content_en: string
+  position: string
+}
+
+export interface SitelinkComponent {
+  title: string
+  description: string
+  category: string
 }
 
 export type CampaignStatus = 'draft' | 'active' | 'paused' | 'completed'

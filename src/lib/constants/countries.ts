@@ -1,4 +1,5 @@
 export const COUNTRIES = [
+  { code: 'BR', name: 'Brasil', flag: '🇧🇷' },
   { code: 'US', name: 'Estados Unidos', flag: '🇺🇸' },
   { code: 'CA', name: 'Canadá', flag: '🇨🇦' },
   { code: 'GB', name: 'Reino Unido', flag: '🇬🇧' },

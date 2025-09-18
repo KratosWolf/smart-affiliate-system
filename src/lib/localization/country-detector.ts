@@ -635,6 +635,81 @@ const COUNTRY_DATABASE: Record<string, CountrySettings> = {
     }
   },
   
+  'Hungria': {
+    country: 'Hungria',
+    language: 'hu-HU',
+    currency: 'HUF',
+    locale: 'hu-HU',
+    timezone: 'Europe/Budapest',
+    adWordsCountryCode: '2348',
+    adWordsLanguageCode: '1038',
+    commonWords: {
+      buy: 'vásárlás',
+      now: 'most',
+      free: 'ingyenes',
+      guarantee: 'garancia',
+      discount: 'kedvezmény',
+      limited: 'korlátozott',
+      today: 'ma',
+      official: 'hivatalos'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: ' ',
+      currencyPosition: 'after'
+    }
+  },
+  
+  'Romênia': {
+    country: 'Romênia',
+    language: 'ro-RO',
+    currency: 'RON',
+    locale: 'ro-RO',
+    timezone: 'Europe/Bucharest',
+    adWordsCountryCode: '2642',
+    adWordsLanguageCode: '1048',
+    commonWords: {
+      buy: 'cumpără',
+      now: 'acum',
+      free: 'gratuit',
+      guarantee: 'garanție',
+      discount: 'reducere',
+      limited: 'limitat',
+      today: 'astăzi',
+      official: 'oficial'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'after'
+    }
+  },
+  
+  'Turquia': {
+    country: 'Turquia',
+    language: 'tr-TR',
+    currency: 'TRY',
+    locale: 'tr-TR',
+    timezone: 'Europe/Istanbul',
+    adWordsCountryCode: '2792',
+    adWordsLanguageCode: '1055',
+    commonWords: {
+      buy: 'satın al',
+      now: 'şimdi',
+      free: 'ücretsiz',
+      guarantee: 'garanti',
+      discount: 'indirim',
+      limited: 'sınırlı',
+      today: 'bugün',
+      official: 'resmi'
+    },
+    numberFormat: {
+      decimal: ',',
+      thousands: '.',
+      currencyPosition: 'before'
+    }
+  },
+  
   'Equador': {
     country: 'Equador',
     language: 'es-EC',
@@ -664,9 +739,60 @@ const COUNTRY_DATABASE: Record<string, CountrySettings> = {
 export class CountryDetector {
   
   /**
-   * Detecta configurações automáticas por país
+   * Converte código de país (ISO 3166-1 alpha-2) para nome em português usado na database
    */
-  detectByCountry(countryName: string): CountrySettings {
+  convertCountryCodeToName(countryCode: string): string {
+    const codeToName: Record<string, string> = {
+      'BR': 'Brasil',
+      'PL': 'Polônia',
+      'US': 'Estados Unidos',
+      'CA': 'Canadá',
+      'GB': 'Reino Unido',
+      'AU': 'Austrália',
+      'DE': 'Alemanha',
+      'FR': 'França',
+      'ES': 'Espanha',
+      'PT': 'Portugal',
+      'IT': 'Itália',
+      'NL': 'Holanda',
+      'BE': 'Bélgica',
+      'SE': 'Suécia',
+      'NO': 'Noruega',
+      'DK': 'Dinamarca',
+      'CH': 'Suíça',
+      'AT': 'Áustria',
+      'HU': 'Hungria',
+      'RO': 'Romênia',
+      'TR': 'Turquia',
+      'AR': 'Argentina',
+      'CL': 'Chile',
+      'CO': 'Colômbia',
+      'PE': 'Peru',
+      'MX': 'México',
+      'UY': 'Uruguai',
+      'EC': 'Equador'
+    };
+    
+    const countryName = codeToName[countryCode.toUpperCase()];
+    if (!countryName) {
+      console.warn(`Código de país não reconhecido: ${countryCode}. Usando Brasil como padrão.`);
+      return 'Brasil';
+    }
+    
+    return countryName;
+  }
+  
+  /**
+   * Detecta configurações automáticas por país (aceita códigos ou nomes)
+   */
+  detectByCountry(countryInput: string): CountrySettings {
+    // Se parece ser código de país (2 letras), converte primeiro
+    let countryName = countryInput;
+    if (countryInput.length === 2 && /^[A-Z]{2}$/i.test(countryInput)) {
+      countryName = this.convertCountryCodeToName(countryInput);
+      console.log(`🔄 Convertendo código '${countryInput}' para nome '${countryName}'`);
+    }
+    
     // Normaliza nome do país
     const normalizedCountry = this.normalizeCountryName(countryName);
     
@@ -904,6 +1030,9 @@ export class CountryDetector {
       'denmark': 'Dinamarca',
       'switzerland': 'Suíça',
       'austria': 'Áustria',
+      'hungary': 'Hungria',
+      'romania': 'Romênia',
+      'turkey': 'Turquia',
       'argentina': 'Argentina',
       'chile': 'Chile',
       'colombia': 'Colômbia',

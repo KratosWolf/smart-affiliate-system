@@ -1,5 +1,14 @@
 # 🤖 CLAUDE.md - Instruções para Assistente IA
 
+## 🚨 **CONTEXTO CRÍTICO - SEMPRE LEMBRAR**
+
+### **⚠️ INFORMAÇÕES QUE NUNCA DEVEM SER ESQUECIDAS:**
+- **USO PESSOAL APENAS** - não é SaaS, máximo 10 campanhas/dia
+- **APENAS GOOGLE ADS** - sem Facebook, TikTok ou outras plataformas  
+- **PORTA 3847** - localhost development (evita conflitos)
+- **KEYWORDS SIMPLES** - `productname` (lowercase) + `PRODUCTNAME` (uppercase)
+- **METODOLOGIA LUIZ** - 1 campaign = 1 ad, budget R$ 70/dia
+
 ## 📋 **CONTEXTO PRINCIPAL DO PROJETO**
 
 **Smart Affiliate System** é um sistema completo de marketing de afiliados com **lógica Discovery/Mining baseada na regra 5-7+ vezes** implementada.
@@ -189,25 +198,41 @@ npx vercel --prod     # Deploy para produção Vercel
 
 ## 🎯 **INSTRUÇÕES PARA CLAUDE**
 
+### **🚨 SEMPRE LEMBRAR PRIMEIRO**:
+1. **ESTE É UM SISTEMA PESSOAL** - não é SaaS, máximo 10 campanhas/dia
+2. **APENAS GOOGLE ADS** - sem Facebook, TikTok ou outras plataformas
+3. **PORTA 3847** para desenvolvimento local (não 3000)
+4. **KEYWORDS SIMPLES** - productname + PRODUCTNAME (não complicar)
+5. **METODOLOGIA LUIZ** - estrutura fixa implementada
+
 ### **🚨 SEMPRE FAZER**:
-1. **Executar ./scripts/check-consistency.sh** antes de qualquer mudança importante
-2. **Verificar dashboard-guide** antes de dizer que algo não existe
-3. **Consultar youtube-monitor.ts** para lógica Discovery/Mining
-4. **Seguir GOVERNANCE.md** para todas as modificações  
-5. **Testar APIs** usando endpoints `/api/test-*`
+1. **Ler docs/CLAUDE.md PRIMEIRO** antes de qualquer resposta
+2. **Executar ./scripts/check-consistency.sh** antes de mudanças importantes
+3. **Verificar dashboard-guide** antes de dizer que algo não existe
+4. **Consultar youtube-monitor.ts** para lógica Discovery/Mining
+5. **Seguir GOVERNANCE.md** para todas as modificações  
+6. **Testar APIs** usando endpoints `/api/test-*`
+
+### **❌ NUNCA ESQUECER**:
+- Este sistema é para USO PESSOAL (não comercial/SaaS)
+- Trabalha APENAS com Google Ads (usuário enfatizou várias vezes)
+- Port 3847 para desenvolvimento (evitar conflitos)
+- Keywords devem ser simples: lowercase + UPPERCASE
+- Metodologia Luiz já está implementada
 
 ### **❌ NUNCA FAZER**:
-- Dizer que lógica 5-7+ vezes não está implementada (ESTÁ em youtube-monitor.ts)
-- Ignorar os 7 canais YouTube configurados pelo usuário
-- Criar arquivos .md na raiz (apenas README.md, GOVERNANCE.md, CHANGELOG.md permitidos)
+- Sugerir Facebook, TikTok ou outras plataformas além Google Ads
+- Complicar keywords (manter simples: productname + PRODUCTNAME)
+- Esquecer que é sistema pessoal (não SaaS)
+- Usar porta 3000 (usar 3847 para development)
 - Reimplementar funcionalidades que já existem
-- Fazer mudanças sem verificar impacto nos arquivos críticos  
 
-### **💡 ANTES DE RESPONDER**:
-1. Ler `/src/app/dashboard-guide/page.tsx` para status atual
-2. Verificar `/src/lib/mining/youtube-monitor.ts` para funcionalidades  
-3. Consultar `docs/CHANGELOG.md` para histórico
-4. Executar script de consistência se necessário
+### **💡 ANTES DE CADA RESPOSTA**:
+1. **Ler seção "CONTEXTO CRÍTICO" deste arquivo**
+2. Ler `/src/app/dashboard-guide/page.tsx` para status atual
+3. Verificar `/src/lib/mining/youtube-monitor.ts` para funcionalidades  
+4. Consultar `docs/CHANGELOG.md` para histórico
+5. Executar script de consistência se necessário
 
 ---
 

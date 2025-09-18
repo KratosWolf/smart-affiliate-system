@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Target, AlertCircle, Zap } from 'lucide-react'
 import { COUNTRY_OPTIONS } from '@/lib/constants/countries'
 import { PLATFORM_OPTIONS } from '@/lib/constants/platforms'
+import { CAMPAIGN_TYPES } from '@/lib/constants/campaign-templates'
+import { getCurrencyForCountry, getCurrencySymbol } from '@/lib/constants/currencies'
 import { CampaignParams } from '@/lib/types'
 
 interface CampaignFormProps {
@@ -13,15 +15,27 @@ interface CampaignFormProps {
     targetCpa: number
     platform?: string
     commissionValue?: number
-    currency?: 'BRL' | 'USD'
+    currency?: string
+    // NEW REDESIGN FIELDS
+    urlBase?: string
+    campaignType?: 'Standard' | 'COD' | 'Review' | 'E-commerce' | 'Produto Restrito'
     useEdisTracking?: boolean
     edisBaseUrl?: string
-    // Campos contextuais da Fase 1
+    // Metodologia Luiz - Preços e descontos
+    productPrice?: number
+    packQuantity?: number
+    packTotalPrice?: number
+    // Informações contextuais
+    guaranteePeriod?: string
+    returnPolicy?: string
+    deliveryType?: string
+    targetCity?: string
+    excludedRegions?: string
+    bonuses?: string
+    scarcityType?: string
+    // Campos calculados (legado)
     discountPercentage?: number
     discountAmount?: number
-    productPrice?: number
-    guaranteePeriod?: string
-    deliveryType?: string
   }
   onInputChange: (field: string, value: string | number | boolean) => void
   onSubmit: () => void
@@ -77,38 +91,43 @@ export function CampaignForm({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Valor da Comissão *
+              URL Base *
             </label>
             <Input
-              type="number"
-              placeholder="100"
-              value={campaignData.commissionValue}
-              onChange={(e) => onInputChange('commissionValue', parseFloat(e.target.value) || 0)}
+              type="url"
+              placeholder="https://exemplo.com"
+              value={campaignData.urlBase || ''}
+              onChange={(e) => onInputChange('urlBase', e.target.value)}
             />
+            <p className="text-xs text-gray-500 mt-1">URL base para tracking da campanha</p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Moeda da Conta Google Ads
+              Moeda (Auto-detectada)
             </label>
-            <select 
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              value={campaignData.currency}
-              onChange={(e) => onInputChange('currency', e.target.value)}
-            >
-              <option value="BRL">🇧🇷 Real (BRL)</option>
-              <option value="USD">🇺🇸 Dólar (USD)</option>
-            </select>
+            <Input
+              type="text"
+              value={campaignData.currency ? `${campaignData.currency} (${getCurrencySymbol(campaignData.currency)})` : 'Selecione um país primeiro'}
+              disabled
+              className="bg-gray-100 text-gray-600"
+            />
+            <p className="text-xs text-gray-500 mt-1">Moeda detectada automaticamente baseada no país selecionado</p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              País de Targeting
+              País de Targeting *
             </label>
-            <select 
+            <select
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               value={campaignData.targetCountry}
-              onChange={(e) => onInputChange('targetCountry', e.target.value)}
+              onChange={(e) => {
+                onInputChange('targetCountry', e.target.value)
+                // Auto-detect currency
+                const currency = getCurrencyForCountry(e.target.value)
+                onInputChange('currency', currency)
+              }}
             >
               {COUNTRY_OPTIONS.map(country => (
                 <option key={country.value} value={country.value}>
@@ -116,6 +135,24 @@ export function CampaignForm({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Tipo de Campanha *
+            </label>
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              value={campaignData.campaignType || 'Standard'}
+              onChange={(e) => onInputChange('campaignType', e.target.value)}
+            >
+              {CAMPAIGN_TYPES.map(type => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">Tipo de campanha influencia os templates utilizados</p>
           </div>
 
           <div className="md:col-span-2">
@@ -131,95 +168,199 @@ export function CampaignForm({
             />
           </div>
 
-          {/* DADOS INTELIGENTES DO PRODUTO - FASE 1 */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 md:col-span-2">
-            <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-              <Zap className="w-4 h-4" />
-              📊 Dados Inteligentes do Produto (Fase 1)
+          {/* METODOLOGIA LUIZ - DADOS COMPLETOS DO PRODUTO */}
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6 md:col-span-2">
+            <h4 className="font-bold text-purple-800 mb-4 flex items-center gap-2 text-lg">
+              <Zap className="w-5 h-5" />
+              🎯 Metodologia Luiz - Dados Completos do Produto
             </h4>
-            <p className="text-blue-600 text-sm mb-4">
-              Forneça dados específicos para gerar headlines contextuais mais precisas
+            <p className="text-purple-700 text-sm mb-6 bg-purple-100 p-3 rounded-md">
+              <strong>📋 Extrair do site do produtor:</strong> preços, garantia, bônus, entrega. Sistema calcula descontos automaticamente.
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-blue-700 mb-2">
-                  Desconto (%)
-                  <span className="text-blue-500 text-xs ml-2">(Opcional)</span>
-                </label>
-                <Input
-                  type="number"
-                  placeholder="Ex: 50"
-                  value={campaignData.discountPercentage || ''}
-                  onChange={(e) => onInputChange('discountPercentage', e.target.value ? Number(e.target.value) : 0)}
-                  className="text-lg"
-                />
-                <p className="text-xs text-blue-600 mt-1">Se fornecido, será usado em headlines específicas</p>
+            {/* PREÇOS E DESCONTOS */}
+            <div className="bg-white rounded-lg p-4 mb-6 border border-purple-200">
+              <h5 className="font-semibold text-purple-800 mb-4 flex items-center gap-2">
+                💰 Estrutura de Preços (do Site do Produtor)
+              </h5>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-purple-700 mb-2">
+                    Valor de 1 Pote *
+                    <span className="text-purple-500 text-xs ml-2">(Obrigatório)</span>
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder={`Ex: ${campaignData.currency === 'BRL' ? '149' : '49'}`}
+                    value={campaignData.productPrice || ''}
+                    onChange={(e) => onInputChange('productPrice', e.target.value ? Number(e.target.value) : 0)}
+                    className="text-lg border-purple-300 focus:border-purple-500"
+                  />
+                  <p className="text-xs text-purple-600 mt-1">Preço unitário (base para cálculos)</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-purple-700 mb-2">
+                    Quantidade de Potes (Maior Oferta)
+                    <span className="text-purple-500 text-xs ml-2">(Ex: 3, 5, 6 potes)</span>
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Ex: 6"
+                    value={campaignData.packQuantity || ''}
+                    onChange={(e) => onInputChange('packQuantity', e.target.value ? Number(e.target.value) : 0)}
+                    className="text-lg border-purple-300 focus:border-purple-500"
+                  />
+                  <p className="text-xs text-purple-600 mt-1">Quantos potes na maior oferta</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-purple-700 mb-2">
+                    Valor Total da Maior Oferta
+                    <span className="text-purple-500 text-xs ml-2">(Valor do pack completo)</span>
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder={`Ex: ${campaignData.currency === 'BRL' ? '397' : '147'}`}
+                    value={campaignData.packTotalPrice || ''}
+                    onChange={(e) => onInputChange('packTotalPrice', e.target.value ? Number(e.target.value) : 0)}
+                    className="text-lg border-purple-300 focus:border-purple-500"
+                  />
+                  <p className="text-xs text-purple-600 mt-1">Valor total do pack (para cálculo preciso)</p>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-blue-700 mb-2">
-                  Valor do Produto
-                  <span className="text-blue-500 text-xs ml-2">(Recomendado)</span>
-                </label>
-                <Input
-                  type="number"
-                  placeholder={`Ex: ${campaignData.currency === 'BRL' ? '149' : '49'}`}
-                  value={campaignData.productPrice || ''}
-                  onChange={(e) => onInputChange('productPrice', e.target.value ? Number(e.target.value) : 0)}
-                  className="text-lg"
-                />
-                <p className="text-xs text-blue-600 mt-1">Preço do produto para headlines "For Only $X"</p>
+              {/* CÁLCULOS AUTOMÁTICOS DE DESCONTO */}
+              {(campaignData.productPrice && campaignData.packQuantity && campaignData.packTotalPrice) && (
+                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <h6 className="font-semibold text-green-800 mb-2">🧮 Cálculo Preciso de Desconto</h6>
+                  <div className="text-sm space-y-2">
+                    <div className="text-green-700">
+                      <strong>Cálculo:</strong> {campaignData.packQuantity} potes × {campaignData.currency} {campaignData.productPrice} = {campaignData.currency} {(campaignData.productPrice * campaignData.packQuantity).toFixed(0)}
+                    </div>
+                    <div className="text-green-700">
+                      <strong>Pack {campaignData.packQuantity}:</strong> {campaignData.currency} {campaignData.packTotalPrice} vs {campaignData.currency} {(campaignData.productPrice * campaignData.packQuantity).toFixed(0)} = 
+                      <span className="font-bold text-green-800"> {Math.round(((campaignData.productPrice * campaignData.packQuantity - campaignData.packTotalPrice) / (campaignData.productPrice * campaignData.packQuantity)) * 100)}% desconto</span>
+                    </div>
+                    <div className="text-green-700">
+                      <strong>Valor por pote no pack:</strong> {campaignData.currency} {(campaignData.packTotalPrice / campaignData.packQuantity).toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* INFORMAÇÕES CONTEXTUAIS */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg p-4 border border-purple-200">
+                <h5 className="font-semibold text-purple-800 mb-4">🛡️ Garantia & Políticas</h5>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-purple-700 mb-2">
+                      Período de Garantia
+                    </label>
+                    <Input
+                      placeholder="Ex: 60 dias, 90 dias, 1 ano"
+                      value={campaignData.guaranteePeriod || ''}
+                      onChange={(e) => onInputChange('guaranteePeriod', e.target.value)}
+                      className="border-purple-300 focus:border-purple-500"
+                    />
+                    <p className="text-xs text-purple-600 mt-1">Para headlines: "60-Day Money-Back Guarantee"</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-purple-700 mb-2">
+                      Política de Devolução
+                      <span className="text-purple-500 text-xs ml-2">(Campo livre)</span>
+                    </label>
+                    <Input
+                      placeholder="Ex: Money-Back Guarantee, Ironclad Guarantee, 100% Garantia"
+                      value={campaignData.returnPolicy || ''}
+                      onChange={(e) => onInputChange('returnPolicy', e.target.value)}
+                      className="border-purple-300 focus:border-purple-500"
+                    />
+                    <p className="text-xs text-purple-600 mt-1">Digite sua política personalizada (será traduzida automaticamente)</p>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-blue-700 mb-2">
-                  Valor do Desconto
-                  <span className="text-blue-500 text-xs ml-2">(Opcional)</span>
-                </label>
-                <Input
-                  type="number"
-                  placeholder={`Ex: ${campaignData.currency === 'BRL' ? '100' : '20'}`}
-                  value={campaignData.discountAmount || ''}
-                  onChange={(e) => onInputChange('discountAmount', e.target.value ? Number(e.target.value) : 0)}
-                  className="text-lg"
-                />
-                <p className="text-xs text-blue-600 mt-1">Valor fixo do desconto em {campaignData.currency}</p>
-              </div>
+              <div className="bg-white rounded-lg p-4 border border-purple-200">
+                <h5 className="font-semibold text-purple-800 mb-4">🚚 Entrega & Localização</h5>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-purple-700 mb-2">
+                      Tipo de Entrega
+                      <span className="text-purple-500 text-xs ml-2">(Campo livre)</span>
+                    </label>
+                    <Input
+                      placeholder="Ex: Frete Grátis, Free Shipping, Express Delivery"
+                      value={campaignData.deliveryType || ''}
+                      onChange={(e) => onInputChange('deliveryType', e.target.value)}
+                      className="border-purple-300 focus:border-purple-500"
+                    />
+                    <p className="text-xs text-purple-600 mt-1">Digite em PT/EN - será traduzido para o idioma do país</p>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-blue-700 mb-2">
-                  Período de Garantia
-                  <span className="text-blue-500 text-xs ml-2">(Opcional)</span>
-                </label>
-                <Input
-                  placeholder="Ex: 60 dias, 90 dias"
-                  value={campaignData.guaranteePeriod || ''}
-                  onChange={(e) => onInputChange('guaranteePeriod', e.target.value)}
-                  className="text-lg"
-                />
-                <p className="text-xs text-blue-600 mt-1">Será usado em headlines de garantia</p>
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-purple-700 mb-2">
+                      Geolocalização
+                      <span className="text-purple-500 text-xs ml-2">(Automática baseada no país)</span>
+                    </label>
+                    <Input
+                      value="Detecção automática ativada"
+                      disabled
+                      className="bg-purple-50 text-purple-600 border-purple-200"
+                    />
+                    <p className="text-xs text-purple-600 mt-1">Sistema detecta automaticamente cidades principais do país selecionado</p>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-blue-700 mb-2">
-                  Tipo de Entrega
-                  <span className="text-blue-500 text-xs ml-2">(Opcional)</span>
-                </label>
-                <select
-                  value={campaignData.deliveryType || ''}
-                  onChange={(e) => onInputChange('deliveryType', e.target.value)}
-                  className="w-full px-3 py-2 border border-blue-300 rounded-md text-lg bg-white"
-                >
-                  <option value="">Selecionar tipo de entrega...</option>
-                  <option value="Frete Grátis">Frete Grátis</option>
-                  <option value="Entrega Express">Entrega Express</option>
-                  <option value="Entrega Rápida">Entrega Rápida</option>
-                  <option value="Entrega Imediata">Entrega Imediata</option>
-                  <option value="Free Shipping">Free Shipping (EN)</option>
-                  <option value="Express Delivery">Express Delivery (EN)</option>
-                </select>
-                <p className="text-xs text-blue-600 mt-1">Influencia sitelinks e headlines de entrega</p>
+                  <div>
+                    <label className="block text-sm font-medium text-purple-700 mb-2">
+                      Regiões/Cidades SEM Entrega
+                      <span className="text-purple-500 text-xs ml-2">(Opcional - separar por vírgula)</span>
+                    </label>
+                    <Input
+                      placeholder="Ex: Acre, Norte, Interior, Remote areas"
+                      value={campaignData.excludedRegions || ''}
+                      onChange={(e) => onInputChange('excludedRegions', e.target.value)}
+                      className="border-purple-300 focus:border-purple-500"
+                    />
+                    <p className="text-xs text-purple-600 mt-1">Regiões onde o produtor NÃO faz entrega (deixe vazio se entrega para todo país)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* BÔNUS E EXTRAS */}
+            <div className="bg-white rounded-lg p-4 mt-6 border border-purple-200">
+              <h5 className="font-semibold text-purple-800 mb-4">🎁 Bônus & Extras</h5>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-purple-700 mb-2">
+                    Bônus Inclusos
+                    <span className="text-purple-500 text-xs ml-2">(Separar por vírgula)</span>
+                  </label>
+                  <Input
+                    placeholder="Ex: E-book gratuito, Consultoria online, Suporte 24h"
+                    value={campaignData.bonuses || ''}
+                    onChange={(e) => onInputChange('bonuses', e.target.value)}
+                    className="border-purple-300 focus:border-purple-500"
+                  />
+                  <p className="text-xs text-purple-600 mt-1">Para descriptions e sitelinks</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-purple-700 mb-2">
+                    Urgência/Escassez
+                    <span className="text-purple-500 text-xs ml-2">(Automático via IA)</span>
+                  </label>
+                  <Input
+                    value="Geração automática baseada nos dados do produto"
+                    disabled
+                    className="bg-purple-50 text-purple-600 border-purple-200"
+                  />
+                  <p className="text-xs text-purple-600 mt-1">IA analisa dados de preço/desconto para gerar urgência contextual automaticamente</p>
+                </div>
               </div>
             </div>
           </div>
@@ -307,9 +448,32 @@ export function CampaignForm({
         </div>
 
         <div className="flex justify-center">
+          {/* Campaign Type Validation Alert */}
+          {campaignData.campaignType && !['Standard', 'COD'].includes(campaignData.campaignType) && (
+            <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-yellow-600" />
+                <div>
+                  <h4 className="font-semibold text-yellow-800">
+                    Tipo de Campanha "{campaignData.campaignType}" em Desenvolvimento
+                  </h4>
+                  <p className="text-sm text-yellow-700 mt-1">
+                    Por enquanto, apenas campanhas <strong>Standard</strong> e <strong>COD</strong> estão disponíveis.
+                    Os demais tipos serão liberados em breve.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <Button
             onClick={onSubmit}
-            disabled={isLoading || !campaignData.productName}
+            disabled={
+              isLoading ||
+              !campaignData.productName ||
+              !campaignData.urlBase ||
+              (campaignData.campaignType && !['Standard', 'COD'].includes(campaignData.campaignType))
+            }
             className="px-8 py-3 text-lg"
           >
             {isLoading ? (

@@ -4,8 +4,6 @@ import { csvExporter } from '@/lib/campaigns/csv-exporter'
 import { luizCampaignGenerator } from '@/lib/campaigns/luiz-campaign-generator'
 import { csvGenerator } from '@/lib/campaigns/csv-generator'
 import { integratedItalianGenerator } from '@/lib/campaigns/integrated-italian-generator'
-import { BilingualCsvGenerator } from '@/lib/campaigns/bilingual-csv-generator'
-import { getCurrencyForCountry } from '@/lib/constants/currencies'
 import { ProductValidationResponse } from '@/types'
 
 // Helper function to map Luiz format to validator format
@@ -239,7 +237,6 @@ export async function POST(request: NextRequest) {
         })
         */
 
-        /*
         // Prepare localization request with contextual fields
         const localizationRequest = {
           // Multi-language input (can be any language)
@@ -304,13 +301,12 @@ export async function POST(request: NextRequest) {
             console.log(`🌍 Updated CSV ads with localized content for ${localizedCampaign.countryCode}`)
           }
           
-          console.log(`🌍 Campaign localized to ${localizedCampaign.language} for ${localizedCampaign.countryCode}`);
+          console.log(`🌍 Campaign localized to ${localizedCampaign.language} for ${localizedCampaign.countryCode}`)
         }
       } catch (aiError) {
         console.error('⚠️ Intelligent localization failed, using standard Luiz campaign:', aiError)
         // Continue with standard Luiz campaign if AI fails
       }
-      */
 
       // USA OS CSVs JÁ GERADOS PELA PHASE 1 (no idioma correto)
       if (exportFormat === 'csv') {

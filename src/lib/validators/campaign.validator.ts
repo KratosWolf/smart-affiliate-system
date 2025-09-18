@@ -29,6 +29,9 @@ const CampaignParamsSchema = z.object({
   budgetRange: z.string().min(1, 'Budget range is required'),
   targetCpa: z.string().min(1, 'Target CPA is required'),
   description: z.string().optional(),
+  // Required fields
+  urlBase: z.string().min(1, 'URL base is required'),
+  campaignType: z.enum(['Standard', 'COD', 'Review', 'E-commerce', 'Produto Restrito']),
   // Platform and commission fields
   platform: z.string().optional(),
   commissionValue: z.number().optional(),

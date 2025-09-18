@@ -13,6 +13,7 @@ import { CampaignForm } from '@/components/campaign/CampaignForm'
 import { CampaignDisplay } from '@/components/campaign/CampaignDisplay'
 import { COUNTRY_OPTIONS } from '@/lib/constants/countries'
 import { PLATFORM_OPTIONS } from '@/lib/constants/platforms'
+import { getCurrencyForCountry, formatCurrency } from '@/lib/constants/currencies'
 
 import { CampaignParams } from '@/lib/types'
 
@@ -21,15 +22,23 @@ interface CampaignData extends Omit<CampaignParams, 'targetCpa'> {
   targetCpa: string // Changed from number to string to match CampaignParams
   platform?: string
   commissionValue?: number
-  currency?: 'BRL' | 'USD'
+  currency?: string
   useEdisTracking?: boolean
   edisBaseUrl?: string
-  // Campos contextuais da Fase 1
+  // Metodologia Luiz - Preços e descontos
+  productPrice?: number
+  pack3Price?: number
+  pack5Price?: number
+  // Informações contextuais
+  guaranteePeriod?: string
+  returnPolicy?: string
+  deliveryType?: string
+  targetCity?: string
+  bonuses?: string
+  scarcityType?: string
+  // Campos calculados (legado)
   discountPercentage?: number
   discountAmount?: number
-  productPrice?: number
-  guaranteePeriod?: string
-  deliveryType?: string
 }
 
 function CampaignBuilderContainer() {
@@ -40,20 +49,29 @@ function CampaignBuilderContainer() {
     targetCpa: number  // Override to number for form inputs
     platform?: string
     commissionValue?: number
-    currency?: 'BRL' | 'USD'
+    currency?: string
     useEdisTracking?: boolean
     edisBaseUrl?: string
-    // Phase 1 contextual fields
+    // Metodologia Luiz - Preços e descontos
+    productPrice?: number
+    packQuantity?: number
+    packTotalPrice?: number
+    // Informações contextuais
+    guaranteePeriod?: string
+    returnPolicy?: string
+    deliveryType?: string
+    targetCity?: string
+    excludedRegions?: string
+    bonuses?: string
+    scarcityType?: string
+    // Campos calculados (legado)
     discountPercentage?: number
     discountAmount?: number
-    productPrice?: number
-    guaranteePeriod?: string
-    deliveryType?: string
   }
 
   const [campaignData, setCampaignData] = useState<CampaignFormState>({
     productName: '',
-    targetCountry: 'PL',
+    targetCountry: 'BR',
     budgetRange: '350',
     targetCpa: 45,  // Fixed: number instead of string
     dailyBudget: 350,
@@ -63,12 +81,23 @@ function CampaignBuilderContainer() {
     useEdisTracking: true,
     edisBaseUrl: 'www.test.com',
     description: '',
-    // Campos contextuais da Fase 1
-    discountPercentage: undefined,
-    discountAmount: undefined,
+    // Required fields
+    urlBase: '',
+    campaignType: 'Standard',
+    // Metodologia Luiz - Campos do produto
     productPrice: undefined,
+    packQuantity: undefined,
+    packTotalPrice: undefined,
     guaranteePeriod: '',
-    deliveryType: ''
+    returnPolicy: '',
+    deliveryType: '',
+    targetCity: '',
+    excludedRegions: '',
+    bonuses: '',
+    scarcityType: '',
+    // Campos calculados (legado)
+    discountPercentage: undefined,
+    discountAmount: undefined
   })
   
   const [activeTab, setActiveTab] = useState('setup')
@@ -121,13 +150,33 @@ function CampaignBuilderContainer() {
     setCampaignData(prev => {
       const updated = { ...prev, [field]: value }
       
+      // Auto-detect currency when country changes
+      if (field === 'targetCountry') {
+        const detectedCurrency = getCurrencyForCountry(value as string)
+        updated.currency = detectedCurrency
+        console.log(`🌍 País alterado para ${value}, moeda detectada: ${detectedCurrency}`)
+      }
+      
       // Recalcula valores automaticamente
-      if (field === 'commissionValue' || field === 'currency') {
+      if (field === 'commissionValue' || field === 'currency' || field === 'targetCountry') {
         // CPA Alvo = 45% da comissão
         updated.targetCpa = Math.round((updated.commissionValue || 100) * 0.45 * 100) / 100
         
         // Orçamento mínimo baseado na moeda
-        const minBudget = updated.currency === 'BRL' ? 350 : 70
+        const getMinBudgetForCurrency = (currency: string): number => {
+          switch (currency) {
+            case 'BRL': return 350  // Brazil Real - R$ 350
+            case 'PLN': return 280  // Polish Zloty - 280 zł
+            case 'EUR': return 65   // Euro - €65
+            case 'GBP': return 55   // British Pound - £55
+            case 'CAD': return 95   // Canadian Dollar - C$95
+            case 'AUD': return 105  // Australian Dollar - A$105
+            case 'MXN': return 1400 // Mexican Peso - $1400
+            case 'USD': 
+            default: return 70      // US Dollar - $70 (default)
+          }
+        }
+        const minBudget = getMinBudgetForCurrency(updated.currency || 'USD')
         if (!updated.dailyBudget || updated.dailyBudget < minBudget) {
           updated.dailyBudget = minBudget
         }
@@ -160,6 +209,9 @@ function CampaignBuilderContainer() {
         budgetRange: campaignData.budgetRange,
         targetCpa: String(campaignData.targetCpa),
         description: campaignData.description,
+        // Required fields
+        urlBase: campaignData.urlBase,
+        campaignType: campaignData.campaignType,
         // Core campaign fields
         platform: campaignData.platform,
         commissionValue: campaignData.commissionValue,

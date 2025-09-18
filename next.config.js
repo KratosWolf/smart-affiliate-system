@@ -9,7 +9,6 @@ const nextConfig = {
   // Performance optimizations
   poweredByHeader: false,
   reactStrictMode: false, // Disable for performance
-  swcMinify: true,
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-slot'],
   },

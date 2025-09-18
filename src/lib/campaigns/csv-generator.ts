@@ -27,12 +27,14 @@ export class GoogleAdsCSVGenerator {
 
   /**
    * GERA TODOS OS ARQUIVOS CSV COM NOME DO PRODUTO
+   * Inclui versões originais + traduções para revisão
    */
-  generateAllCSVs(data: CSVCampaignData): Record<string, string> {
+  generateAllCSVs(data: CSVCampaignData, targetLanguage?: string): Record<string, string> {
     // Extrai nome do produto e sanitiza
     const productName = this.sanitizeFileName(this.extractProductName(data.campaign.name));
     
-    return {
+    const files: Record<string, string> = {
+      // Arquivos originais (para Google Ads)
       [`${productName}-campaign-structure.csv`]: this.generateCampaignCSV(data),
       [`${productName}-keywords.csv`]: this.generateKeywordsCSV(data),
       [`${productName}-ads.csv`]: this.generateAdsCSV(data),
@@ -41,6 +43,16 @@ export class GoogleAdsCSVGenerator {
       [`${productName}-snippets.csv`]: this.generateSnippetsCSV(data),
       [`${productName}-import-guide.md`]: this.generateImportGuide(data)
     };
+
+    // 🌍 GERAR VERSÕES TRADUZIDAS PARA REVISÃO (se não for português/inglês)
+    if (targetLanguage && !['pt', 'pt-BR', 'en', 'en-US'].includes(targetLanguage)) {
+      const translatedData = this.createTranslatedData(data, targetLanguage);
+      
+      files[`${productName}-ads-PT.csv`] = this.generateAdsCSV(translatedData);
+      files[`${productName}-review-guide-PT.md`] = this.generateReviewGuide(data, translatedData, targetLanguage);
+    }
+
+    return files;
   }
 
   /**
@@ -320,6 +332,181 @@ export class GoogleAdsCSVGenerator {
 
 ---
 **📌 IMPORTANTE:** Esta campanha segue a metodologia testada do Luiz. Não alterar estrutura sem aprovação.`;
+  }
+
+  /**
+   * 🌍 CRIAR DADOS TRADUZIDOS PARA REVISÃO
+   */
+  private createTranslatedData(originalData: CSVCampaignData, targetLanguage: string): CSVCampaignData {
+    return {
+      ...originalData,
+      // Traduzir headlines para português (placeholder - pode ser integrado com AI)
+      headlines: originalData.headlines.map(headline => `[PT] ${headline}`),
+      
+      // Traduzir descriptions para português
+      descriptions: originalData.descriptions.map(desc => `[PT] ${desc}`),
+      
+      // Traduzir sitelinks
+      sitelinks: originalData.sitelinks.map(link => ({
+        ...link,
+        text: `[PT] ${link.text}`
+      })),
+      
+      // Traduzir callouts
+      callouts: originalData.callouts.map(callout => ({
+        ...callout,
+        text: `[PT] ${callout.text}`
+      })),
+      
+      // Traduzir snippets
+      snippets: originalData.snippets.map(snippet => ({
+        ...snippet,
+        text: `[PT] ${snippet.text}`
+      }))
+    };
+  }
+
+  /**
+   * 📋 GERAR GUIA DE REVISÃO COMPARATIVO
+   */
+  private generateReviewGuide(originalData: CSVCampaignData, translatedData: CSVCampaignData, targetLanguage: string): string {
+    const languageName = this.getLanguageName(targetLanguage);
+    
+    return `# 🔍 GUIA DE REVISÃO - CAMPANHA ${languageName.toUpperCase()}
+
+## 📊 RESUMO DA CAMPANHA
+- **Produto:** ${originalData.campaign.name}
+- **Idioma Original:** ${languageName}
+- **Moeda:** ${originalData.campaign.currency}
+- **Budget Diário:** ${originalData.campaign.currency} ${originalData.campaign.budget}
+- **CPA Target:** ${originalData.campaign.currency} ${originalData.campaign.targetCpa}
+
+## 🎯 HEADLINES COMPARATIVO
+
+### ${languageName} (Original) → Português (Revisão)
+
+${originalData.headlines.map((original, i) => 
+`**${i + 1}.** ${original}  
+→ [PT] ${this.translateToPortuguese(original)}`
+).join('\n\n')}
+
+## 📝 DESCRIPTIONS COMPARATIVO
+
+${originalData.descriptions.map((original, i) => 
+`**${i + 1}.** ${original}  
+→ [PT] ${this.translateToPortuguese(original)}`
+).join('\n\n')}
+
+## 🔗 EXTENSÕES
+
+### Sitelinks
+${originalData.sitelinks.map((sitelink, i) => 
+`${i + 1}. **${sitelink.text}** → [PT] ${this.translateToPortuguese(sitelink.text)}`
+).join('\n')}
+
+### Callouts  
+${originalData.callouts.map((callout, i) => 
+`${i + 1}. **${callout.text}** → [PT] ${this.translateToPortuguese(callout.text)}`
+).join('\n')}
+
+### Snippets
+${originalData.snippets.map((snippet, i) => 
+`${i + 1}. **${snippet.text}** → [PT] ${this.translateToPortuguese(snippet.text)}`
+).join('\n')}
+
+## ✅ CHECKLIST DE QUALIDADE
+
+### Headlines
+${originalData.headlines.map((headline, i) => 
+`- [ ] **${i + 1}.** "${headline}" (${headline.length} chars) - ${headline.length <= 30 ? '✅' : '❌'}`
+).join('\n')}
+
+### Descriptions
+${originalData.descriptions.map((desc, i) => 
+`- [ ] **${i + 1}.** "${desc}" (${desc.length} chars) - ${desc.length <= 90 ? '✅' : '❌'}`
+).join('\n')}
+
+## 📁 ARQUIVOS GERADOS
+
+### Para Google Ads (${languageName})
+1. **${this.sanitizeFileName(this.extractProductName(originalData.campaign.name))}-ads.csv** - Anúncios originais
+2. **${this.sanitizeFileName(this.extractProductName(originalData.campaign.name))}-keywords.csv** - Keywords
+3. **${this.sanitizeFileName(this.extractProductName(originalData.campaign.name))}-campaign-structure.csv** - Estrutura
+
+### Para Revisão (Português)  
+1. **${this.sanitizeFileName(this.extractProductName(originalData.campaign.name))}-ads-PT.csv** - Anúncios traduzidos
+2. **${this.sanitizeFileName(this.extractProductName(originalData.campaign.name))}-review-guide-PT.md** - Este guia
+
+## ⚠️ IMPORTANTE
+
+- **USE OS ARQUIVOS ORIGINAIS** (sem -PT) no Google Ads
+- **USE OS ARQUIVOS -PT** apenas para revisar a qualidade
+- Verifique se todas as traduções fazem sentido no contexto
+- Confirme que headlines não passam de 30 caracteres
+- Confirme que descriptions não passam de 90 caracteres
+
+---
+**🎯 Status:** Campanha pronta para upload no Google Ads em ${languageName}`;
+  }
+
+  /**
+   * 🗣️ TRADUÇÃO SIMPLES PARA PORTUGUÊS (placeholder)
+   */
+  private translateToPortuguese(text: string): string {
+    // Placeholder - pode ser integrado com Gemini Flash para tradução real
+    const translations: Record<string, string> = {
+      // Italiano
+      'Compra': 'Comprar',
+      'Ora': 'Agora',
+      'Prezzo Migliore': 'Melhor Preço',
+      'Originale': 'Original',
+      'Offerta Speciale': 'Oferta Especial',
+      'Spedizione Gratuita': 'Frete Grátis',
+      'Garanzia': 'Garantia',
+      'naturale con garanzia': 'natural com garantia',
+      'spedizione gratuita': 'frete grátis',
+      
+      // Alemão
+      'Kaufen': 'Comprar',
+      'Jetzt': 'Agora',
+      'Bester Preis': 'Melhor Preço',
+      'Original': 'Original',
+      'Sonderangebot': 'Oferta Especial',
+      
+      // Espanhol
+      'Comprar': 'Comprar',
+      'Ahora': 'Agora',
+      'Mejor Precio': 'Melhor Preço',
+      'Oferta Especial': 'Oferta Especial',
+      'Envío Gratis': 'Frete Grátis'
+    };
+
+    let translated = text;
+    Object.entries(translations).forEach(([original, portuguese]) => {
+      translated = translated.replace(new RegExp(original, 'gi'), portuguese);
+    });
+
+    return translated;
+  }
+
+  /**
+   * 🌍 OBTER NOME DO IDIOMA
+   */
+  private getLanguageName(languageCode: string): string {
+    const names: Record<string, string> = {
+      'it': 'Italiano',
+      'it-IT': 'Italiano',
+      'de': 'Alemão',
+      'de-DE': 'Alemão',
+      'es': 'Espanhol',
+      'es-ES': 'Espanhol',
+      'fr': 'Francês',
+      'fr-FR': 'Francês',
+      'pl': 'Polonês',
+      'pl-PL': 'Polonês'
+    };
+
+    return names[languageCode] || languageCode.toUpperCase();
   }
 
   /**
