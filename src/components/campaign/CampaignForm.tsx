@@ -76,7 +76,7 @@ export function CampaignForm({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Plataforma de Afiliado *
             </label>
-            <select 
+            <select
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               value={campaignData.platform}
               onChange={(e) => onInputChange('platform', e.target.value)}
@@ -87,6 +87,40 @@ export function CampaignForm({
                 </option>
               ))}
             </select>
+          </div>
+
+          {/* COMISSÃO E MOEDA */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Valor da Comissão *
+            </label>
+            <Input
+              type="number"
+              step="0.01"
+              placeholder="Ex: 45.50"
+              value={campaignData.commissionValue || ''}
+              onChange={(e) => onInputChange('commissionValue', parseFloat(e.target.value) || 0)}
+              className="text-lg"
+            />
+            <p className="text-xs text-gray-500 mt-1">Valor em moeda local da comissão por venda</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Moeda da Comissão *
+            </label>
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              value={campaignData.currency || getCurrencyForCountry(campaignData.targetCountry)}
+              onChange={(e) => onInputChange('currency', e.target.value)}
+            >
+              <option value="BRL">BRL - Real Brasileiro (R$)</option>
+              <option value="USD">USD - Dólar Americano ($)</option>
+              <option value="EUR">EUR - Euro (€)</option>
+              <option value="PLN">PLN - Zloty Polonês (zł)</option>
+              <option value="GBP">GBP - Libra Esterlina (£)</option>
+            </select>
+            <p className="text-xs text-gray-500 mt-1">Moeda utilizada para cálculos de CPA e comissão</p>
           </div>
 
           <div>
@@ -155,18 +189,6 @@ export function CampaignForm({
             <p className="text-xs text-gray-500 mt-1">Tipo de campanha influencia os templates utilizados</p>
           </div>
 
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Descrição do Produto
-              <span className="text-gray-500 text-xs ml-2">(Opcional - ajuda na geração de keywords)</span>
-            </label>
-            <Input
-              placeholder="Breve descrição do produto e seus benefícios"
-              value={campaignData.description || ''}
-              onChange={(e) => onInputChange('description', e.target.value)}
-              className="text-lg"
-            />
-          </div>
 
           {/* METODOLOGIA LUIZ - DADOS COMPLETOS DO PRODUTO */}
           <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6 md:col-span-2">

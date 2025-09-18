@@ -175,10 +175,27 @@ export async function POST(request: NextRequest) {
       // 🚀 USAR NOVO GERADOR COM TODAS AS FEATURES
       console.log('🚀 Using NEW BilingualCsvGenerator with AI + Translation + Competitive Intelligence')
 
+      // 🌍 SMART LANGUAGE MAPPING: Map target country to correct language
+      const languageMapping: Record<string, string> = {
+        'BR': 'pt-BR',  // Brazil -> Portuguese
+        'PL': 'pl-PL',  // Poland -> Polish
+        'DE': 'de-DE',  // Germany -> German
+        'ES': 'es-ES',  // Spain -> Spanish
+        'FR': 'fr-FR',  // France -> French
+        'IT': 'it-IT',  // Italy -> Italian
+        'US': 'en-US',  // USA -> English
+        'CA': 'en-US',  // Canada -> English
+        'AU': 'en-US',  // Australia -> English
+        'GB': 'en-US'   // UK -> English
+      }
+
+      const targetLanguage = languageMapping[validationData.targetCountry] || 'en-US'
+      console.log(`🌍 LANGUAGE MAPPING: ${validationData.targetCountry} → ${targetLanguage}`)
+
       const bilingualGenerator = new BilingualCsvGenerator({
         productName: validationData.productName,
         targetCountry: validationData.targetCountry,
-        targetLanguage: validationData.targetCountry === 'BR' ? 'pt-BR' : 'en-US',
+        targetLanguage,
         countryCode: validationData.targetCountry,
         hasDiscountData: !!(enhancedCampaignData.discountPercentage || enhancedCampaignData.discountAmount),
         campaignType: enhancedCampaignData.campaignType || 'Standard'
@@ -198,17 +215,17 @@ export async function POST(request: NextRequest) {
           structure: '1_CAMPAIGN_1_AD'
         },
         ads: {
-          headlines: bilingualOutput.metadata.components.headlines || [],
-          descriptions: bilingualOutput.metadata.components.descriptions || []
+          headlines: bilingualOutput.standardCsvs.headlines ? bilingualOutput.standardCsvs.headlines.split('\n').slice(1).map(line => line.split(',')[0]) : [],
+          descriptions: bilingualOutput.standardCsvs.descriptions ? bilingualOutput.standardCsvs.descriptions.split('\n').slice(1).map(line => line.split(',')[0]) : []
         },
         keywords: [
           { keyword: validationData.productName.toLowerCase(), matchType: 'BROAD', case: 'lowercase' },
           { keyword: validationData.productName.toUpperCase(), matchType: 'BROAD', case: 'uppercase' }
         ],
         extensions: {
-          sitelinks: bilingualOutput.metadata.components.sitelinks || [],
-          callouts: bilingualOutput.metadata.components.callouts || [],
-          snippets: bilingualOutput.metadata.components.snippets || []
+          sitelinks: bilingualOutput.standardCsvs.sitelinks ? bilingualOutput.standardCsvs.sitelinks.split('\n').slice(1).map((line: string) => ({ text: line.split(',')[0], category: 'GENERAL' })) : [],
+          callouts: bilingualOutput.standardCsvs.callouts ? bilingualOutput.standardCsvs.callouts.split('\n').slice(1).map((line: string) => ({ text: line.split(',')[0], category: 'GENERAL' })) : [],
+          snippets: bilingualOutput.standardCsvs.snippets ? bilingualOutput.standardCsvs.snippets.split('\n').slice(1).map((line: string) => ({ text: line.split(',')[0], category: 'GENERAL' })) : []
         },
         csvFiles: bilingualOutput.standardCsvs
       }
@@ -369,10 +386,10 @@ export async function POST(request: NextRequest) {
 **Estrutura:** ${luizCampaign.campaign.structure}
 
 ## Headlines (${luizCampaign.ads.headlines.length}):
-${luizCampaign.ads.headlines.map((h, i) => `${i+1}. ${h}`).join('\n')}
+${luizCampaign.ads.headlines.map((h: string, i: number) => `${i+1}. ${h}`).join('\n')}
 
 ## Descriptions (${luizCampaign.ads.descriptions.length}):
-${luizCampaign.ads.descriptions.map((d, i) => `${i+1}. ${d}`).join('\n')}
+${luizCampaign.ads.descriptions.map((d: string, i: number) => `${i+1}. ${d}`).join('\n')}
 
 ## Keywords (${luizCampaign.keywords.length}):
 ${luizCampaign.keywords.map(k => `- ${k.keyword} (${k.case})`).join('\n')}
