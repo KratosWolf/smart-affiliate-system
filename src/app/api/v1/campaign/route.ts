@@ -206,12 +206,28 @@ export async function POST(request: NextRequest) {
       const bilingualOutput = await bilingualGenerator.generateAllCsvs()
 
       // Convert to luizCampaign format for compatibility
+      // Calculate budget in account currency
+      const accountCurrency = enhancedCampaignData.accountCurrency || 'USD'
+      let convertedBudget = finalDailyBudget
+
+      // Convert BRL to account currency if needed
+      if (accountCurrency === 'USD' && finalDailyBudget > 200) {
+        convertedBudget = Math.round(finalDailyBudget / 5.4) // BRL to USD conversion
+      } else if (accountCurrency === 'EUR' && finalDailyBudget > 200) {
+        convertedBudget = Math.round(finalDailyBudget / 6.0) // BRL to EUR conversion
+      }
+
+      // Build campaign name with platform and commission
+      const platform = enhancedCampaignData.platform || 'Unknown'
+      const commission = enhancedCampaignData.commissionValue || 0
+      const commissionCurrency = enhancedCampaignData.currency || 'USD'
+
       luizCampaign = {
         campaign: {
-          name: `${validationData.productName} - ${validationData.targetCountry}`,
-          budget: finalDailyBudget,
+          name: `${validationData.productName} - ${validationData.targetCountry} - ${platform} - ${commissionCurrency}${commission}`,
+          budget: convertedBudget,
           targetCpa: finalTargetCpa,
-          currency: getCurrencyForCountry(validationData.targetCountry),
+          currency: accountCurrency,
           type: 'SEARCH',
           structure: '1_CAMPAIGN_1_AD'
         },
