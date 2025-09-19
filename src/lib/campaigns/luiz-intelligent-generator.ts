@@ -20,7 +20,7 @@ import {
   substituteVariables,
   type LuizTemplate
 } from '@/lib/constants/luiz-campaign-templates'
-import type { EnterpriseCompetitiveAnalysis } from '@/lib/intelligence/competitive-intelligence-engine-v3'
+import type { FastCompetitiveAnalysis } from '@/lib/intelligence/competitive-intelligence-engine-fast'
 import { createTranslator, type RealTranslator } from '@/lib/translation/real-translator'
 
 export interface LuizCampaignData {
@@ -38,7 +38,7 @@ export interface LuizCampaignData {
   deliveryType?: string     // [Delivery]
 
   // Inteligência competitiva
-  competitiveIntelligence?: EnterpriseCompetitiveAnalysis | null
+  competitiveIntelligence?: FastCompetitiveAnalysis | null
 }
 
 export interface LuizCampaignOutput {
@@ -312,17 +312,24 @@ export class LuizIntelligentGenerator {
    * 🧠 COMPETITIVE INTELLIGENCE SCORE
    */
   private getCompetitiveScore(template: LuizTemplate): number {
-    if (!this.campaignData.competitiveIntelligence?.puppeteerData?.languagePatterns) {
+    if (!this.campaignData.competitiveIntelligence?.recommendations?.headlines) {
       return 0
     }
 
-    const patterns = this.campaignData.competitiveIntelligence.puppeteerData.languagePatterns
+    const competitorHeadlines = this.campaignData.competitiveIntelligence.recommendations.headlines
     let score = 0
 
-    // Verifica se o template usa frases que competidores usam com alta performance
-    for (const phrase of patterns.commonPhrases) {
-      if (phrase.performance > 0.7 && template.template.toLowerCase().includes(phrase.phrase.toLowerCase())) {
-        score += phrase.performance * 10
+    // Verifica se o template usa palavras-chave que aparecem nos headlines dos competidores
+    for (const headline of competitorHeadlines) {
+      const headlineWords = headline.toLowerCase().split(' ')
+      const templateWords = template.template.toLowerCase().split(' ')
+
+      const commonWords = headlineWords.filter(word =>
+        templateWords.some(tWord => tWord.includes(word) || word.includes(tWord))
+      )
+
+      if (commonWords.length > 0) {
+        score += commonWords.length * 2 // Score baseado em palavras comuns
       }
     }
 
@@ -333,33 +340,26 @@ export class LuizIntelligentGenerator {
    * 🎯 FUGIR DA MANADA - Ajusta grafia baseado na competitive intelligence
    */
   private async applyFugirDaMandaRule(text: string, category: string): Promise<string> {
-    if (!this.campaignData.competitiveIntelligence?.puppeteerData?.languagePatterns) {
+    if (!this.campaignData.competitiveIntelligence?.recommendations?.marketingStrategy) {
       return text
     }
 
-    const patterns = this.campaignData.competitiveIntelligence.puppeteerData.languagePatterns
+    const strategies = this.campaignData.competitiveIntelligence.recommendations.marketingStrategy
     let optimizedText = text
 
-    // ✅ SUBSTITUI FRASES POR VERSÕES DE ALTA PERFORMANCE DOS COMPETIDORES
-    for (const phrase of patterns.commonPhrases) {
-      if (phrase.performance > 0.75) { // Só usa frases de muito alta performance
-        // Procura por palavras similares e substitui se encontrar uma melhor
-        const words = optimizedText.toLowerCase().split(' ')
-        const phraseWords = phrase.phrase.toLowerCase().split(' ')
-
-        // Se encontrar overlap, considera substituição
-        const overlap = words.filter(word => phraseWords.includes(word))
-        if (overlap.length >= 1) {
-          console.log(`🎯 FUGIR DA MANADA: Considering replacement with high-performance phrase: "${phrase.phrase}" (${phrase.performance})`)
-          // Aqui pode implementar lógica mais sofisticada de substituição
-        }
+    // ✅ APLICA OTIMIZAÇÕES BASEADAS NA ESTRATÉGIA COMPETITIVA
+    for (const strategy of strategies) {
+      if (strategy.includes('localized') && this.campaignData.targetLanguage !== 'pt-BR') {
+        // Para idiomas não-portugueses, força uso de termos mais localizados
+        optimizedText = optimizedText.replace(/Original/g, 'Eredeti') // Hungarian example
+          .replace(/Best Price/g, 'Legjobb Ár')
+          .replace(/Free Shipping/g, 'Ingyenes Szállítás')
       }
     }
 
-    // ✅ INTEGRA EXPRESSÕES LOCAIS DE ALTA QUALIDADE
-    if (patterns.localExpressions.length > 0) {
-      const bestLocalExpr = patterns.localExpressions[0]
-      // Lógica para integrar expressões locais quando apropriado
+    // ✅ ADICIONA URGÊNCIA BASEADA EM PATTERNS COMPETITIVOS
+    if (category === 'Urgência' && !optimizedText.includes('!')) {
+      optimizedText += '!'
     }
 
     return optimizedText
@@ -412,6 +412,21 @@ export class LuizIntelligentGenerator {
       'Free Shipping [PRODUCT]': 'Ingyenes Szállítás Rectin',
       'Original [PRODUCT] Here': 'Eredeti Rectin Itt',
 
+      // TEMPLATES LUIZ EM INGLÊS → HÚNGARO
+      'Rectin Rectin + Online Store': 'Rectin Eredeti + Online Bolt',
+      'Rectin Order Now': 'Rectin Rendelés Most',
+      'Rectin Buy Now': 'Rectin Vásárlás Most',
+      'Rectin Special Offer': 'Rectin Különleges Ajánlat',
+      'Rectin Save Up To $50': 'Rectin Takarítson Meg $50-t',
+      'Rectin Biggest Discount': 'Rectin Legnagyobb Kedvezmény',
+      'Rectin Get Your Offer': 'Rectin Szerezze be Ajánlatát',
+      '30-Day Money Back Guarantee': '30 Napos Pénzvisszafizetési Garancia',
+      'Free Shipping to HU': 'Ingyenes Szállítás Magyarországra',
+      'Free Delivery': 'Ingyenes Szállítás',
+      'Order Now While Suplies Last': 'Rendeljen Most Amíg Készlet Tart',
+      'Last Hours Offer, Act Now': 'Utolsó Órák Ajánlat, Cselekedj Most',
+      'Start Your Order NOw': 'Indítsa Rendelését Most',
+
       // CTAs
       'Buy Now': 'Vásároljon Most',
       'Order Today': 'Rendelje ma',
@@ -433,13 +448,30 @@ export class LuizIntelligentGenerator {
       'Exclusive Discount': 'Exkluzív Kedvezmény',
       'Best Deal': 'Legjobb Ajánlat',
 
-      // SITELINKS
+      // SITELINKS (from CSV files)
+      'Where To Buy Rectin': 'Hol Vásárolhat Rectin-t',
+      'Rectin is Only Available for': 'Rectin Csak Itt Elérhető',
+      'Purchase On Website': 'Vásárlás a Weboldalon',
+      'Half Price Offer': 'Fél Áras Ajánlat',
+      'Big Sale in Progress': 'Nagy Akció Folyamatban',
+      'Get 50% Off': 'Szerezzen 50% Kedvezményt',
       'About Us': 'Rólunk',
       'How It Works': 'Hogyan Működik',
       'Benefits': 'Előnyök',
-      'Shop Now': 'Vásárlás Most',  // ✅ CORRIGIDO: era Buy Now duplicado
+      'Shop Now': 'Vásárlás Most',
       'Support': '24 órás Támogatás',
       'Guarantee': 'Garancia',
+
+      // SNIPPETS (from CSV files)
+      'Free Private Delivery': 'Ingyenes Privát Szállítás',
+      'Half Price Offer': 'Fél Áras Ajánlat',
+
+      // MISSING HEADLINES (from CSV files)
+      '[Guarantee]Days to Try With Money Back': '[GUARANTEE] Napos Kipróbálás Pénzvisszafizetéssel',
+      'Only $19800Per Bottle Today': 'Csak $19800 Per Palack Ma',
+
+      // DESCRIPTIONS (from CSV files)
+      'High converting sitelink': 'Magas Konverziós Sitelink',
 
       // CALLOUTS
       'Official Website': 'Hivatalos Oldal',
