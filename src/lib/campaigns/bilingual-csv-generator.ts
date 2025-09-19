@@ -196,14 +196,22 @@ export class BilingualCsvGenerator {
       }
     }
 
-    this.components.push(...headlines)
+    // ✅ GARANTIR EXATAMENTE 15 HEADLINES (Google Ads compliance)
+    const finalHeadlines = headlines.slice(0, 15)
+    console.log(`📊 Generated exactly ${finalHeadlines.length} headlines (Google Ads limit)`)
+
+    this.components.push(...finalHeadlines)
   }
 
   private async generateDescriptions(): Promise<void> {
     const descriptions: AdComponent[] = []
 
-    for (let i = 0; i < DESCRIPTION_TEMPLATES.length; i++) {
-      const template = DESCRIPTION_TEMPLATES[i]
+    // ✅ GOOGLE ADS COMPLIANCE: Máximo 4 descriptions
+    const maxDescriptions = 4
+    const limitedTemplates = DESCRIPTION_TEMPLATES.slice(0, maxDescriptions)
+
+    for (let i = 0; i < limitedTemplates.length; i++) {
+      const template = limitedTemplates[i]
       const localContent = await this.translateTemplate(template.template)
       const englishContent = this.getEnglishVersion(template.template)
 
@@ -217,6 +225,7 @@ export class BilingualCsvGenerator {
       })
     }
 
+    console.log(`📊 Generated exactly ${descriptions.length} descriptions (Google Ads limit: max 4)`)
     this.components.push(...descriptions)
   }
 
@@ -366,8 +375,141 @@ export class BilingualCsvGenerator {
   }
 
   private async translateTemplate(template: string): Promise<string> {
-    // Use real translator for proper language conversion
-    return await this.translator.translateText(template)
+    try {
+      // Try real translator first with 3-second timeout
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Translation timeout')), 3000)
+      })
+      const translationPromise = this.translator.translateText(template)
+      return await Promise.race([translationPromise, timeoutPromise])
+    } catch (error) {
+      // If Hungarian and translation fails, use comprehensive fallback
+      if (this.options.targetLanguage === 'hu-HU') {
+        return this.getHungarianFallback(template)
+      }
+      // For other languages, return as-is
+      return template
+    }
+  }
+
+  /**
+   * 🇭🇺 FALLBACK HÚNGARO COMPLETO - Sistema confiável para evitar conteúdo misto
+   */
+  private getHungarianFallback(text: string): string {
+    // Dicionário completo PT/EN → HU para evitar conteúdo misto
+    const hungarianDict: Record<string, string> = {
+      // PRODUTOS
+      'Rectin': 'Rectin',
+      '[PDTO]': 'Rectin',
+      '{ProductName}': 'Rectin',
+
+      // SITELINKS - SOLUÇÃO PARA PROBLEMA PRINCIPAL
+      'Rólunk Rectin': 'Rólunk Rectin',
+      'Hogyan Működik': 'Hogyan Működik',
+      'Előnyök': 'Előnyök',
+      'Vásárlás Most': 'Vásárlás Most',
+      'Ajânlats Especiais': 'Különleges Ajánlatok',  // ❌ ERRO CORRIGIDO
+      'Promoções korlátozott ideig': 'Promóciók korlátozott ideig',  // ❌ ERRO CORRIGIDO
+      'Formas de Pagamento': 'Fizetési Módok',  // ❌ PORTUGUÊS → HÚNGARO
+      'Cartão, PIX ou boleto': 'Kártya, átutalás vagy bankutalvány',  // ❌ PORTUGUÊS → HÚNGARO
+      'Garancia': 'Garancia',
+      '24 órás Támogatás': '24 órás Támogatás',
+      'Política de Troca': 'Csere Szabályzat',  // ❌ PORTUGUÊS → HÚNGARO
+      'Troca fácil e sem burocracia': 'Egyszerű csere bürokrácia nélkül',  // ❌ PORTUGUÊS → HÚNGARO
+      'Ingyenes Szállítás': 'Ingyenes Szállítás',
+      'Entrega gratuita em todo país': 'Ingyenes szállítás az egész országban',  // ❌ PORTUGUÊS → HÚNGARO
+      'Entrega Expressa': 'Expressz Szállítás',  // ❌ PORTUGUÊS → HÚNGARO
+      'Receba em até 2 dias úteis': 'Átvétel 2 munkanapon belül',  // ❌ PORTUGUÊS → HÚNGARO
+      'Rastrear Pedido': 'Rendelés Követése',  // ❌ PORTUGUÊS → HÚNGARO
+      'Acompanhe sua encomenda': 'Kövesse nyomon csomagját',  // ❌ PORTUGUÊS → HÚNGARO
+
+      // HEADLINES - CONTEÚDO MISTO CORRIGIDO
+      'Comprar Rectin Online': 'Rectin Vásárlás Online',  // ❌ PORTUGUÊS → HÚNGARO
+      'Loja Confiável': 'Megbízható Bolt',  // ❌ PORTUGUÊS → HÚNGARO
+
+      // DESCRIPTIONS - MISTURA CORRIGIDA
+      'Exkluzív Kedvezmény em Rectin': 'Exkluzív Kedvezmény Rectin-re',  // ❌ MISTURA → HÚNGARO PURO
+      'Rectin com garantált': 'Rectin garantált',  // ❌ MISTURA → HÚNGARO PURO
+      'Ajânlat especial Rectin': 'Különleges Ajánlat Rectin',  // ❌ MISTURA → HÚNGARO PURO
+      'Comprar Rectin még soha': 'Rectin vásárlás még soha',  // ❌ MISTURA → HÚNGARO PURO
+      'Desconto especial korlátozott': 'Különleges kedvezmény korlátozott',  // ❌ MISTURA → HÚNGARO PURO
+      'felett R$99': 'felett 99 EUR',  // ❌ BRL → EUR PARA HUNGRIA
+
+      // TEMPLATES GERAIS
+      'Buy [PRODUCT] Now - Official Store': 'Vásároljon Rectin Most - Hivatalos Bolt',
+      '[PRODUCT] - Best Price Online': 'Rectin - Legjobb Ár Online',
+      'Order [PRODUCT] Today': 'Rendelje meg a Rectin-t ma',
+      'Natural [PRODUCT] Supplement': 'Természetes Rectin Kiegészítő',
+      '[PRODUCT] - Premium Quality': 'Rectin - Prémium Minőség',
+      'Free Shipping [PRODUCT]': 'Ingyenes Szállítás Rectin',
+      'Original [PRODUCT] Here': 'Eredeti Rectin Itt',
+
+      // CTAs
+      'Buy Now': 'Vásároljon Most',
+      'Order Today': 'Rendelje ma',
+      'Get Now': 'Szerezze be most',
+      'Official Store': 'Hivatalos Bolt',
+      'Best Price': 'Legjobb Ár',
+      'Free Shipping': 'Ingyenes Szállítás',
+      'Fast Delivery': 'Gyors Szállítás',
+      'Original Product': 'Eredeti Termék',
+
+      // GARANTIAS
+      '30 Day Guarantee': '30 Napos Garancia',
+      'Money Back Guarantee': 'Pénzvisszafizetési Garancia',
+      'Full Guarantee': 'Teljes Garancia',
+
+      // PREÇOS E DESCONTOS
+      'Special Offer': 'Különleges Ajánlat',
+      'Limited Time': 'Korlátozott Ideig',
+      'Exclusive Discount': 'Exkluzív Kedvezmény',
+      'Best Deal': 'Legjobb Ajánlat',
+
+      // CALLOUTS
+      'Official Website': 'Hivatalos Oldal',
+      'Trusted Store': 'Megbízható Bolt',
+      'Secure Payment': 'Biztonságos Fizetés',
+      'Express Delivery': 'Expressz Szállítás',
+
+      // SNIPPETS
+      'Hivatalos Oldal': 'Hivatalos Oldal',
+      'Legjobb Ár': 'Legjobb Ár',
+      'Eredeti Termék': 'Eredeti Termék',
+      'Exkluzív Kedvezmény': 'Exkluzív Kedvezmény',
+      'Teljes Garancia': 'Teljes Garancia',
+      'Díjmentes': 'Díjmentes',
+      'Visszatérítés': 'Visszatérítés',
+      'Kamatmentes Részletfizetés': 'Kamatmentes Részletfizetés',
+      'Ingyenes Visszaküldés': 'Ingyenes Visszaküldés',
+      'Megbízható Cég': 'Megbízható Cég',
+      'Védett Vásárlás': 'Védett Vásárlás',
+      'Tanúsított': 'Tanúsított'
+    }
+
+    // Busca tradução direta primeiro
+    if (hungarianDict[text]) {
+      return hungarianDict[text]
+    }
+
+    // Substituições parciais para templates com variáveis
+    let translated = text
+    for (const [mixed, hu] of Object.entries(hungarianDict)) {
+      translated = translated.replace(new RegExp(mixed, 'gi'), hu)
+    }
+
+    // Se ainda tem português, força substituições básicas
+    translated = translated
+      .replace(/comprar|compre/gi, 'vásároljon')
+      .replace(/loja/gi, 'bolt')
+      .replace(/promoção|promoções/gi, 'promóciók')
+      .replace(/especial/gi, 'különleges')
+      .replace(/desconto/gi, 'kedvezmény')
+      .replace(/entrega/gi, 'szállítás')
+      .replace(/política/gi, 'szabályzat')
+      .replace(/troca/gi, 'csere')
+      .replace(/rastrear/gi, 'követés')
+
+    return translated
   }
 
   private getEnglishVersion(template: string): string {

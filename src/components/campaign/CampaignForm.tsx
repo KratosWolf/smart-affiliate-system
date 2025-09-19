@@ -7,6 +7,7 @@ import { COUNTRY_OPTIONS } from '@/lib/constants/countries'
 import { PLATFORM_OPTIONS } from '@/lib/constants/platforms'
 import { CAMPAIGN_TYPES } from '@/lib/constants/campaign-templates'
 import { getCurrencyForCountry, getCurrencySymbol } from '@/lib/constants/currencies'
+import { getLanguageForCountry } from '@/lib/constants/languages'
 import { CampaignParams } from '@/lib/types'
 
 interface CampaignFormProps {
@@ -159,10 +160,16 @@ export function CampaignForm({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               value={campaignData.targetCountry}
               onChange={(e) => {
-                onInputChange('targetCountry', e.target.value)
-                // Auto-detect currency
-                const currency = getCurrencyForCountry(e.target.value)
+                const selectedCountry = e.target.value
+                onInputChange('targetCountry', selectedCountry)
+
+                // 🌍 AUTO-DETECT CURRENCY + LANGUAGE
+                const currency = getCurrencyForCountry(selectedCountry)
+                const language = getLanguageForCountry(selectedCountry)
+
                 onInputChange('currency', currency)
+                // Store language for AI system (internal use)
+                console.log(`🌍 Auto-mapped: ${selectedCountry} → ${language} (${currency})`)
               }}
             >
               {COUNTRY_OPTIONS.map(country => (

@@ -6,6 +6,7 @@ import { csvGenerator } from '@/lib/campaigns/csv-generator'
 import { integratedItalianGenerator } from '@/lib/campaigns/integrated-italian-generator'
 import { BilingualCsvGenerator } from '@/lib/campaigns/bilingual-csv-generator'
 import { CompetitiveIntelligenceEngineV3 } from '@/lib/intelligence/competitive-intelligence-engine-v3'
+import { generateLuizCampaign, type LuizCampaignData } from '@/lib/campaigns/luiz-intelligent-generator'
 import { getCurrencyForCountry } from '@/lib/constants/currencies'
 import { ProductValidationResponse } from '@/types'
 
@@ -211,18 +212,36 @@ export async function POST(request: NextRequest) {
         console.log('⚠️ Competitive Intelligence failed, continuing without competitor data:', error)
       }
 
-      const bilingualGenerator = new BilingualCsvGenerator({
+      // 🎯 LUIZ INTELLIGENT GENERATOR - MODELO EXATO CAMPANHAS & PERFORMANCE TF
+      console.log('🎯 Using LUIZ INTELLIGENT GENERATOR with exact model structure')
+
+      const luizCampaignData: LuizCampaignData = {
         productName: validationData.productName,
         targetCountry: validationData.targetCountry,
         targetLanguage,
-        countryCode: validationData.targetCountry,
-        hasDiscountData: !!(enhancedCampaignData.discountPercentage || enhancedCampaignData.discountAmount),
-        campaignType: enhancedCampaignData.campaignType || 'Standard',
-        competitiveIntelligence: competitiveIntelligence // Pass competitive data to generator
-      })
+        campaignType: (enhancedCampaignData.campaignType || 'Standard') as any,
 
-      // Generate complete bilingual campaign with all features
-      const bilingualOutput = await bilingualGenerator.generateAllCsvs()
+        // Campos para substituição de variáveis
+        guaranteePeriod: enhancedCampaignData.guaranteePeriod || '30',
+        discountAmount: enhancedCampaignData.discountAmount,
+        discountPercentage: enhancedCampaignData.discountPercentage,
+        productPrice: enhancedCampaignData.productPrice,
+        deliveryType: enhancedCampaignData.deliveryType || 'Free',
+
+        // Inteligência competitiva
+        competitiveIntelligence: competitiveIntelligence
+      }
+
+      // Generate campaign using EXACT Luiz model structure
+      console.log('🔧 DEBUG: Calling generateLuizCampaign with:', luizCampaignData)
+      let luizOutput
+      try {
+        luizOutput = await generateLuizCampaign(luizCampaignData)
+        console.log('🔧 DEBUG: generateLuizCampaign SUCCESS:', luizOutput)
+      } catch (error) {
+        console.error('🚨 ERROR: generateLuizCampaign FAILED:', error)
+        throw error
+      }
 
       // Convert to luizCampaign format for compatibility
       // Calculate budget in account currency
@@ -241,10 +260,12 @@ export async function POST(request: NextRequest) {
       // Build campaign name with platform and commission
       const campaignPlatform = enhancedCampaignData.platform || platform || 'DR Cash'
       const commission = enhancedCampaignData.commissionValue || commissionValue || 0
-      const commissionCurrency = enhancedCampaignData.currency || 'USD'
+      // ✅ SEMPRE USD PARA COMISSÕES (mesmo que conta local seja HUF)
+      const commissionCurrency = 'USD'
 
       console.log(`🏷️ Campaign naming: ${validationData.productName} - ${validationData.targetCountry} - ${campaignPlatform} - ${commissionCurrency}${commission}`)
 
+      // 🎯 CONSTRUCT LUIZ CAMPAIGN OBJECT WITH EXACT MODEL STRUCTURE
       luizCampaign = {
         campaign: {
           name: `${validationData.productName} - ${validationData.targetCountry} - ${campaignPlatform} - ${commissionCurrency}${commission}`,
@@ -255,65 +276,37 @@ export async function POST(request: NextRequest) {
           structure: '1_CAMPAIGN_1_AD'
         },
         ads: {
-          headlines: bilingualOutput.standardCsvs.headlines ? bilingualOutput.standardCsvs.headlines.split('\n').slice(1).map(line => line.replace(/"/g, '')) : [],
-          descriptions: bilingualOutput.standardCsvs.descriptions ? bilingualOutput.standardCsvs.descriptions.split('\n').slice(1).map(line => line.replace(/"/g, '')).slice(0, 4) : []
+          headlines: luizOutput.headlines, // Exatamente 15 (7 fixos + 8 dinâmicos)
+          descriptions: luizOutput.descriptions // Máximo 4
         },
         keywords: [
           { keyword: validationData.productName.toLowerCase(), matchType: 'BROAD', case: 'lowercase' },
           { keyword: validationData.productName.toUpperCase(), matchType: 'BROAD', case: 'uppercase' }
         ],
         extensions: {
-          sitelinks: bilingualOutput.standardCsvs.sitelinks ? bilingualOutput.standardCsvs.sitelinks.split('\n').slice(1).map((line: string) => ({ text: line.split(',')[0], category: 'GENERAL' })) : [],
-          callouts: bilingualOutput.standardCsvs.callouts ? bilingualOutput.standardCsvs.callouts.split('\n').slice(1).map((line: string) => ({ text: line.split(',')[0], category: 'GENERAL' })) : [],
-          snippets: bilingualOutput.standardCsvs.snippets ? bilingualOutput.standardCsvs.snippets.split('\n').slice(1).map((line: string) => ({ text: line.split(',')[0], category: 'GENERAL' })) : []
+          sitelinks: luizOutput.sitelinks.map(text => ({ text: `"${text}"`, category: 'GENERAL' })),
+          callouts: luizOutput.callouts.map(text => ({ text: `"${text}"`, category: 'GENERAL' })),
+          snippets: luizOutput.snippets.map(text => ({ text: `"${text}"`, category: 'GENERAL' }))
         },
-        csvFiles: bilingualOutput.standardCsvs
-      }
-
-      // 🤖 AI ENHANCEMENT: Replace headlines with clean AI-generated content
-      try {
-        console.log('🤖 Enhancing campaign with clean AI headlines...')
-
-        const { MultiAIOrchestrator } = await import('@/lib/ai/multi-ai-orchestrator')
-        const aiOrchestrator = new MultiAIOrchestrator({
-          claude: {
-            apiKey: process.env.CLAUDE_API_KEY || '',
-            model: 'claude-3-5-sonnet-20241022',
-            maxTokens: 4000
-          },
-          gemini: {
-            apiKey: process.env.GEMINI_API_KEY || '',
-            model: 'gemini-2.0-flash',
-            maxTokens: 2000
-          },
-          nanoBanana: { apiKey: '', endpoint: '' }
-        })
-
-        // Generate clean headlines with AI
-        const aiHeadlines = await aiOrchestrator.generateCopywriting({
-          task: 'headlines',
-          productData: {
-            name: validationData.productName,
-            category: 'health',
-            price: enhancedCampaignData.productPrice || 97
-          },
-          language: targetLanguage,
-          targetCountry: validationData.targetCountry
-        })
-
-        // Replace with clean AI headlines if available (but keep original language)
-        if (aiHeadlines.content.length > 0) {
-          console.log(`✅ Using ${aiHeadlines.content.length} clean AI headlines in ${targetLanguage}`)
-          // Only use AI headlines if they're in the correct language
-          if (targetLanguage !== 'en-US' || validationData.targetCountry === 'US') {
-            luizCampaign.ads.headlines = aiHeadlines.content.slice(0, 15)
-          }
+        csvFiles: {
+          headlines: `Headline\n${luizOutput.headlines.map(h => `"${h}"`).join('\n')}`,
+          descriptions: `Description\n${luizOutput.descriptions.map(d => `"${d}"`).join('\n')}`,
+          sitelinks: `Sitelink Title,Sitelink Description\n${luizOutput.sitelinks.map(s => `"${s}","High converting sitelink"`).join('\n')}`,
+          callouts: `Callout\n${luizOutput.callouts.map(c => `"${c}"`).join('\n')}`,
+          snippets: `Snippet\n${luizOutput.snippets.map(s => `"${s}"`).join('\n')}`
         }
-
-      } catch (aiError) {
-        console.warn('⚠️ AI enhancement failed, using standard headlines:', aiError)
-        // Continue with standard campaign
       }
+
+      console.log(`✅ LUIZ MODEL CAMPAIGN GENERATED:`, {
+        headlines: luizOutput.headlines.length,
+        descriptions: luizOutput.descriptions.length,
+        sitelinks: luizOutput.sitelinks.length,
+        callouts: luizOutput.callouts.length,
+        snippets: luizOutput.snippets.length,
+        metadata: luizOutput.metadata
+      })
+
+      // ✅ LUIZ INTELLIGENT GENERATOR já aplicou todas as otimizações IA + Competitive Intelligence
 
       // TODO: Add advanced intelligent localization later
       console.log('✅ Using clean AI-enhanced campaign without complex localization')
