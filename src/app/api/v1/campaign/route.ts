@@ -5,7 +5,7 @@ import { luizCampaignGenerator } from '@/lib/campaigns/luiz-campaign-generator'
 import { csvGenerator } from '@/lib/campaigns/csv-generator'
 import { integratedItalianGenerator } from '@/lib/campaigns/integrated-italian-generator'
 import { BilingualCsvGenerator } from '@/lib/campaigns/bilingual-csv-generator'
-import { CompetitiveIntelligenceEngineV3 } from '@/lib/intelligence/competitive-intelligence-engine-v3'
+import { CompetitiveIntelligenceEngineFast } from '@/lib/intelligence/competitive-intelligence-engine-fast'
 import { generateLuizCampaign, type LuizCampaignData } from '@/lib/campaigns/luiz-intelligent-generator'
 import { getCurrencyForCountry } from '@/lib/constants/currencies'
 import { ProductValidationResponse } from '@/types'
@@ -197,12 +197,12 @@ export async function POST(request: NextRequest) {
 
       // 🧠 COMPETITIVE INTELLIGENCE ENGINE V3 - FUGIR DA MANADA
       console.log('🧠 Iniciando Competitive Intelligence Engine V3...')
-      const competitiveEngine = new CompetitiveIntelligenceEngineV3()
+      const competitiveEngine = new CompetitiveIntelligenceEngineFast()
 
       let competitiveIntelligence = null
       try {
         // Run competitive analysis to get better phrases and patterns
-        competitiveIntelligence = await competitiveEngine.analyzeCompetitorsEnterprise(
+        competitiveIntelligence = await competitiveEngine.analyzeCompetitorsFast(
           validationData.productName,
           validationData.targetCountry,
           targetLanguage
