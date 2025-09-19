@@ -92,8 +92,8 @@ export const SITELINK_TEMPLATES: SitelinkTemplate[] = [
 
   // Purchase Process (8 options)
   { id: 7, title: "Comprar Agora", description: "Adquira com desconto exclusivo", category: 'Purchase Process' },
-  { id: 8, title: "Ofertas Especiais", description: "Promoções por tempo limitado", category: 'Purchase Process' },
-  { id: 9, title: "Formas de Pagamento", description: "Cartão, PIX ou boleto", category: 'Purchase Process' },
+  { id: 8, title: "Különleges Ajánlatok", description: "Promóciók korlátozott ideig", category: 'Purchase Process' },
+  { id: 9, title: "Fizetési Módok", description: "Kártya, átutalás vagy bankutalvány", category: 'Purchase Process' },
   { id: 10, title: "Parcele sem Juros", description: "Até 12x no cartão de crédito", category: 'Purchase Process' },
   { id: 11, title: "Desconto à Vista", description: "15% off pagamento à vista", category: 'Purchase Process' },
   { id: 12, title: "Kits com Desconto", description: "Compre mais e pague menos", category: 'Purchase Process' },
@@ -101,9 +101,9 @@ export const SITELINK_TEMPLATES: SitelinkTemplate[] = [
   { id: 14, title: "Cashback", description: "Ganhe dinheiro de volta", category: 'Purchase Process' },
 
   // Shipping & Delivery (8 options)
-  { id: 15, title: "Frete Grátis", description: "Entrega gratuita em todo país", category: 'Shipping & Delivery' },
-  { id: 16, title: "Entrega Expressa", description: "Receba em até 2 dias úteis", category: 'Shipping & Delivery' },
-  { id: 17, title: "Rastrear Pedido", description: "Acompanhe sua encomenda", category: 'Shipping & Delivery' },
+  { id: 15, title: "Ingyenes Szállítás", description: "Ingyenes szállítás az egész országban", category: 'Shipping & Delivery' },
+  { id: 16, title: "Expressz Szállítás", description: "Átvétel 2 munkanapon belül", category: 'Shipping & Delivery' },
+  { id: 17, title: "Rendelés Követése", description: "Kövesse nyomon csomagját", category: 'Shipping & Delivery' },
   { id: 18, title: "Entrega Rápida", description: "Prazo de entrega reduzido", category: 'Shipping & Delivery' },
   { id: 19, title: "Regiões Atendidas", description: "Entregamos em todo território", category: 'Shipping & Delivery' },
   { id: 20, title: "Envio Imediato", description: "Postado em até 24 horas", category: 'Shipping & Delivery' },
@@ -113,7 +113,7 @@ export const SITELINK_TEMPLATES: SitelinkTemplate[] = [
   // Trust & Support (9 options)
   { id: 23, title: "Garantia", description: "30 dias para devolução", category: 'Trust & Support' },
   { id: 24, title: "Suporte 24h", description: "Atendimento sempre disponível", category: 'Trust & Support' },
-  { id: 25, title: "Política de Troca", description: "Troca fácil e sem burocracia", category: 'Trust & Support' },
+  { id: 25, title: "Csere Szabályzat", description: "Egyszerű csere bürokrácia nélkül", category: 'Trust & Support' },
   { id: 26, title: "Empresa Confiável", description: "Mais de 10 anos no mercado", category: 'Trust & Support' },
   { id: 27, title: "Certificações", description: "Produtos certificados", category: 'Trust & Support' },
   { id: 28, title: "Segurança", description: "Site seguro e protegido", category: 'Trust & Support' },
